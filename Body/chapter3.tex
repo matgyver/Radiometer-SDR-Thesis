@@ -1,0 +1,87 @@
+% Chapter 3 from the thesis template file
+%   that contains an example table and figure.
+\chapter{A GNURadio AND N200 TOTAL POWER RADIOMETER}
+
+One of the principal goals with this research was to implement a fully functioning total power radiometer within software.  The N200 provides us the link between the RF signal captured by the antenna and converts that to a format that the computer can now use to manipulate the signal.  Once the signal has been passed to the computer, GNURadio will implement the correct algorithms to detect the power within the signal.  One of the advantages of course with a SDR is that filtering can also be done within the software.  In addition, thanks to the WxGUI that GNURadio uses, we can also build a user interface that can control several key variables that are useful for us.  This includes controlling the gain on the programmable gain amplifier on the DSRX2 card, the sampling or bandwidth of the signal, the center frequency, and also the integration time.  All of these can now be controlled in real time as well.  GNURadio will also store the power data so that we are able to do further analysis of the data using a software program like MatLab.  Because GNURadio is a very flexible system, much more can be done with the signal if needed and future updates may add more capabilities or additional analysis on the signal can happen.
+
+\section{Requirements}
+
+Requirements for this system was based largely on what the current ISU radiometer was capable of doing and was also based on requirements of a typical radiometer.  These requirements are outlined below.
+
+%As can be seen in Table~\ref{nothing} it is truly
+%obvious what I am saying is true.
+
+%\begin{table}[h!tb] \centering
+%\isucaption{This table shows a standard empty table}
+%\label{nothing}
+
+%\vspace{ 2 in}
+%\end{table}
+
+\subsection{Hardware Requirements}
+
+The selection of the N200 SDR from Ettus Research was based on many of the requirements outlined above.  In addition, we wanted the hardware to be flexible but also affordable.  There are many different kinds of software defined radios on the market.  However, we choose the N200 based on the availability of the device, the large community support especially with regards to support by GNURadio and because it meet and often exceeded the requirements stated above.  
+
+Flexibility was another key aspect of the N200 that made it an excellent selection for our project.  The N200 uses a daughter board setup for configuring the RF interface to the rest of the electronics.  Several different daughter boards are available that have different frequency ranges and offer both receive, transmit and transceiver designs.  For the radiometer we need to operate around 1.4 GHz and receive only.  Based on those requirements we choose the DBSRX2 daughter board.  This board is designed from 800 MHz to 2.3 GHz and has a fairly low noise figure.   
+
+
+The current RF front end to the radiometer is designed for a 20 MHz wide signal.  This requirement was one of the main driving points for selecting the N200 SDR as it can support up to 50 MHz in bandwidth between the N200 and the host computer.  This is accomplished by using a 1 Gbps Ethernet connection between the N200 and the host computer.
+
+
+\subsection{Software Requirements}
+
+The driving force for the software requirement was to have a system that was easy to use.  The ISU radiometer originally used LabWindows, to retrieve data and control the radiometer.  A revision was made that changed the interface control to LabView.  In both cases the interface was a graphical interface that allowed the user to easily set parameters and download the data.
+
+The original ISU Radiometer did most of it's processing on board the FPGA.  The graphical interface simply downloaded the data and allowed for control of certain parameters.  With the switch to a software defined radio platform, we switched to having most of the processing done by the host computer.  However, we still wanted to keep the interface hardware fairly simple.  GNURadio was selected as it includes GNURadio Companion (GRC) which uses a graphical interface for creating the radio environment.  It also includes options to create a user interface during the operation of the N200 as well.  This allowed us to rapidly create both the critical radio components needed for the radiometer and also a control interface.
+
+
+\section{Hardware}
+
+Here certain criteria are explained thus eventually
+leading to a foregone conclusion as can be seen in
+
+%Table~\ref{nevermore}.
+
+%\begin{table}[h!tb] \centering
+%\setlength{\captionwidth}{3.5 in}
+%\isucaption{This table shows a standard empty table with
+%a limited captionwidth}
+%\label{nevermore}
+%\vspace{ 2 in}
+%\end{table}
+
+\subsection{Noise Temperature Consideration}
+
+For any radiometer noise temperature is a large consideration and is critical to the design of the radiometer.  One method to determine how well a radiometer is to look at the sensitivity of the radiometer.  We can do this by looking at the smallest change in temperature the radiometer can see.  We will call this the Noise Equivalent $\Delta T$ or $NE\Delta T$ of the radiometer.  The equation for this is shown below.
+
+\begin{equation}
+NE\Delta T=\frac{T_{A}+T_{sys}}{\sqrt{\beta + \tau}}
+\end{equation}
+
+For our radiometer, we will assume that our bandwidth, $\beta$, is fixed at 20 MHz.  This is due to the current RF hardware that is placed in front of the N200 which has band-pass filters that restrict the incoming signal to between 1.400 and 1.420 GHz. 
+
+Need to add information about the ISU Radiometer antenna and what it adds to the noise temperature
+
+For $T_{sys}$, both the RF front end and the software defined radio needs to be included and calculated to see the impact to the overall $NE\Delta T$ of the radiometer.  
+
+Finally $\tau$ is the integration time for the radiometer.  This parameter is set by the user and is the only variable that we have direct control of.  
+
+\subsection{Existing ISU Radiometer RF Front End}
+
+\subsection{DBSRX2 Noise Temperature Consideration}
+
+The N200 uses daughter board cards that allow for us to easily swap out different RF front ends.  The DBSRX2 was selected due to the fact that it is receive only and that it will work in the frequency spectrum that we are interested in, primarily in the 1.4 GHz range.  Since we are using the DBSRX2 after the LNAs that are already on the, the noise temperature added by the DBSRX2 will be quite small.  The DBSRX2 adds approximately 5 dB to the noise factor of the system.  Again though, since this is at the end of the RF chain, the total contribution of the DBSRX2 to the overall system noise temperature is small, and has been calculated to be 1.05 dB to the overall noise factor of the system.
+
+While the DBSRX2 does have additional gain, this gain is not as critical since we have the additional gain from the ISU radiometer front end.  While the gain the DBSRX2 is significant, the noise figure on the DBSRX2 by itself is quite high.  Therefore, the DBSRX2 would not be a good candidate if the N200 would be used solely by itself.  Ideally, there would be at least one if not multiple LNA's that have much better noise figure numbers than what the DBSRX2 and would be placed in front of the DBSRX2 daughter-board.  However, the filters that are on the ISU radiometer are not as critical and, in fact, could be removed.  Once we have the signal in the digital domain, it is possible to build and even adjust band-pass filers in software instead of using hardware. This can have the advantage of reducing some of the noise that these band-pass filters add, although their contribution is small.  One drawback to this however is that it will require additional computation cycles.  In our case, since the ISU radiometer already has band-pass filters, we assume the signal will be valid in that range.  We do however, artificially apply a band-pass to the system in software by defining the sample rate that we receive the data from the N200.  For this reason, we do need to know what our sample rate is, as often that will be smaller than the bandwidth coming from the ISU radiometer. 
+
+\section{Software}
+
+A software defined radio by its definition requires software for the proper operation of the radio.  In our case there is the software or firmware that resides on the FPGA and then the software that runs on the computer.  For this thesis, we focused on the software running in GNURadio.  This software package provides us with the ability to write the code needed to implement a total power radiometer but also gives us a method to control the SDR as well.  
+
+\subsection{Obtaining the signal and GUI controls}
+
+The N200 sends all data across the 1 Gbps connection to be read in by GNURadio.  This data is the raw I/Q values that is read by the on board A/D and processed by the on board FPGA.  A very simple GNURadio implementation would simply take this data and store the data to the drive in a file.  This can be very handy if we want to simply record the data and then process it later.  However, depending on the sample rate, it can consume a large amount of storage.  A short recording can easily consume 1-2 GB with a sample rate of 10 Msps.  It also does not give us any immediate feedback on the 
+
+\subsection{Total Power Radiometer Implementation}
+
+\subsection{Display and Data Storage}
