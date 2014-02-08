@@ -7,11 +7,25 @@ Radiometers measure power and it is this information that we can use to determin
 \section{Performance of a radiometer}
 The performance of a radiometer can be measured by looking at both the sensitivity and the accuracy of the radiometer.  In addition, we need to be concerned with the stability of the radiometer as this affects the accuracy of the radiometer.
 
+
+
 \subsection{Sensitivity}
-Look at section 3.2 in book
+Sensitivity of the radiometer relates to the amount of power that the radio selects from the antenna.  This selection is then dependent on the bandwidth that the radiometer is able to listen to.  The radiometer however detects not only the signal of interest but also receives a noise signal as well.  This noise is added to the signal and can not be separated from the signal.  Because this noise is added to the signal, we must be able to determine a change in the signal while the noise signal is also present.  
+
+An example of this is to look at a system that has a system noise temperature of 700K and an antenna temperature of 300K.  This gives us a total noise temperature of 1000K.  Therefore, if we wish to detect a change of 1K, we need to be able to detect between 1000K and 1001K.
+
+INSERT EQ 3.3
+
+Talk about BW impact on this equation
 
 \subsection{Accuracy and Stability}
-Look at section 3.3 in book
+Stability and accuracy are additional problems that need to be considered when looking at the radiometer system.  To begin we can once again look at the power received equation
+
+INSERT EQ 3.4
+
+As we look at this equation, we can see that if k, B, G, and $T_{N}$ are constant, then stability can be assured.  k is a known constant and we can also assume that our bandwidth, B, will also remain constant, or at least while we are taking our measurements.  Gain and the noise temperature however can vary.  
+
+Gain is usually our largest factor that can change on a radiometer and even with a software defined radio this is still a large source of variation.  This is due to the analog nature of the amplifiers that affect a large portion of the gain in our system.  Various things can affect our gain, but the two largest factors is the physical temperature of the amplifier and the voltage that feeds the amplifier.  Voltage can be controlled to a degree.  High accuracy voltage regulators can help control fluctuations in voltages that can in turn affect the gain.  A factor however that is harder to control is temperature.  It is because of this that the current ISU radiometer has gone to great strides to control the temperature of the amplifiers to maintain a contstant temperature.
 
 
 \section{Required Performance Requirements}
