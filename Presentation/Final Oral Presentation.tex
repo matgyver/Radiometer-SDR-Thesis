@@ -58,8 +58,8 @@
 %\usecolortheme{dove}
 %\usecolortheme{fly}
 %\usecolortheme{lily}
-%\usecolortheme{orchid}
-\usecolortheme{rose}
+\usecolortheme{orchid}
+%\usecolortheme{rose}
 %\usecolortheme{seagull}
 %\usecolortheme{seahorse}
 %\usecolortheme{whale}
@@ -83,7 +83,7 @@
 
 % The short title appears at the bottom of every slide, the full title is only on the title page
 
-\title[SDR Radiometer]{Implentation of a Total Power Radiometer in Software Defined Radios} 
+\title[SDR Radiometer]{Implementation of a Total Power Radiometer in Software Defined Radios} 
 
 \author{Matthew E. Nelson} 
 \institute[ISU] 
@@ -120,22 +120,43 @@ Iowa State University \\
 %Each begin frame starts a new slide
 \begin{frame}
 \frametitle{Introduction}
+\begin{block}{Presentation Goals}
 The goal of this thesis and presentation is to explore other methods that could be used for a remote sensing radiometer and specifically the implementation of a software defined radio as a total power radiometer.  The end goal is to develop a radiometer that is more flexible than most radiometers and still maintain the accuracy and stability of a traditional radiometers if not exceed these specifications.  
+\end{block}
 \end{frame}
 
 \begin{frame}
-A secondary goal was to use off the shelf components and components that are generally more accessible.  This would allow radiometers to be more accessible to a wider scope of researchers in this field. 
-\end{frame}
+\begin{block}{Secondary goal}
+A secondary goal was to use off the shelf components and components that are generally more accessible.  This would allow radiometers to be more accessible to a wider scope of researchers in this field.
+\end{block} 
 
-\begin{frame}
+\begin{block}{Tertiary goal}
 And finally a tertiary goal was to ensure that the system as a whole is fairly easy to use.  This ties to our secondary goal of making radiometers more accessible to a wider range of researchers and research topics.
+\end{block}
 \end{frame}
 
 \begin{frame}
-As stated in the background, ISU currently owns a radiometer that is used for the remote sensing of soil moisture.  In many ways, the current ISU radiometer is like a SDR.  The RF signal is digitized and then processed by a FPGA to give the total power reading needed for radiometry.  However, due to the under-sampling of the signal some information is lost.  The ISU radiometer assumes that incoming signal is free of any interference and the power recorded is from the target of interest.  However, in recent years the ISU radiometer has not been performing as expected, and without additional information it is almost impossible to diagnose these issues out in the field.  The ISU radiometer is also not frequency agile, it is fixed at 1.4 GHz and the bandwidth is also fixed at 20 MHz.  All of this means that if an interfering signal is present the current radiometer would not be able to determine this and even if it could, it has no means to try to avoid the signal.  
-
+\begin{block}
 This thesis looks to explore the following questions: (1) Can we use a SDR along with GNURadio to recreate a radiometer in software?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer?  The results of this research and experimentation are the subject of this thesis.
+\end{block}
+
+\end{frame}  
+
+\begin{frame}
+\frametitle{Background}
+\begin{block}{Background}
+ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed bandwidth of 20 MHz.  This radiometer is unique in that it does a total power evaluation by undersampling the A/D converter.  This current radiometer however has experienced a number of issues that hindered its performance.  
+\end{block}
+
+\begin{figure}
+\includegraphics[width=0.4\linewidth]{images/agronomy_roof.png}
+\end{figure}
 \end{frame}
+
+\begin{frame}
+This thesis looks to explore the following questions: (1) Can we use a SDR along with GNURadio to recreate a radiometer in software?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer?  The results of this research and experimentation are the subject of this thesis.
+\end{frame}  
+
 
 \subsection{Software Defined Radio} 
 
@@ -215,24 +236,6 @@ Sed diam enim, sagittis nec condimentum sit amet, ullamcorper sit amet libero. A
 \end{itemize}
 \end{frame}
 
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Blocks of Highlighted Text}
-\begin{block}{Block 1}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-\end{block}
-
-\begin{block}{Block 2}
-Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
-\end{block}
-
-\begin{block}{Block 3}
-Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
-\end{block}
-\end{frame}
-
-%------------------------------------------------
 
 \begin{frame}
 \frametitle{Multiple Columns}
