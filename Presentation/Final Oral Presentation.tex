@@ -18,9 +18,7 @@
 
 \mode<presentation> {
 
-% The Beamer class comes with a number of default slide themes
-% which change the colors and layouts of slides. Below this is a list
-% of all the themes, uncomment each in turn to see what they look like.
+%Beamer Themes, uncomment the theme you wish to use
 
 %\usetheme{default}
 %\usetheme{AnnArbor}
@@ -50,9 +48,7 @@
 %\usetheme{Szeged}
 %\usetheme{Warsaw}
 
-% As well as themes, the Beamer class has a number of color themes
-% for any slide theme. Uncomment each of these in turn to see how it
-% changes the colors of your current slide theme.
+%Beamer color themes, select one, or use none to use the themes default color scheme
 
 %\usecolortheme{albatross}
 %\usecolortheme{beaver}
@@ -69,39 +65,49 @@
 %\usecolortheme{whale}
 %\usecolortheme{wolverine}
 
-%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
-%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
-
-%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+% To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline} 
+% To replace the footer line in all slides with a simple slide count uncomment this line
+%\setbeamertemplate{footline}[page number] 
+% To remove the navigation symbols from the bottom of all slides uncomment this line
+%\setbeamertemplate{navigation symbols}{} 
 }
 
-\usepackage{graphicx} % Allows including images
-\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{graphicx} 
+% Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{booktabs} 
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[SDR Radiometer]{Implentation of a Total Power Radiometer in Software Defined Radios} % The short title appears at the bottom of every slide, the full title is only on the title page
+% The short title appears at the bottom of every slide, the full title is only on the title page
 
-\author{Matthew E. Nelson} % Your name
-\institute[ISU] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+\title[SDR Radiometer]{Implentation of a Total Power Radiometer in Software Defined Radios} 
+
+\author{Matthew E. Nelson} 
+\institute[ISU] 
 {
-Iowa State University \\ % Your institution for the title page
+% Your institution for the title page
+Iowa State University \\ 
 \medskip
+% email address or contact
 \textit{mnelson@iastate.edu} % Your email address
 }
-\date{\today} % Date, can be changed to a custom date
+\date{\today} 
 
 \begin{document}
 
 \begin{frame}
-\titlepage % Print the title page as the first slide
+% Print the title page as the first slide
+\titlepage 
 \end{frame}
 
 \begin{frame}[allowframebreaks]
-\frametitle{Overview} % Table of contents slide, comment this block out to remove it
-\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+% Table of contents slide, comment this block out to remove it
+\frametitle{Overview} 
+% Anything with a \section or \subsection will get populated here.  allowframebreaks allow for this to go to more than one slide for large presentations
+\tableofcontents 
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -111,13 +117,24 @@ Iowa State University \\ % Your institution for the title page
 %------------------------------------------------
 \section{Introduction} 
 
+%Each begin frame starts a new slide
 \begin{frame}
 \frametitle{Introduction}
-Introduction text here
+The goal of this thesis and presentation is to explore other methods that could be used for a remote sensing radiometer and specifically the implementation of a software defined radio as a total power radiometer.  The end goal is to develop a radiometer that is more flexible than most radiometers and still maintain the accuracy and stability of a traditional radiometers if not exceed these specifications.  
 \end{frame}
 
 \begin{frame}
-Additional text for introduction
+A secondary goal was to use off the shelf components and components that are generally more accessible.  This would allow radiometers to be more accessible to a wider scope of researchers in this field. 
+\end{frame}
+
+\begin{frame}
+And finally a tertiary goal was to ensure that the system as a whole is fairly easy to use.  This ties to our secondary goal of making radiometers more accessible to a wider range of researchers and research topics.
+\end{frame}
+
+\begin{frame}
+As stated in the background, ISU currently owns a radiometer that is used for the remote sensing of soil moisture.  In many ways, the current ISU radiometer is like a SDR.  The RF signal is digitized and then processed by a FPGA to give the total power reading needed for radiometry.  However, due to the under-sampling of the signal some information is lost.  The ISU radiometer assumes that incoming signal is free of any interference and the power recorded is from the target of interest.  However, in recent years the ISU radiometer has not been performing as expected, and without additional information it is almost impossible to diagnose these issues out in the field.  The ISU radiometer is also not frequency agile, it is fixed at 1.4 GHz and the bandwidth is also fixed at 20 MHz.  All of this means that if an interfering signal is present the current radiometer would not be able to determine this and even if it could, it has no means to try to avoid the signal.  
+
+This thesis looks to explore the following questions: (1) Can we use a SDR along with GNURadio to recreate a radiometer in software?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer?  The results of this research and experimentation are the subject of this thesis.
 \end{frame}
 
 \subsection{Software Defined Radio} 
