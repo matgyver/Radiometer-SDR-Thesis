@@ -136,7 +136,7 @@ And finally a tertiary goal was to ensure that the system as a whole is fairly e
 \end{frame}
 
 \begin{frame}
-\begin{block}
+\begin{block}{Thesis Goals}
 This thesis looks to explore the following questions: (1) Can we use a SDR along with GNURadio to recreate a radiometer in software?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer?  The results of this research and experimentation are the subject of this thesis.
 \end{block}
 
@@ -154,7 +154,16 @@ ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed ban
 \end{frame}
 
 \begin{frame}
-This thesis looks to explore the following questions: (1) Can we use a SDR along with GNURadio to recreate a radiometer in software?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer?  The results of this research and experimentation are the subject of this thesis.
+\begin{block}{Thesis Questions}
+This thesis looks to explore the following questions: 
+\begin{enumerate}
+\item Can we use a SDR along with GNURadio to recreate a radiometer in software?
+\item If so, what performance can we get from the system?
+\item What benefits do we gain (if any) from using a SDR from a more traditional radiometer?
+\end{enumerate}
+The results of this research and experimentation are the subject of this thesis.
+\end{block}
+
 \end{frame}  
 
 
@@ -167,7 +176,60 @@ This thesis looks to explore the following questions: (1) Can we use a SDR along
 \subsection{Related Works}
 
 \section{General Theory of Operation}
+\begin{frame}
+\begin{block}{Radiometer}
+The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole. 
+\end{block}
+\end{frame}
 
+\begin{frame}
+\begin{block}{Measuring power}
+To measure power in a radiometer, several factors are taken into consideration.  To begin with we have the noise signal coming from the antenna.  Our antenna is assumed to be looking at our target of interest and it is assumed that we can relate the antenna noise to the noise from the source.  It is often easier to refer to this noise as the brightness temperature.  Therefore the brightness temperature of the source can be related to the brightness temperature at the antenna.  We will refer to this brightness temperature as T$_{A}$.  
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=\textwidth]{../Images/simple_rad.png}
+\label{simplerad}
+\end{figure}
+}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Ideal Radiometer}
+Figure on slide~\ref{simplerad} shows us an ideal radiometer.  That is a radiometer that has an input from the antenna, T$_{A}$, a known bandwidth denoted as B and a known gain denoted as G.  At the end of the block is the detector, which measures the power from the radiometer.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Bandwidth}
+Only a certain selection of the radio spectrum is observed by the radiometer.  This is referred to as the bandwidth of the radiometer and is denoted as B or as $\beta$.  This bandwidth is then centered around a center frequency.  In our case, we center around 1.405 GHz as this falls in a protected frequency range often used for radiometry.  
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Power}
+The power coming from the antenna is amplified so it is easier to determine changes in the brightness temperature.  The overall gain of the radiometer system is referred to as G in this case.  Finally, we need to apply Boltzmann's constant, referred to as \textit{k}.  With these values, we can now compute the power the radiometer will see for an ideal radiometer.  This can be shown in equation~\ref{eq:power_rad_eq}
+
+\begin{equation} \label{eq:power_rad_eq}
+P=k*\beta*G*(T_{A})
+\end{equation}
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+\begin{block}{Noise}
+However, since we do not have an ideal radiometer, we have another key component that needs to be addressed and that is the noise added to the system from the radiometer itself.  Most of the additional noise is from the Low Noise Amplifiers (LNA) that are used to increase the signal while attempting to keep the noise added to a minimum.  The Figure below shows the additional noise that is injected into the system.
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=\textwidth]{../Images/radiometer_noise_added.png}
+\label{noiserad}
+\end{figure}
+}
+\end{block}
+\end{frame}
 \subsection{Software Defined Radios}
 
 \subsection{GNURadio Software}
@@ -216,14 +278,6 @@ This thesis looks to explore the following questions: (1) Can we use a SDR along
 
 \section{Conclusion and Future Work}
 
-\begin{frame}
-\frametitle{Paragraphs of Text}
-Sed iaculis dapibus gravida. Morbi sed tortor erat, nec interdum arcu. Sed id lorem lectus. Quisque viverra augue id sem ornare non aliquam nibh tristique. Aenean in ligula nisl. Nulla sed tellus ipsum. Donec vestibulum ligula non lorem vulputate fermentum accumsan neque mollis.\\~\\
-
-Sed diam enim, sagittis nec condimentum sit amet, ullamcorper sit amet libero. Aliquam vel dui orci, a porta odio. Nullam id suscipit ipsum. Aenean lobortis commodo sem, ut commodo leo gravida vitae. Pellentesque vehicula ante iaculis arcu pretium rutrum eget sit amet purus. Integer ornare nulla quis neque ultrices lobortis. Vestibulum ultrices tincidunt libero, quis commodo erat ullamcorper id.
-\end{frame}
-
-%------------------------------------------------
 
 \begin{frame}
 \frametitle{Bullet Points}
