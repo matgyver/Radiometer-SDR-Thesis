@@ -18,15 +18,14 @@ Frequency Range & 1400 - 1425 & MHz \\
 Bandwidth & 25 & MHz \\
 Polarization & Dual &  \\ 
 Sensitivity & -30 & dBm \\
-Accuracy & 1 & Kelvin \\ 
-Output Voltage Range & 0.03 to 4.8 & V \\ \hline
+Accuracy & 1 & Kelvin \\ \hline
 \end{tabular}
 %\vspace{ 2 in}
 \end{table}
 
 \subsection{Hardware Requirements}
 
-The selection of the N200 SDR from Ettus Research was based on many of the requirements outlined above.  In addition, we wanted the hardware to be flexible but also affordable.  There are many different kinds of software defined radios on the market.  However, we choose the N200 based on the availability of the device, the large community support especially with regards to support by GNURadio and because it meet and often exceeded the requirements stated above.  
+The selection of the N200 SDR from Ettus Research was based on many of the requirements outlined in table~\ref{requirements}.  In addition, we wanted the hardware to be flexible but also affordable.  There are many different kinds of software defined radios on the market.  However, we choose the N200 based on the availability of the device, the large community support especially with regards to support by GNURadio and because it meet and often exceeded the requirements stated above.  
 
 Flexibility was another key aspect of the N200 that made it an excellent selection for our project.  The N200 uses a daughter board setup for configuring the RF interface to the rest of the electronics.  Several different daughter boards are available that have different frequency ranges and offer both receive, transmit and transceiver designs.  For the radiometer we need to operate around 1.4 GHz and receive only.  Based on those requirements we choose the DBSRX2 daughter board.  This board is designed from 800 MHz to 2.3 GHz and has a fairly low noise figure.   
 
@@ -42,9 +41,7 @@ The original ISU Radiometer did most of it's processing on board the FPGA.  The 
 
 
 \section{Hardware}
-
-Here certain criteria are explained thus eventually
-leading to a foregone conclusion as can be seen in
+There are two main hardware components that make up the radiometer.  The first and probably the most critical is the RF front end of the radiometer.  This critical component is what reads the RF coming in from the antenna or source.  It is then amplified so that it can then be processed.  Processing is then handled by the software defined radio, which digitizes the signal so it can be processed by the onboard FPGA and computer.  As we will discuss next, due to noise temperature considerations, we need to make sure the incoming RF signal is as noise free as possible so we are able to process the signal that we want.  
 
 %Table~\ref{nevermore}.
 
@@ -74,6 +71,8 @@ Finally $\tau$ is the integration time for the radiometer.  This parameter is se
 
 \subsection{Existing ISU Radiometer RF Front End}
 
+The existing ISU radiometer RF Front end uses a series of cascading low noise amplifiers (LNAs) that increase the power from the antenna while contributing a minimum amount of noise to the system.  In addition, the current ISU Radiometer uses bandpass filters to narrow the bandwidth to the desired 1400 to 1425 MHz that we wish to monitor.  While these are not needed with the addition of the software defined radio, since we can filter in software, they do not contribute much in terms of the noise temperature, and as passive components do not impact the performance of the radiometer.
+
 \subsection{DBSRX2 Noise Temperature Consideration}
 
 The N200 uses daughter board cards that allow for us to easily swap out different RF front ends.  The DBSRX2 was selected due to the fact that it is receive only and that it will work in the frequency spectrum that we are interested in, primarily in the 1.4 GHz range.  Since we are using the DBSRX2 after the LNAs that are already on the, the noise temperature added by the DBSRX2 will be quite small.  The DBSRX2 adds approximately 5 dB to the noise factor of the system.  Again though, since this is at the end of the RF chain, the total contribution of the DBSRX2 to the overall system noise temperature is small, and has been calculated to be 1.05 dB to the overall noise factor of the system.
@@ -89,5 +88,12 @@ A software defined radio by its definition requires software for the proper oper
 The N200 sends all data across the 1 Gbps connection to be read in by GNURadio.  This data is the raw I/Q values that is read by the on board A/D and processed by the on board FPGA.  A very simple GNURadio implementation would simply take this data and store the data to the drive in a file.  This can be very handy if we want to simply record the data and then process it later.  However, depending on the sample rate, it can consume a large amount of storage.  A short recording can easily consume 1-2 GB with a sample rate of 10 Msps.  It also does not give us any immediate feedback on the 
 
 \subsection{Total Power Radiometer Implementation}
+To implement a total power radiometer in software, we first need to look at how we implement a total power radiometer traditionally.  Traditionally, a square law detector is used to detect the average power that is seen by the radiometer.  This simple device uses a diode that gives a small voltage output based on the RF power present.  This small voltage is then amplified and can now be calibrated with a known source to give us a noise temperature.  
+
+To implement this in software, we need to build a square law detector mathematically.  We can then give this to the software defined radio to process the information accordingly.  A square law detector mathematically, is the sum of the squares.  Once the signal has been digitized, it is expressed in data bits of I and Q, which represent in-phase and quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal.
+
+Another step that we typically do in a traditional radiometer is to integrate the signal over time.  This gives us an average of the signal and helps to smooth out the output.  In addition, we will show later that the integration time can be adjusted to help improve our sensitivity of the radiometer.
+
+In a traditional radiometer can integrate by using a simple integrator circuit, which consists of an op-amp, resistor and capacitor.  This type of circuit is also equivalent to a low pass filter circuit as well, and the two are interchangeable.  We can then look at how we filter in the digital domain, and this is down with a infinite impulse response filter or IIR.  We can use this type of digital filter to then integrate the signal for our total power radiometer. 
 
 \subsection{Display and Data Storage}
