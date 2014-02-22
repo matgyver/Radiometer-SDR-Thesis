@@ -224,12 +224,6 @@ The N200 is capable of working with up to 100 MS/s signal and can stream up to 5
 
 The daughter boards allow for easy replacement of the RF front end to the software defined radio.  Ettus Research makes a number of daughter boards that range from a a wide range of frequencies and is available with transmitters, receivers and transceivers.  Because these boards are modular and do not touch the analog to digital converters or the on-board FPGA, very little change is required in the software.  The daughter boards however do have the required RF hardware for the signal to be processed.  In this application it was required that the signal was detected at 1.4 GHz with a bandwidth of 20 MHz.  The DBSRX2 receiver met this requirement and was selected to be used with the N200.  In this radiometer application transmission is not needed and is in fact illegal in the 1.4 GHz band, which is reserved for radiometer applications.
 
-%\subsubsection{Parts of the second hypothesis}
-
-%Here one particular part of the hypothesis that is 
-%currently being explained is examined and particular
-%elements of that part are given careful scrutiny.
-
 \subsection{The DBSRX2 Receiver}
 The DBSRX2 receiver board is capable of receiving signals between 800 MHz and 2.3 GHz.  The board is able to plug into one of expansion slots available on the N200 that we are using.  
 
