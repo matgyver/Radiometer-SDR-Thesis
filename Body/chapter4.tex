@@ -94,6 +94,7 @@ Further testing of the square-law detector was performed by using the radiometer
 \end{figure}
 }
 
+The E E 518 test however showed that there were additional problems with the radiometer.  While the test showed that the SDR could in fact read data, the data was skewed.  It was later found out that the radiometer was generating an interfering signal that caused the power readings to be elevated.  That was found as a result of having the SDR record the signal and then was analyzed later.  Through this analysis, we found that a strong harmonic was developed and caused a spike in signal being recorded.  Although the exact reason for this has not been found, the problem has been isolated to something in the RF Front End of the ISU radiometer.  
 \section{Total Power Radiometer Test with Cold Water Bath}
 To fully test both the total power radiometer in the software defined radio and the square-law detector, a cold water bath experiment was established to verify that both the square-law detector and SDR was able to measure real world changes in the noise.  In addition, this would also give us a calibration test (confirm this) line to work with.
 
@@ -111,3 +112,4 @@ To run this test, we need to have some equipment for this.  First and foremost, 
 \subsection{Test Run 1}
 The first test run was conducted to help verify that the radiometer was operating correctly and to start to build up data for calibration.  This test was conducted by placing the matched load into the liquid nitrogen bath and then putting it into a ice water bath.  This would give us two points to figure out a calibration point.
 \section{Further testing}
+As discussed earlier, there are some known issues with the RF Front end of the radiometer.  This needs to be explored in more detail or the RF front end may need to be rebuilt.  The issue appears to stem that movement on the RF Front end is causing something to become lose or causes for some local interference to impact the radiometer.  When the radiometer is stationary, it appears to operate normally.  However, as the radiometer is designed to be mounted on a rotational platform and point to the sky for calibration, the movement issue needs to be addressed.  
