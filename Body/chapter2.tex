@@ -101,7 +101,7 @@ To begin with, we look at what an analog RC filter looks like.
 }
 
 This circuit can be represented by the following equation.
-\begin{equation}
+\begin{equation}\label{eq:rc_circuit_eq}
 \frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
 \end{equation}
 
@@ -129,7 +129,7 @@ H(f)=\frac{\displaystyle\sum\limits_{j=o}^{P-1} c_je^{-2\pi ijfT}}{1-\displaysty
 
 Here $f$ is our frequency in Hz and $T$ is the time between samples in seconds.
 
-We now want show the link between our analog RC circuit and the IIR filter.  Looking at equation 2.6, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can subsitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is.
+We now want show the link between our analog RC circuit and the IIR filter.  Looking at equation \ref{eq:rc_circuit_eq}, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can substitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is.
 
 \begin{equation}
 T=time between samples=\frac{1}{sampling rate}

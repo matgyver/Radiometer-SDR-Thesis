@@ -230,8 +230,153 @@ However, since we do not have an ideal radiometer, we have another key component
 }
 \end{block}
 \end{frame}
-\subsection{Software Defined Radios}
 
+\begin{frame}
+\begin{block}{Antenna Noise}
+As it can be seen, this additional noise is added to the noise coming from the antenna source.  Therefore T$_{N}$ is added to T$_{A}$ and our final equation for the power measured is shown in equation~\ref{eq:final_power}.  
+
+\begin{equation} \label{eq:final_power}
+P=k*\beta*G*(T_{A}+T_{N})
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Sensitivity}
+The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T. 
+
+\begin{equation}
+NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
+\end{equation}
+\end{block}
+\end{frame}
+
+
+\subsection{Software Defined Radios}
+\begin{frame}
+\begin{block}{SDR}
+A software defined radio (SDR) attempts to mimic radio functions in software instead of relying on dedicated hardware.  A radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at. 
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Implementing a TPR}
+The SDR is able to implement a total power radiometer, but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal power.  For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
+
+\begin{equation}
+I^2+Q^2 = P_{out}
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{IIR Filter}
+This signal will fluctuate rapidly and to improve the sensitivity of the radiometer we wish to integrate this signal.  A RC filter is analogous to an integrator where the R and C values determine our time constant and our integration time for the filter.  A SDR however operates in the digital domain at discrete intervals.  One type of filter that can be used in the Infinite Impulse Response (IIR) filter. 
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{RC Filter}
+To begin with, we look at what an analog RC filter looks like. 
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=7cm]{../Images/rc-circuit.png}
+\label{rc_circuit}
+\end{figure}
+}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{RC Filter Eqs}
+This circuit can be represented by the following equation.
+\begin{equation}\label{eq:rc_circuit_eq}
+\frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{FIR Filter}
+A Finite Impulse Response (FIR) filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by the following equation:
+
+\begin{equation}
+y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{IIR Filter}
+An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except that we add an additional summation term which feeds back the previous output.
+
+\begin{equation}
+y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
+\end{equation}
+
+It can be seen that a FIR filter is really a IIR filter except that $Q=0$.  
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{IIR and RC Filter}
+To get a better understanding on how our digital IIR filter relates to our RC filter analog, we can look at the Fourier Transform and the relationship of the input to the output in the frequency domain.
+
+\begin{equation}
+H(f)=\frac{\displaystyle\sum\limits_{j=o}^{P-1} c_je^{-2\pi ijfT}}{1-\displaystyle\sum\limits_{k=1}^{Q} d_ke^{-2\pi ikfT}}
+\end{equation}
+
+Here $f$ is our frequency in Hz and $T$ is the time between samples in seconds.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Link between RC and IIR}
+We now want show the link between our analog RC circuit and the IIR filter.  Looking at equation \ref{eq:rc_circuit_eq}, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can substitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is.
+
+\begin{equation}
+T=time between samples=\frac{1}{sampling rate}
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{input voltage to IIR}
+We can now relate our input voltage to the input to our IIR filter and the output voltage to the output of our IIR filter.
+
+\begin{equation}
+x_n=v_{in}(nT)
+\end{equation}
+
+\begin{equation}
+y_n=v_{out}(nT)
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Rewrite difference eq}
+We can now rewrite our difference equation with $x_n$ and $y_n$.
+
+\begin{equation}
+\frac{x_n-y_n}{R}=C\frac{y_n-y_{n-1}}{T}
+\end{equation}
+
+Now, we can solve for $y_n$ which results in our final equation for showing how a IIR filter is related to an RC filter.
+
+\begin{equation}
+y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
+\end{equation}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{IIR and RC filter}
+It can be seen that an IIR filter can have the same frequency response as we would expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
+
+\end{block}
+\end{frame}
 \subsection{GNURadio Software}
 
 \subsection{RF Front End}
