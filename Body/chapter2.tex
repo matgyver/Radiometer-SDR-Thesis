@@ -233,7 +233,7 @@ The DBSRX2 has an onboard Programmable Gain Amplifier (PGA) that is accessible f
 \centering
 \includegraphics{Images/dbsrx2}
 \isucaption{The DBSRX2 daughter board from Ettus Research}
-\label{mgraph}
+\label{dbsrx2}
 \end{figure}
 }
 
@@ -245,5 +245,16 @@ This functionality is ideal for communication type of radios where different mod
 
 GNURadio was selected as it is an open source software platform.  GNURadio is licensed under the GPL license and has a strong community that continually updates the software.  It is also well supported by third parties such as Ettus Research Group, National Instruments and other SDR developers.  In addition GNURadio has a strong set of tools that can be used to develop programs that run under GNURadio.  Tools such as the GNURadio Companion (GRC) allows for an easy to use GUI to develop code for GNURadio.  GNURadio is also written in Python, which allows for easy modification and access to additional tools that can be used with GNURadio.  
 
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics{Images/N200_radiometer.grc.png}
+\isucaption{Screenshot of the GNURadio block editor}
+\label{N200_GRC}
+\end{figure}
+}
 
+GNUradio Companion works by having many of the common functions as blocks that can picked and placed on the screen.  Once placed, the blocks can be wired up, very much like LabView, and the flow of data can be controlled in this fashion.  While GNURadio Companion provides most of the essential blocks used in most applications, additional blocks can by added if needed.  This is due to the fact that GNURadio is built using Python and the blocks in GNUradio Companion are simply blocks of Python code.  To "compile" a GNURadio Companion sheet, you simply run the sheet, which then generates the Python code that is then executed.  GNURadio actually usues a combination of Python and C++, where Python handles most of the interface and the C++ is usually most of the drivers and low level interface to the hardware.  This allows for a easy to use system but still meets some of the demanding performances needed for handling large amounts of data.  
 
+GNURadio Companion also includes blocks that allow it to create a GUI type of interface.  The typical method it uses for this is using wxGUI although GNURadio Companion does also include blocks that can use QT for generating widgets as well.  However, the wxGUI tends to work better and has better support in GNURadio than QT.  
+
+Through these blocks can not only manipulate the data we need to perform a total power radiometer in software but to also create a user interface that allows us to control the radiometer as well.  We are also able to display the information in real time so the user can see changes in power and even monitor spectral information during the operation of the radiometer. 
