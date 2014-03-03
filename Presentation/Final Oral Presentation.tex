@@ -186,23 +186,61 @@ ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed ban
 \end{frame}
 
 \subsection{Software Defined Radio}
-
+\begin{frame}
+\begin{block}{SDR}
+A software defined radio (SDR) attempts to mimic radio functions in software instead of relying on dedicated hardware.  A radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at. 
+\end{block}
+\end{frame}
 \subsection{SDR Radiometer}
 
 \section{Implantation}
 \subsection{Power detection/Square-law detector}
+\begin{frame}
+\begin{block}{Implementing a TPR}
+The SDR is able to implement a total power radiometer, but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal power.  For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
 
+\begin{equation}
+I^2+Q^2 = P_{out}
+\end{equation}
+\end{block}
+\end{frame}
 \subsection{IIR as an integrator}
 
 \subsection{GNURadio Blocks}
+\begin{frame}
+\frametitle{Basic GNURadio Blocks}
+\begin{block}{GRC}
+Blah blah blah, talk about square law block and IIR block, plus others, insert image of block diagram
+\end{block}
+\end{frame}
 
 \subsection{GNURadio Controls}
+\begin{frame}
+\frametitle{GNURadio Controls}
+\begin{block}{Controlling the SDR}
+blah blah blah, talk about the wxGUI we use to control the N200 and show a screen shot of the control panel
+\end{block}
+\end{frame}
 
 \subsection{GNURadio Display}
+\begin{frame}
+\frametitle{GNURadio Display}
+\begin{block}{Data Display}
+blah blah blah show how we display the information and data and take a screen shot of the displays
+\end{block}
+\end{frame}
 
 \section{Performance}
 \subsection{Sensitivity}
+\begin{frame}
+\begin{block}{Sensitivity}
+The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T. 
 
+\begin{equation}
+NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
+\end{equation}
+\end{block}
+\end{frame}
 \subsection{Accuracy}
 
 \section{Comparison}
@@ -233,7 +271,12 @@ ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed ban
 \end{frame}
 
 \section{Conclusion}
-
+\begin{frame}
+\frametitle{Conclusion}
+\begin{block}{Final Thoughts}
+In this thesis we have shown that an off the shelf SDR can be used to perform as a radiometer.  Using a SDR has several advantages such as a more flexible system and can result in a less expensive system.  Since a SDR offers high flexibility, changes to the system can be done very quickly and helps in future proofing the system.  
+\end{block}
+\end{frame}
 
 \section{References}
 % Beamer does not support BibTeX so references must be inserted manually as below
@@ -320,32 +363,6 @@ As it can be seen, this additional noise is added to the noise coming from the a
 
 \begin{equation} \label{eq:final_power}
 P=k*\beta*G*(T_{A}+T_{N})
-\end{equation}
-\end{block}
-\end{frame}
-
-\begin{frame}
-\begin{block}{Sensitivity}
-The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T. 
-
-\begin{equation}
-NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
-\end{equation}
-\end{block}
-\end{frame}
-
-\begin{frame}
-\begin{block}{SDR}
-A software defined radio (SDR) attempts to mimic radio functions in software instead of relying on dedicated hardware.  A radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at. 
-\end{block}
-\end{frame}
-
-\begin{frame}
-\begin{block}{Implementing a TPR}
-The SDR is able to implement a total power radiometer, but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal power.  For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
-
-\begin{equation}
-I^2+Q^2 = P_{out}
 \end{equation}
 \end{block}
 \end{frame}
