@@ -82,6 +82,7 @@
 %----------------------------------------------------------------------------------------
 
 % The short title appears at the bottom of every slide, the full title is only on the title page
+%\title[short title]{Long Title}
 
 \title[SDR Radiometer]{Implementation of a Total Power Radiometer in Software Defined Radios} 
 
@@ -116,7 +117,7 @@ Iowa State University \\
 
 %------------------------------------------------
 \section{Introduction} 
-
+\subsection{About this thesis and why}
 %Each begin frame starts a new slide
 \begin{frame}
 \frametitle{Introduction}
@@ -124,65 +125,42 @@ Iowa State University \\
 The goal of this thesis and presentation is to explore other methods that could be used for a remote sensing radiometer and specifically the implementation of a software defined radio as a total power radiometer.  The end goal is to develop a radiometer that is more flexible than most radiometers and still maintain the accuracy and stability of a traditional radiometers if not exceed these specifications.  
 \end{block}
 \end{frame}
+\pause
 
-\begin{frame}
-\begin{block}{Secondary goal}
-A secondary goal was to use off the shelf components and components that are generally more accessible.  This would allow radiometers to be more accessible to a wider scope of researchers in this field.
-\end{block} 
-
-\begin{block}{Tertiary goal}
-And finally a tertiary goal was to ensure that the system as a whole is fairly easy to use.  This ties to our secondary goal of making radiometers more accessible to a wider range of researchers and research topics.
-\end{block}
-\end{frame}
-
-\begin{frame}
 \begin{block}{Thesis Goals}
 This thesis looks to explore the following questions: (1) Can we use a SDR along with GNURadio to recreate a radiometer in software?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer?  The results of this research and experimentation are the subject of this thesis.
 \end{block}
-
-\end{frame}  
-
+ 
+\subsection{Related Works}
 \begin{frame}
-\frametitle{Background}
-\begin{block}{Background}
-ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed bandwidth of 20 MHz.  This radiometer is unique in that it does a total power evaluation by undersampling the A/D converter.  This current radiometer however has experienced a number of issues that hindered its performance.  
+\frametitle{Related Works}
+\begin{block}{Shirleys Bay Radio Astronomy Consortium}
+\begin{itemize}
+\item Radio Astronomy is very close radiometer remote sensing
+\item Main difference is between looking at specific objects or general trend
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{SBRAC}
+The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNU-radio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.
+\end{block}
+\end{frame}
+
+\section{General Theory}
+\subsection{Traditional Radiometer}
+\begin{frame}
+\frametitle{General Theory}
+\begin{block}{Traditional Radiometer}
+The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole. 
 \end{block}
 
 \begin{figure}
-\includegraphics[width=0.4\linewidth]{images/agronomy_roof.png}
+\includegraphics[width=0.15\linewidth]{images/Crookes_radiometer.jpg}
 \end{figure}
 \end{frame}
 
 \begin{frame}
-\begin{block}{Thesis Questions}
-This thesis looks to explore the following questions: 
-\begin{enumerate}
-\item Can we use a SDR along with GNURadio to recreate a radiometer in software?
-\item If so, what performance can we get from the system?
-\item What benefits do we gain (if any) from using a SDR from a more traditional radiometer?
-\end{enumerate}
-The results of this research and experimentation are the subject of this thesis.
-\end{block}
-
-\end{frame}  
-
-
-\subsection{Software Defined Radio} 
-
-\subsection{GNURadio Software}
-
-\subsection{Current ISU Radiometer}
-
-\subsection{Related Works}
-
-\section{General Theory of Operation}
-\begin{frame}
-\begin{block}{Radiometer}
-The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole. 
-\end{block}
-\end{frame}
-
-\begin{frame}
+\frametitle{General Theory}
 \begin{block}{Measuring power}
 To measure power in a radiometer, several factors are taken into consideration.  To begin with we have the noise signal coming from the antenna.  Our antenna is assumed to be looking at our target of interest and it is assumed that we can relate the antenna noise to the noise from the source.  It is often easier to refer to this noise as the brightness temperature.  Therefore the brightness temperature of the source can be related to the brightness temperature at the antenna.  We will refer to this brightness temperature as T$_{A}$.  
 
@@ -192,6 +170,111 @@ To measure power in a radiometer, several factors are taken into consideration. 
 \label{simplerad}
 \end{figure}
 }
+\end{block}
+\end{frame}
+
+\subsection{ISU Radiometer}
+\begin{frame}
+\frametitle{ISU Radiometer}
+\begin{block}{}
+ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed bandwidth of 20 MHz.  This radiometer is unique in that it does a total power evaluation by under-sampling the A/D converter.  This current radiometer however has experienced a number of issues that hindered its performance.  
+\end{block}
+
+\begin{figure}
+\includegraphics[width=0.4\linewidth]{images/agronomy_roof.png}
+\end{figure}
+\end{frame}
+
+\subsection{Software Defined Radio}
+
+\subsection{SDR Radiometer}
+
+\section{Implantation}
+\subsection{Power detection/Square-law detector}
+
+\subsection{IIR as an integrator}
+
+\subsection{GNURadio Blocks}
+
+\subsection{GNURadio Controls}
+
+\subsection{GNURadio Display}
+
+\section{Performance}
+\subsection{Sensitivity}
+
+\subsection{Accuracy}
+
+\section{Comparison}
+\subsection{SDR vs Traditional}
+
+\subsection{SDR vs ISU}
+
+\section{Testing and Verification}
+\subsection{Rational}
+
+\subsection{Liquid Nitrogen Test setup}
+
+\subsection{Results from LN2 Test}
+
+\section{Future Work}
+\begin{frame}
+\frametitle{Future Work}
+\begin{block}{Future Items}
+\begin{itemize}
+\item Make improvements to the ISU RF Front End
+\note[item]{Fix issues with SWR and interference}
+\item Make improvements to the support HW for the ISU Radiometer
+\note[item]{Replacing the Rabbit uC with PIC32}
+\item Correlation
+\item Noise Injection
+\end{itemize}
+\end{block}
+\end{frame}
+
+\section{Conclusion}
+
+
+\section{References}
+% Beamer does not support BibTeX so references must be inserted manually as below
+\begin{frame}
+\frametitle{References}
+\footnotesize{
+\begin{thebibliography}{99}
+\bibitem[Skou, 2006]{Skou} Niels Skou and David Le Vine (2006)
+\newblock Microwave Radiometer Systems Design and Analysis
+\newblock \emph{Artech House}
+
+\bibitem[Ulaby, 1981]{Ulaby} F. T. Ulaby, R. K. Moore and A. K. Fung (1981)
+\newblock Microwave Remote Sensing
+\newblock \emph{Artech House}
+
+\bibitem[Leech, 2007]{Leech2007} Marcus Leech and David Ocame (2007)
+\newblock A year of Gnu Radio and SDR astronomy: experience, practice and observations
+\newblock \emph{\url{http://www.sbrac.org/documents/gnuradio_at_one_year_20070401.doc}}
+
+\end{thebibliography}
+}
+\end{frame}
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{The End}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+\begin{frame}
+\Huge{\centerline{Extra Slides}}
+\end{frame}
+\section*{Extra Slides}
+
+\begin{frame}
+\begin{block}{Secondary goal}
+A secondary goal was to use off the shelf components and components that are generally more accessible.  This would allow radiometers to be more accessible to a wider scope of researchers in this field.
+\end{block} 
+
+\begin{block}{Tertiary goal}
+And finally a tertiary goal was to ensure that the system as a whole is fairly easy to use.  This ties to our secondary goal of making radiometers more accessible to a wider range of researchers and research topics.
 \end{block}
 \end{frame}
 
@@ -251,8 +334,6 @@ NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
 \end{block}
 \end{frame}
 
-
-\subsection{Software Defined Radios}
 \begin{frame}
 \begin{block}{SDR}
 A software defined radio (SDR) attempts to mimic radio functions in software instead of relying on dedicated hardware.  A radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at. 
@@ -377,52 +458,6 @@ It can be seen that an IIR filter can have the same frequency response as we wou
 
 \end{block}
 \end{frame}
-\subsection{GNURadio Software}
-
-\subsection{RF Front End}
-
-\section{GNURadio and N200 TPR}
-
-\subsection{Hardware}
-
-\subsubsection{Requirements}
-
-\subsubsection{Noise Temperature Considerations}
-
-\subsubsection{Existing ISU Radiometer RF Front End}
-
-\subsection{Software}
-
-\subsubsection{Requirements}
-
-\subsubsection{Obtaining Signal Information and GUI Controls}
-
-\subsubsection{Implantation of a TPR in Software}
-
-\subsubsection{Data Storage and Display}
-
-\section{Testing and Verification}
-
-\subsection{Square-law Detector}
-
-\subsection{SDR Tests}
-
-\subsection{E E 518 Lab Tests}
-
-\subsection{LN2 Tests}
-
-\section{Performance and Evaluation}
-
-\subsection{Sensitivity, Accuracy and Stability}
-
-\subsection{Required Performance}
-
-\subsection{Square-law Detector Performance}
-
-\subsection{SDR Performance}
-
-\section{Conclusion and Future Work}
-
 
 \begin{frame}
 \frametitle{Bullet Points}
@@ -454,9 +489,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ul
 \end{columns}
 \end{frame}
 
-%------------------------------------------------
-\section{Second Section}
-%------------------------------------------------
 
 \begin{frame}
 \frametitle{Table}
@@ -474,16 +506,6 @@ Treatment 3 & 0.0009271 & 0.296 \\
 \end{table}
 \end{frame}
 
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
-\end{frame}
-
-%------------------------------------------------
 
 \begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
 \frametitle{Verbatim}
@@ -498,44 +520,5 @@ $E = mc^2$
 \end{example}
 \end{frame}
 
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Figure}
-Uncomment the code on this slide to include your own image from the same directory as the template .TeX file.
-%\begin{figure}
-%\includegraphics[width=0.8\linewidth]{test}
-%\end{figure}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Citation}
-An example of the \verb|\cite| command to cite within the presentation:\\~
-
-This statement requires citation \cite{p1}.
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{References}
-\footnotesize{
-\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
-\bibitem[Smith, 2012]{p1} John Smith (2012)
-\newblock Title of the publication
-\newblock \emph{Journal Name} 12(3), 45 -- 678.
-\end{thebibliography}
-}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\Huge{\centerline{The End}}
-\end{frame}
-
-%----------------------------------------------------------------------------------------
 
 \end{document} 
