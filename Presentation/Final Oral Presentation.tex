@@ -122,15 +122,19 @@ Iowa State University \\
 \begin{frame}
 \frametitle{Introduction}
 \begin{block}{Presentation Goals}
-The goal of this thesis and presentation is to explore other methods that could be used for a remote sensing radiometer and specifically the implementation of a software defined radio as a total power radiometer.  The end goal is to develop a radiometer that is more flexible than most radiometers and still maintain the accuracy and stability of a traditional radiometers if not exceed these specifications.  
+The goal of this thesis and presentation is to explore other methods that could be used for a remote sensing radiometer and specifically the implementation of a software defined radio as a total power radiometer.
 \end{block}
-\end{frame}
 \pause
 
-\begin{block}{Thesis Goals}
-This thesis looks to explore the following questions: (1) Can we use a SDR along with GNURadio to recreate a radiometer in software?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer?  The results of this research and experimentation are the subject of this thesis.
+\begin{block}{Questions Asked}
+This thesis looks to explore the following questions: 
+\begin{enumerate}
+\item Can we use a SDR along with GNURadio to recreate a radiometer in software?
+\item If so, what performance can we get from the system?
+\item What benefits do we gain (if any) from using a SDR from a more traditional radiometer?
+\end{enumerate}
 \end{block}
- 
+\end{frame} 
 \subsection{Related Works}
 \begin{frame}
 \frametitle{Related Works}
@@ -193,9 +197,10 @@ A software defined radio (SDR) attempts to mimic radio functions in software ins
 \end{frame}
 \subsection{SDR Radiometer}
 
-\section{Implantation}
+\section{Implementation}
 \subsection{Power detection/Square-law detector}
 \begin{frame}
+\frametitle{Implementation of Square-law detector}
 \begin{block}{Implementing a TPR}
 The SDR is able to implement a total power radiometer, but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal power.  For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
 
@@ -205,6 +210,12 @@ I^2+Q^2 = P_{out}
 \end{block}
 \end{frame}
 \subsection{IIR as an integrator}
+\begin{frame}
+\frametitle{IIR as an integrator}
+\begin{block}{IIR and RC filter}
+It can be seen that an IIR filter can have the same frequency response as we would expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
+\end{block}
+\end{frame}
 
 \subsection{GNURadio Blocks}
 \begin{frame}
@@ -469,24 +480,12 @@ y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
 \end{block}
 \end{frame}
 
-\begin{frame}
-\begin{block}{IIR and RC filter}
-It can be seen that an IIR filter can have the same frequency response as we would expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
-
-\end{block}
-\end{frame}
-
-\begin{frame}
-\frametitle{Bullet Points}
-\begin{itemize}
-\item Lorem ipsum dolor sit amet, consectetur adipiscing elit
-\item Aliquam blandit faucibus nisi, sit amet dapibus enim tempus eu
-\item Nulla commodo, erat quis gravida posuere, elit lacus lobortis est, quis porttitor odio mauris at libero
-\item Nam cursus est eget velit posuere pellentesque
-\item Vestibulum faucibus velit a augue condimentum quis convallis nulla gravida
-\end{itemize}
-\end{frame}
-
+%\begin{frame}
+%\begin{block}{IIR and RC filter}
+%It can be seen that an IIR filter can have the same frequency %response as we would expect from an analog RC filter.  As our %sampling rate approaches infinity, the approximation gets closer to %the original response from the analog RC circuit.  
+%
+%\end{block}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Multiple Columns}
