@@ -106,7 +106,7 @@ Iowa State University \\
 
 \begin{frame}[allowframebreaks]
 % Table of contents slide, comment this block out to remove it
-\frametitle{Overview} 
+\frametitle{Table of Contents} 
 % Anything with a \section or \subsection will get populated here.  allowframebreaks allow for this to go to more than one slide for large presentations
 \tableofcontents 
 \end{frame}
@@ -185,14 +185,14 @@ ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed ban
 \end{block}
 
 \begin{figure}
-\includegraphics[width=0.4\linewidth]{images/agronomy_roof.png}
+\includegraphics[width=0.45\linewidth]{images/agronomy_roof.png}
 \end{figure}
 \end{frame}
 
 \subsection{Software Defined Radio}
 \begin{frame}
 \begin{block}{SDR}
-A software defined radio (SDR) attempts to mimic radio functions in software instead of relying on dedicated hardware.  A radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at. 
+A software defined radio (SDR) is designed to mimic radio functions in software instead of using dedicated hardware.  A radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at. 
 \end{block}
 \end{frame}
 \subsection{SDR Radiometer}
@@ -272,15 +272,15 @@ NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
 \begin{block}{Future Items}
 \begin{itemize}
 \item Make improvements to the ISU RF Front End
-\note[item]{Fix issues with SWR and interference}
+\note<1>{Fix issues with SWR and interference}
 \item Make improvements to the support HW for the ISU Radiometer
-\note[item]{Replacing the Rabbit uC with PIC32}
+\note Replacing the Rabbit uC with PIC32
 \item Correlation
 \item Noise Injection
 \end{itemize}
 \end{block}
 \end{frame}
-
+\note<2>[item]{this is a test note}
 \section{Conclusion}
 \begin{frame}
 \frametitle{Conclusion}
