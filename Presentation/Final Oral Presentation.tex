@@ -149,7 +149,7 @@ This thesis looks to explore the following questions:
 The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNU-radio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.
 \end{block}
 \end{frame}
-
+%---------------------------------------
 \section{General Theory}
 \subsection{Traditional Radiometer}
 \begin{frame}
@@ -196,11 +196,27 @@ A software defined radio (SDR) is designed to mimic radio functions in software 
 \end{block}
 \end{frame}
 \subsection{SDR Radiometer}
-
+%---------------------------------
+\section{Comparison}
+\subsection{SDR vs Traditional}
+\begin{frame}
+\frametitle{Comparison}
+\begin{block}{SDR vs Traditional}
+blah blah blah
+\end{block}
+\end{frame}
+\subsection{SDR vs ISU}
+\begin{frame}
+\frametitle{Comparison}
+\begin{block}{SDR vs ISU}
+blah blah blah
+\end{block}
+\end{frame}
+%---------------------------------
 \section{Implementation}
 \subsection{Power detection/Square-law detector}
 \begin{frame}
-\frametitle{Implementation of Square-law detector}
+\frametitle{Implementation}
 \begin{block}{Implementing a TPR}
 The SDR is able to implement a total power radiometer, but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal power.  For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
 
@@ -211,7 +227,7 @@ I^2+Q^2 = P_{out}
 \end{frame}
 \subsection{IIR as an integrator}
 \begin{frame}
-\frametitle{IIR as an integrator}
+\frametitle{Implementation}
 \begin{block}{IIR and RC filter}
 It can be seen that an IIR filter can have the same frequency response as we would expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
 \end{block}
@@ -219,7 +235,7 @@ It can be seen that an IIR filter can have the same frequency response as we wou
 
 \subsection{GNURadio Blocks}
 \begin{frame}
-\frametitle{Basic GNURadio Blocks}
+\frametitle{Implementation}
 \begin{block}{GRC}
 Blah blah blah, talk about square law block and IIR block, plus others, insert image of block diagram
 \end{block}
@@ -240,10 +256,13 @@ blah blah blah, talk about the wxGUI we use to control the N200 and show a scree
 blah blah blah show how we display the information and data and take a screen shot of the displays
 \end{block}
 \end{frame}
-
+%-----------------------------
+\section{Experimental Setup}
+%-----------------------------
 \section{Performance}
 \subsection{Sensitivity}
 \begin{frame}
+\frametitle{Performance}
 \begin{block}{Sensitivity}
 The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T. 
 
@@ -253,19 +272,30 @@ NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
 \end{block}
 \end{frame}
 \subsection{Accuracy}
+\begin{frame}
+\frametitle{Performance}
+\begin{block}{Accuracy}
+blah blah blah
+\end{block}
+\end{frame}
 
-\section{Comparison}
-\subsection{SDR vs Traditional}
+%-------------------------------
 
-\subsection{SDR vs ISU}
-
-\section{Testing and Verification}
-\subsection{Rational}
-
-\subsection{Liquid Nitrogen Test setup}
-
-\subsection{Results from LN2 Test}
-
+\section{Results from LN2 Test}
+\begin{frame}
+\frametitle{LN2 Tests}
+\begin{block}{Results}
+blah blah blah talk about LN2 test on this slide
+\end{block}
+\end{frame}
+%---------------------------------
+\section{Conclusion}
+\begin{frame}
+\frametitle{Conclusion}
+\begin{block}{Final Thoughts}
+In this thesis we have shown that an off the shelf SDR can be used to perform as a radiometer.  Using a SDR has several advantages such as a more flexible system and can result in a less expensive system.  Since a SDR offers high flexibility, changes to the system can be done very quickly and helps in future proofing the system.  
+\end{block}
+\end{frame}
 \section{Future Work}
 \begin{frame}
 \frametitle{Future Work}
@@ -281,13 +311,6 @@ NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
 \end{block}
 \end{frame}
 \note<2>[item]{this is a test note}
-\section{Conclusion}
-\begin{frame}
-\frametitle{Conclusion}
-\begin{block}{Final Thoughts}
-In this thesis we have shown that an off the shelf SDR can be used to perform as a radiometer.  Using a SDR has several advantages such as a more flexible system and can result in a less expensive system.  Since a SDR offers high flexibility, changes to the system can be done very quickly and helps in future proofing the system.  
-\end{block}
-\end{frame}
 
 \section{References}
 % Beamer does not support BibTeX so references must be inserted manually as below
