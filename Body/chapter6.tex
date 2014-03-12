@@ -1,17 +1,20 @@
 % Chapter 6 from the standard thesis template
 %  Conclusions and Future work
-\chapter{Conclusion and Future work}
+\chapter{Conclusion and Future work} 
+
+\section{Conclusion}
+In this thesis we have shown that an off the shelf SDR can be used to perform as a radiometer.  Using a SDR has several advantages such as a more flexible system and can result in a less expensive system.  Since a SDR offers high flexibility, changes to the system can be done very quickly and helps in future proofing the system.  
 
 \section{Future work}
 The main purpose of this research is to demonstrate and prove that an off the shelf software defined radio is capable of operating like a radiometer and can do so within the same or better specifications that are seen in most radiometers today.  To do that, we used a very basic radiometer setup and configured our SDR to behave as a single input radiometer.  It was also assumed that the input from the RF front end of the radiometer was stable, which in our case was accomplished by stabilizing the temperature of the active components in the RF Front end.
 
 However, this temperature stabilization requires extra weight and bulk to be added to the radiometer.  In the application that the ISU radiometer was designed for, this was not a major drawback to the system.  However other applications may require a system that does not have this type of temperature stabilization.  For those type of systems, other radiometers use different methods to account for and adjust for fluctuations in the RF front end. 
 
-\subsection{Improvements to the ISU radiometer}
+%\subsection{Improvements to the ISU radiometer}
 
-Most of the work done with this thesis used much of the existing RF hardware that was already on the ISU radiometer.  Improvements to LNAs, especially those in the GHz and above range, have been able to reduce noise figures while still keeping relatively high gains.  It would be advantageous to reconsider the RF chain while keeping the SDR in mind for the design.  Since the SDR that we used has some gain, which can be adjusted, it may be possible to reduce some of the gain that the ISU radiometer provides. This may help in the overall system performance.  In addition, by removing some things such as the filters that are used with the ISU radiometer, we can now make the system more frequency agile.  Although use of the 1.4 GHz spectrum is ideal for most remote sensing tasks, removing these restrictions would further enhance the functionality of the radiometer by being able to look at other frequencies.  This can also aid in the radiometer needing to shift around to avoid possible interference as well.  
+%Most of the work done with this thesis used much of the existing RF hardware that was already on the ISU radiometer.  Improvements to LNAs, especially those in the GHz and above range, have been able to reduce noise figures while still keeping relatively high gains.  It would be advantageous to reconsider the RF chain while keeping the SDR in mind for the design.  Since the SDR that we used has some gain, which can be adjusted, it may be possible to reduce some of the gain that the ISU radiometer provides. This may help in the overall system performance.  In addition, by removing some things such as the filters that are used with the ISU radiometer, we can now make the system more frequency agile.  Although use of the 1.4 GHz spectrum is ideal for most remote sensing tasks, removing these restrictions would further enhance the functionality of the radiometer by being able to look at other frequencies.  This can also aid in the radiometer needing to shift around to avoid possible interference as well.  
 
-There also needs to be additional improvements to the support systems to the ISU radiometer if it will continue to be the main radiometer for remote sensing.  Currently, the system to control the thermal properties is out-dated and does not work reliably in terms of being able to set the thermal temperature.  There is also now additional "dead weight" as there is equipment currently in the ISU radiometer that can be removed once the SDR system has been fully integrated into the ISU radiometer. 
+%There also needs to be additional improvements to the support systems to the ISU radiometer if it will continue to be the main radiometer for remote sensing.  Currently, the system to control the thermal properties is out-dated and does not work reliably in terms of being able to set the thermal temperature.  There is also now additional "dead weight" as there is equipment currently in the ISU radiometer that can be removed once the SDR system has been fully integrated into the ISU radiometer. 
 
 \subsection{Improving on the FPGA firmware}
 
@@ -23,7 +26,4 @@ One such method is to correlate the information with another input from the ante
 \subsection{Noise injection}
 Another method to stabilize the signal is to inject the signal with a known noise diode as a reference point.  The current ISU radiometer does this by turning on and off a noise diode source and injecting this noise in the RF front end.  
 
-Another method that can be explored is using a simulated noise source which is then done by the software instead of using a hardware based source.  This has two advantages; one it eliminates the need for additional hardware and two we now have control over the noise source and are able to change the amplitude if needed.  
-
-\section{Conclusion}
-In this thesis we have shown that an off the shelf SDR can be used to perform as a radiometer.  Using a SDR has several advantages such as a more flexible system and can result in a less expensive system.  Since a SDR offers high flexibility, changes to the system can be done very quickly and helps in future proofing the system.  
+Another method that can be explored is using a simulated noise source which is then done by the software instead of using a hardware based source.  This has two advantages; one it eliminates the need for additional hardware and two we now have control over the noise source and are able to change the amplitude if needed.
