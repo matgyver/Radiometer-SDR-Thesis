@@ -49,7 +49,7 @@ However, since we do not have an ideal radiometer, we have another key component
 
 As it can be seen, this additional noise is added to the noise coming from the antenna source.  Therefore T$_{N}$ is added to T$_{A}$ and our final equation for the power measured is shown in equation~\ref{eq:final_power}.  
 
-\begin{equation} \label{eq:final_power}
+\begin{equation} \label{eq:final_power_1}
 P=k*\beta*G*(T_{A}+T_{N})
 \end{equation}
 
@@ -94,7 +94,7 @@ To begin with, we look at what an analog RC filter looks like.
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=\textwidth]{Images/rc-circuit.png}
+\includegraphics[width=10cm]{Images/rc-circuit.png}
 \isucaption{A simple RC circuit}
 \label{rc_circuit}
 \end{figure}
@@ -247,7 +247,7 @@ GNURadio was selected as it is an open source software platform.  GNURadio is li
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics{Images/N200_radiometer_grc.png}
+\includegraphics[width=17cm]{Images/N200_radiometer_grc.png}
 \isucaption{Screenshot of the GNURadio block editor}
 \label{N200_GRC}
 \end{figure}
