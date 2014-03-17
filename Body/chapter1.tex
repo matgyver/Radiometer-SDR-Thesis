@@ -35,7 +35,15 @@ Although a Software Defined Radio uses software to do the bulk of the signal pro
 
 \textbf{N200 SDR} The equipment that was selected for researching into this topic was the Ettus Research Group N200 SDR.  This SDR uses daughter boards as the RF front end to the SDR and up to two daughter boards may be installed into a N200.  This is an important consideration as one of the requirements is to be able to look at both the V-polarization and the H-polarization signal coming from the antenna.  This allows us to correlate the signal and other signal analysis can also be done.  Another important reason the N200 was selected was due to the fact that it can handle up to 50 MHz of bandwidth to the computer.  This means that it is very possible to have two receive cards that can stream up to 25 MHz bandwidth each.  
 
-The N200 utilizes a flexible architecture for a variety of RF interface systems based on the frequency range desired and if receive and/or transmission is needed.  These daughter boards directly receive the RF signal and then outputs the analog I and Q signals that are then sampled by the N200 A/D converter for reception or receives the I and Q values from the N200 D/A converter for transmission.  
+The N200 utilizes a flexible architecture for a variety of RF interface systems based on the frequency range desired and if receive and/or transmission is needed.  These daughter boards directly receive the RF signal and then outputs the analog I and Q signals that are then sampled by the N200 A/D converter for reception or receives the I and Q values from the N200 D/A converter for transmission. 
+
+ {\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=14cm]{Images/n200_block_edited}
+\isucaption{Block diagram of the N200 SDR}
+\label{N200_block}
+\end{figure}
+}
 
 The daughter board selected was the DBSRX2 card.  This card is a receive only card that operates between 800 MHz and 2.4 GHz and would thus work in the 1.4 GHz band we are interested in.  The DBSRX2 also has built in amplification that is adjustable through software.
 
