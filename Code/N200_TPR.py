@@ -4,10 +4,11 @@
 # Title: Total Power Radiometer - N200
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR
-# Generated: Sun Mar 23 00:54:34 2014
+# Generated: Sun Mar 23 01:10:25 2014
 ##################################################
 
 from datetime import datetime
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import filter
 from gnuradio import gr
@@ -351,22 +352,22 @@ class N200_TPR(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._idecln_text_box, 1, 2, 1, 1)
-        self.gr_multiply_const_vxx_1 = gr.multiply_const_vff((calib_1, ))
-        self.gr_multiply_const_vxx_0 = gr.multiply_const_vff((dc_gain, ))
-        self.gr_keep_one_in_n_3 = gr.keep_one_in_n(gr.sizeof_float*1, int(det_rate/file_rate))
-        self.gr_keep_one_in_n_2 = gr.keep_one_in_n(gr.sizeof_float*1, int(det_rate/scope_rate))
-        self.gr_keep_one_in_n_1 = gr.keep_one_in_n(gr.sizeof_float*fftsize, fftrate)
-        self.gr_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_float*1, samp_rate/det_rate)
-        self.gr_file_sink_3 = gr.file_sink(gr.sizeof_gr_complex*1, prefix+"iq_raw" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
-        self.gr_file_sink_3.set_unbuffered(False)
-        self.gr_file_sink_2 = gr.file_sink(gr.sizeof_float*1, recfile_kelvin)
-        self.gr_file_sink_2.set_unbuffered(True)
-        self.gr_file_sink_1 = gr.file_sink(gr.sizeof_float*fftsize, spec_data_fifo)
-        self.gr_file_sink_1.set_unbuffered(True)
-        self.gr_file_sink_0 = gr.file_sink(gr.sizeof_float*1, recfile_tpr)
-        self.gr_file_sink_0.set_unbuffered(True)
-        self.gr_complex_to_mag_squared_0 = gr.complex_to_mag_squared(1)
-        self.gr_add_const_vxx_0 = gr.add_const_vff((calib_2, ))
+        self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((calib_1, ))
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((dc_gain, ))
+        self.blocks_keep_one_in_n_3 = gr.keep_one_in_n(gr.sizeof_float*1, samp_rate/det_rate)
+        self.blocks_keep_one_in_n_2 = gr.keep_one_in_n(gr.sizeof_float*1, int(det_rate/scope_rate))
+        self.blocks_keep_one_in_n_1 = gr.keep_one_in_n(gr.sizeof_float*fftsize, fftrate)
+        self.blocks_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_float*1, int(det_rate/file_rate))
+        self.blocks_file_sink_3 = gr.file_sink(gr.sizeof_gr_complex*1, prefix+"iq_raw" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+        self.blocks_file_sink_3.set_unbuffered(False)
+        self.blocks_file_sink_2 = gr.file_sink(gr.sizeof_float*1, recfile_kelvin)
+        self.blocks_file_sink_2.set_unbuffered(True)
+        self.blocks_file_sink_1 = gr.file_sink(gr.sizeof_float*fftsize, spec_data_fifo)
+        self.blocks_file_sink_1.set_unbuffered(True)
+        self.blocks_file_sink_0 = gr.file_sink(gr.sizeof_float*1, recfile_tpr)
+        self.blocks_file_sink_0.set_unbuffered(True)
+        self.blocks_complex_to_mag_squared_0 = gr.complex_to_mag_squared(1)
+        self.blocks_add_const_vxx_0 = gr.add_const_vff((calib_2, ))
         self.blks2_valve_2 = grc_blks2.valve(item_size=gr.sizeof_gr_complex*1, open=bool(rec_button_iq))
         self.blks2_valve_1 = grc_blks2.valve(item_size=gr.sizeof_float*1, open=bool(0))
         self.blks2_valve_0 = grc_blks2.valve(item_size=gr.sizeof_float*1, open=bool(rec_button_tpr))
@@ -383,26 +384,26 @@ class N200_TPR(grc_wxgui.top_block_gui):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.gr_keep_one_in_n_0, 0), (self.gr_multiply_const_vxx_0, 0))
-        self.connect((self.gr_keep_one_in_n_1, 0), (self.gr_file_sink_1, 0))
-        self.connect((self.gr_keep_one_in_n_2, 0), (self.wxgui_scopesink2_0, 0))
-        self.connect((self.gr_multiply_const_vxx_0, 0), (self.gr_keep_one_in_n_2, 0))
-        self.connect((self.gr_multiply_const_vxx_0, 0), (self.gr_keep_one_in_n_3, 0))
-        self.connect((self.gr_keep_one_in_n_3, 0), (self.gr_multiply_const_vxx_1, 0))
-        self.connect((self.gr_add_const_vxx_0, 0), (self.wxgui_numbersink2_0, 0))
-        self.connect((self.gr_multiply_const_vxx_1, 0), (self.gr_add_const_vxx_0, 0))
-        self.connect((self.gr_keep_one_in_n_3, 0), (self.blks2_valve_0, 0))
-        self.connect((self.blks2_valve_0, 0), (self.gr_file_sink_0, 0))
-        self.connect((self.gr_add_const_vxx_0, 0), (self.blks2_valve_1, 0))
-        self.connect((self.blks2_valve_1, 0), (self.gr_file_sink_2, 0))
+        self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_file_sink_1, 0))
+        self.connect((self.blocks_keep_one_in_n_2, 0), (self.wxgui_scopesink2_0, 0))
+        self.connect((self.blocks_add_const_vxx_0, 0), (self.wxgui_numbersink2_0, 0))
+        self.connect((self.blocks_keep_one_in_n_0, 0), (self.blks2_valve_0, 0))
+        self.connect((self.blks2_valve_0, 0), (self.blocks_file_sink_0, 0))
+        self.connect((self.blocks_add_const_vxx_0, 0), (self.blks2_valve_1, 0))
+        self.connect((self.blks2_valve_1, 0), (self.blocks_file_sink_2, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.blks2_valve_2, 0))
-        self.connect((self.blks2_valve_2, 0), (self.gr_file_sink_3, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.gr_complex_to_mag_squared_0, 0))
+        self.connect((self.blks2_valve_2, 0), (self.blocks_file_sink_3, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_complex_to_mag_squared_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.wxgui_fftsink2_0, 0))
-        self.connect((self.gr_complex_to_mag_squared_0, 0), (self.single_pole_iir_filter_xx_0, 0))
-        self.connect((self.single_pole_iir_filter_xx_0, 0), (self.gr_keep_one_in_n_0, 0))
-        self.connect((self.logpwrfft_x_0, 0), (self.gr_keep_one_in_n_1, 0))
+        self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.single_pole_iir_filter_xx_0, 0))
+        self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_3, 0))
+        self.connect((self.logpwrfft_x_0, 0), (self.blocks_keep_one_in_n_1, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.logpwrfft_x_0, 0))
+        self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_2, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_0, 0))
+        self.connect((self.blocks_keep_one_in_n_0, 0), (self.blocks_multiply_const_vxx_1, 0))
+        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_add_const_vxx_0, 0))
 
 
 # QT sink close method reimplementation
@@ -512,18 +513,18 @@ class N200_TPR(grc_wxgui.top_block_gui):
         self.samp_rate = samp_rate
         self.set_fftrate(int(self.samp_rate/self.fftsize))
         self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
-        self.gr_keep_one_in_n_0.set_n(self.samp_rate/self.det_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
+        self.blocks_keep_one_in_n_3.set_n(self.samp_rate/self.det_rate)
 
     def get_prefix(self):
         return self.prefix
 
     def set_prefix(self, prefix):
         self.prefix = prefix
-        self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.set_recfile_tpr(self.prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
-        self.gr_file_sink_3.open(self.prefix+"iq_raw" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+        self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+        self.blocks_file_sink_3.open(self.prefix+"iq_raw" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
 
     def get_variable_static_text_0_0_0_0(self):
         return self.variable_static_text_0_0_0_0
@@ -558,7 +559,7 @@ class N200_TPR(grc_wxgui.top_block_gui):
 
     def set_spec_data_fifo(self, spec_data_fifo):
         self.spec_data_fifo = spec_data_fifo
-        self.gr_file_sink_1.open(self.spec_data_fifo)
+        self.blocks_file_sink_1.open(self.spec_data_fifo)
 
     def get_spavg(self):
         return self.spavg
@@ -575,21 +576,21 @@ class N200_TPR(grc_wxgui.top_block_gui):
     def set_scope_rate(self, scope_rate):
         self.scope_rate = scope_rate
         self.wxgui_scopesink2_0.set_sample_rate(self.scope_rate)
-        self.gr_keep_one_in_n_2.set_n(int(self.det_rate/self.scope_rate))
+        self.blocks_keep_one_in_n_2.set_n(int(self.det_rate/self.scope_rate))
 
     def get_recfile_tpr(self):
         return self.recfile_tpr
 
     def set_recfile_tpr(self, recfile_tpr):
         self.recfile_tpr = recfile_tpr
-        self.gr_file_sink_0.open(self.recfile_tpr)
+        self.blocks_file_sink_0.open(self.recfile_tpr)
 
     def get_recfile_kelvin(self):
         return self.recfile_kelvin
 
     def set_recfile_kelvin(self, recfile_kelvin):
         self.recfile_kelvin = recfile_kelvin
-        self.gr_file_sink_2.open(self.recfile_kelvin)
+        self.blocks_file_sink_2.open(self.recfile_kelvin)
 
     def get_rec_button_tpr(self):
         return self.rec_button_tpr
@@ -654,24 +655,24 @@ class N200_TPR(grc_wxgui.top_block_gui):
 
     def set_file_rate(self, file_rate):
         self.file_rate = file_rate
-        self.gr_keep_one_in_n_3.set_n(int(self.det_rate/self.file_rate))
+        self.blocks_keep_one_in_n_0.set_n(int(self.det_rate/self.file_rate))
 
     def get_fftrate(self):
         return self.fftrate
 
     def set_fftrate(self, fftrate):
         self.fftrate = fftrate
-        self.gr_keep_one_in_n_1.set_n(self.fftrate)
         self.logpwrfft_x_0.set_avg_alpha(1.0/float(self.spavg*self.fftrate))
+        self.blocks_keep_one_in_n_1.set_n(self.fftrate)
 
     def get_det_rate(self):
         return self.det_rate
 
     def set_det_rate(self, det_rate):
         self.det_rate = det_rate
-        self.gr_keep_one_in_n_3.set_n(int(self.det_rate/self.file_rate))
-        self.gr_keep_one_in_n_2.set_n(int(self.det_rate/self.scope_rate))
-        self.gr_keep_one_in_n_0.set_n(self.samp_rate/self.det_rate)
+        self.blocks_keep_one_in_n_0.set_n(int(self.det_rate/self.file_rate))
+        self.blocks_keep_one_in_n_2.set_n(int(self.det_rate/self.scope_rate))
+        self.blocks_keep_one_in_n_3.set_n(self.samp_rate/self.det_rate)
 
     def get_dc_gain(self):
         return self.dc_gain
@@ -679,23 +680,23 @@ class N200_TPR(grc_wxgui.top_block_gui):
     def set_dc_gain(self, dc_gain):
         self.dc_gain = dc_gain
         self._dc_gain_chooser.set_value(self.dc_gain)
-        self.gr_multiply_const_vxx_0.set_k((self.dc_gain, ))
+        self.blocks_multiply_const_vxx_0.set_k((self.dc_gain, ))
 
     def get_calib_2(self):
         return self.calib_2
 
     def set_calib_2(self, calib_2):
         self.calib_2 = calib_2
-        self.gr_add_const_vxx_0.set_k((self.calib_2, ))
         self._calib_2_text_box.set_value(self.calib_2)
+        self.blocks_add_const_vxx_0.set_k((self.calib_2, ))
 
     def get_calib_1(self):
         return self.calib_1
 
     def set_calib_1(self, calib_1):
         self.calib_1 = calib_1
-        self.gr_multiply_const_vxx_1.set_k((self.calib_1, ))
         self._calib_1_text_box.set_value(self.calib_1)
+        self.blocks_multiply_const_vxx_1.set_k((self.calib_1, ))
 
     def get_add_noise(self):
         return self.add_noise
