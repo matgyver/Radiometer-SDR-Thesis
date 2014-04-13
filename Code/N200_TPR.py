@@ -4,7 +4,7 @@
 # Title: Total Power Radiometer - N200
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR
-# Generated: Sun Mar 23 11:03:03 2014
+# Generated: Fri Apr 11 14:31:11 2014
 ##################################################
 
 from datetime import datetime
@@ -30,7 +30,7 @@ import wx
 
 class N200_TPR(grc_wxgui.top_block_gui):
 
-    def __init__(self, dcg=1, devid="addr=192.168.10.2", srate=10.0e6, spa=1, rxant="", tpint=2.0, rfgain=0.0, frequency=1.406e9, decln=-28.0, subdev="A:0", maxg=50, fftsize=8192, clock=100.0e6):
+    def __init__(self, tpint=2.0, dcg=1, rfgain=0.0, frequency=1.406e9, devid="addr=192.168.10.2", decln=-28.0, srate=10.0e6, clock=100.0e6, fftsize=8192, maxg=50, spa=1, subdev="A:0", rxant=""):
         grc_wxgui.top_block_gui.__init__(self, title="Total Power Radiometer - N200")
         _icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
         self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
@@ -38,19 +38,19 @@ class N200_TPR(grc_wxgui.top_block_gui):
         ##################################################
         # Parameters
         ##################################################
-        self.dcg = dcg
-        self.devid = devid
-        self.srate = srate
-        self.spa = spa
-        self.rxant = rxant
         self.tpint = tpint
+        self.dcg = dcg
         self.rfgain = rfgain
         self.frequency = frequency
+        self.devid = devid
         self.decln = decln
-        self.subdev = subdev
-        self.maxg = maxg
-        self.fftsize = fftsize
+        self.srate = srate
         self.clock = clock
+        self.fftsize = fftsize
+        self.maxg = maxg
+        self.spa = spa
+        self.subdev = subdev
+        self.rxant = rxant
 
         ##################################################
         # Variables
@@ -64,7 +64,7 @@ class N200_TPR(grc_wxgui.top_block_gui):
         self.variable_static_text_0 = variable_static_text_0 = israte
         self.spec_data_fifo = spec_data_fifo = "spectrum_" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
         self.spavg = spavg = int(spa)
-        self.scope_rate = scope_rate = 2.0
+        self.scope_rate = scope_rate = 2
         self.recfile_tpr = recfile_tpr = prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
         self.recfile_kelvin = recfile_kelvin = prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
         self.rec_button_tpr = rec_button_tpr = 1
@@ -221,21 +221,37 @@ class N200_TPR(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._calib_1_text_box, 3, 0, 1, 1)
-        self.wxgui_scopesink2_0 = scopesink2.scope_sink_f(
+        self.wxgui_scopesink2_2 = scopesink2.scope_sink_f(
         	self.Main.GetPage(0).GetWin(),
         	title="Total Power",
-        	sample_rate=scope_rate,
+        	sample_rate=2,
         	v_scale=0,
         	v_offset=0,
-        	t_scale=450,
+        	t_scale=0,
         	ac_couple=False,
         	xy_mode=False,
         	num_inputs=1,
         	trig_mode=wxgui.TRIG_MODE_AUTO,
-        	y_axis_label="Power Level",
-        	size=(800,300),
+        	y_axis_label="power level",
         )
-        self.Main.GetPage(0).Add(self.wxgui_scopesink2_0.win)
+        self.Main.GetPage(0).Add(self.wxgui_scopesink2_2.win)
+        self.wxgui_numbersink2_0_0 = numbersink2.number_sink_f(
+        	self.Main.GetPage(2).GetWin(),
+        	unit="",
+        	minval=0,
+        	maxval=.2,
+        	factor=1,
+        	decimal_places=6,
+        	ref_level=0,
+        	sample_rate=scope_rate,
+        	number_rate=15,
+        	average=False,
+        	avg_alpha=None,
+        	label="Raw Power level",
+        	peak_hold=False,
+        	show_gauge=True,
+        )
+        self.Main.GetPage(2).Add(self.wxgui_numbersink2_0_0.win)
         self.wxgui_numbersink2_0 = numbersink2.number_sink_f(
         	self.Main.GetPage(2).GetWin(),
         	unit="Kelvin",
@@ -248,7 +264,7 @@ class N200_TPR(grc_wxgui.top_block_gui):
         	number_rate=15,
         	average=False,
         	avg_alpha=None,
-        	label="Number Plot",
+        	label="Calibrated Temperature",
         	peak_hold=False,
         	show_gauge=True,
         )
@@ -354,7 +370,6 @@ class N200_TPR(grc_wxgui.top_block_gui):
         self.Main.GetPage(0).GridAdd(self._idecln_text_box, 1, 2, 1, 1)
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((calib_1, ))
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((dc_gain, ))
-        self.blocks_keep_one_in_n_5 = blocks.keep_one_in_n(gr.sizeof_float*1, int(det_rate/scope_rate))
         self.blocks_keep_one_in_n_4 = blocks.keep_one_in_n(gr.sizeof_float*1, samp_rate/det_rate)
         self.blocks_keep_one_in_n_3 = blocks.keep_one_in_n(gr.sizeof_float*fftsize, fftrate)
         self.blocks_keep_one_in_n_1 = blocks.keep_one_in_n(gr.sizeof_float*1, int(det_rate/file_rate))
@@ -384,63 +399,29 @@ class N200_TPR(grc_wxgui.top_block_gui):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.uhd_usrp_source_0, 0), (self.blks2_valve_2, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.wxgui_fftsink2_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.logpwrfft_x_0, 0))
-        self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_4, 0))
-        self.connect((self.blocks_keep_one_in_n_4, 0), (self.blocks_multiply_const_vxx_0, 0))
-        self.connect((self.logpwrfft_x_0, 0), (self.blocks_keep_one_in_n_3, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_5, 0))
-        self.connect((self.blocks_keep_one_in_n_5, 0), (self.wxgui_scopesink2_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_1, 0))
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.blks2_valve_0, 0))
-        self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_multiply_const_vxx_1, 0))
         self.connect((self.blks2_valve_0, 0), (self.blocks_file_sink_4, 0))
-        self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_file_sink_5, 0))
         self.connect((self.blks2_valve_1, 0), (self.blocks_file_sink_0, 0))
-        self.connect((self.blks2_valve_2, 0), (self.blocks_file_sink_1, 0))
-        self.connect((self.blocks_complex_to_mag_squared_1, 0), (self.single_pole_iir_filter_xx_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_complex_to_mag_squared_1, 0))
         self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_add_const_vxx_1, 0))
         self.connect((self.blocks_add_const_vxx_1, 0), (self.wxgui_numbersink2_0, 0))
         self.connect((self.blocks_add_const_vxx_1, 0), (self.blks2_valve_1, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_numbersink2_0_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_scopesink2_2, 0))
+        self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_multiply_const_vxx_1, 0))
+        self.connect((self.blocks_keep_one_in_n_4, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_4, 0))
+        self.connect((self.blks2_valve_2, 0), (self.blocks_file_sink_1, 0))
+        self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_file_sink_5, 0))
+        self.connect((self.logpwrfft_x_0, 0), (self.blocks_keep_one_in_n_3, 0))
+        self.connect((self.blocks_complex_to_mag_squared_1, 0), (self.single_pole_iir_filter_xx_0, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.blks2_valve_2, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_complex_to_mag_squared_1, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.logpwrfft_x_0, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.wxgui_fftsink2_0, 0))
 
 
 # QT sink close method reimplementation
-
-    def get_dcg(self):
-        return self.dcg
-
-    def set_dcg(self, dcg):
-        self.dcg = dcg
-        self.set_dc_gain(int(self.dcg))
-
-    def get_devid(self):
-        return self.devid
-
-    def set_devid(self, devid):
-        self.devid = devid
-        self.set_variable_static_text_0_0_0(self.devid)
-
-    def get_srate(self):
-        return self.srate
-
-    def set_srate(self, srate):
-        self.srate = srate
-        self.set_israte(self.srate)
-
-    def get_spa(self):
-        return self.spa
-
-    def set_spa(self, spa):
-        self.spa = spa
-        self.set_spavg(int(self.spa))
-
-    def get_rxant(self):
-        return self.rxant
-
-    def set_rxant(self, rxant):
-        self.rxant = rxant
 
     def get_tpint(self):
         return self.tpint
@@ -448,6 +429,13 @@ class N200_TPR(grc_wxgui.top_block_gui):
     def set_tpint(self, tpint):
         self.tpint = tpint
         self.set_integ(self.tpint)
+
+    def get_dcg(self):
+        return self.dcg
+
+    def set_dcg(self, dcg):
+        self.dcg = dcg
+        self.set_dc_gain(int(self.dcg))
 
     def get_rfgain(self):
         return self.rfgain
@@ -462,6 +450,13 @@ class N200_TPR(grc_wxgui.top_block_gui):
         self.frequency = frequency
         self.set_freq(self.frequency)
 
+    def get_devid(self):
+        return self.devid
+
+    def set_devid(self, devid):
+        self.devid = devid
+        self.set_variable_static_text_0_0_0(self.devid)
+
     def get_decln(self):
         return self.decln
 
@@ -469,18 +464,19 @@ class N200_TPR(grc_wxgui.top_block_gui):
         self.decln = decln
         self.set_idecln(self.decln)
 
-    def get_subdev(self):
-        return self.subdev
+    def get_srate(self):
+        return self.srate
 
-    def set_subdev(self, subdev):
-        self.subdev = subdev
-        self.set_variable_static_text_0_0(self.subdev)
+    def set_srate(self, srate):
+        self.srate = srate
+        self.set_israte(self.srate)
 
-    def get_maxg(self):
-        return self.maxg
+    def get_clock(self):
+        return self.clock
 
-    def set_maxg(self, maxg):
-        self.maxg = maxg
+    def set_clock(self, clock):
+        self.clock = clock
+        self.set_variable_static_text_0_0_0_0(self.clock)
 
     def get_fftsize(self):
         return self.fftsize
@@ -489,12 +485,31 @@ class N200_TPR(grc_wxgui.top_block_gui):
         self.fftsize = fftsize
         self.set_fftrate(int(self.samp_rate/self.fftsize))
 
-    def get_clock(self):
-        return self.clock
+    def get_maxg(self):
+        return self.maxg
 
-    def set_clock(self, clock):
-        self.clock = clock
-        self.set_variable_static_text_0_0_0_0(self.clock)
+    def set_maxg(self, maxg):
+        self.maxg = maxg
+
+    def get_spa(self):
+        return self.spa
+
+    def set_spa(self, spa):
+        self.spa = spa
+        self.set_spavg(int(self.spa))
+
+    def get_subdev(self):
+        return self.subdev
+
+    def set_subdev(self, subdev):
+        self.subdev = subdev
+        self.set_variable_static_text_0_0(self.subdev)
+
+    def get_rxant(self):
+        return self.rxant
+
+    def set_rxant(self, rxant):
+        self.rxant = rxant
 
     def get_israte(self):
         return self.israte
@@ -512,10 +527,10 @@ class N200_TPR(grc_wxgui.top_block_gui):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.set_fftrate(int(self.samp_rate/self.fftsize))
-        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
-        self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
         self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
+        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+        self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
 
     def get_prefix(self):
         return self.prefix
@@ -575,8 +590,6 @@ class N200_TPR(grc_wxgui.top_block_gui):
 
     def set_scope_rate(self, scope_rate):
         self.scope_rate = scope_rate
-        self.blocks_keep_one_in_n_5.set_n(int(self.det_rate/self.scope_rate))
-        self.wxgui_scopesink2_0.set_sample_rate(self.scope_rate)
 
     def get_recfile_tpr(self):
         return self.recfile_tpr
@@ -597,8 +610,8 @@ class N200_TPR(grc_wxgui.top_block_gui):
 
     def set_rec_button_tpr(self, rec_button_tpr):
         self.rec_button_tpr = rec_button_tpr
-        self._rec_button_tpr_chooser.set_value(self.rec_button_tpr)
         self.blks2_valve_0.set_open(bool(self.rec_button_tpr))
+        self._rec_button_tpr_chooser.set_value(self.rec_button_tpr)
 
     def get_rec_button_iq(self):
         return self.rec_button_iq
@@ -662,17 +675,16 @@ class N200_TPR(grc_wxgui.top_block_gui):
 
     def set_fftrate(self, fftrate):
         self.fftrate = fftrate
-        self.logpwrfft_x_0.set_avg_alpha(1.0/float(self.spavg*self.fftrate))
         self.blocks_keep_one_in_n_3.set_n(self.fftrate)
+        self.logpwrfft_x_0.set_avg_alpha(1.0/float(self.spavg*self.fftrate))
 
     def get_det_rate(self):
         return self.det_rate
 
     def set_det_rate(self, det_rate):
         self.det_rate = det_rate
-        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
-        self.blocks_keep_one_in_n_5.set_n(int(self.det_rate/self.scope_rate))
         self.blocks_keep_one_in_n_1.set_n(int(self.det_rate/self.file_rate))
+        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
 
     def get_dc_gain(self):
         return self.dc_gain
@@ -715,34 +727,34 @@ if __name__ == '__main__':
         except:
             print "Warning: failed to XInitThreads()"
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    parser.add_option("", "--dcg", dest="dcg", type="eng_float", default=eng_notation.num_to_str(1),
-        help="Set DC (post-detector) gain [default=%default]")
-    parser.add_option("", "--devid", dest="devid", type="string", default="addr=192.168.10.2",
-        help="Set USRP Device ID [default=%default]")
-    parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(10.0e6),
-        help="Set Sample Rate [default=%default]")
-    parser.add_option("", "--spa", dest="spa", type="eng_float", default=eng_notation.num_to_str(1),
-        help="Set Spectral Averaging Constant [default=%default]")
-    parser.add_option("", "--rxant", dest="rxant", type="string", default="",
-        help="Set RX Antenna selection [default=%default]")
     parser.add_option("", "--tpint", dest="tpint", type="eng_float", default=eng_notation.num_to_str(2.0),
         help="Set Integration Time [default=%default]")
+    parser.add_option("", "--dcg", dest="dcg", type="eng_float", default=eng_notation.num_to_str(1),
+        help="Set DC (post-detector) gain [default=%default]")
     parser.add_option("", "--rfgain", dest="rfgain", type="eng_float", default=eng_notation.num_to_str(0.0),
         help="Set Gain of RF Front-End [default=%default]")
     parser.add_option("", "--frequency", dest="frequency", type="eng_float", default=eng_notation.num_to_str(1.406e9),
         help="Set Center Frequency [default=%default]")
+    parser.add_option("", "--devid", dest="devid", type="string", default="addr=192.168.10.2",
+        help="Set USRP Device ID [default=%default]")
     parser.add_option("", "--decln", dest="decln", type="eng_float", default=eng_notation.num_to_str(-28.0),
         help="Set Declination [default=%default]")
-    parser.add_option("", "--subdev", dest="subdev", type="string", default="A:0",
-        help="Set USRP Subdevice ID [default=%default]")
-    parser.add_option("", "--maxg", dest="maxg", type="intx", default=50,
-        help="Set maxg [default=%default]")
-    parser.add_option("", "--fftsize", dest="fftsize", type="intx", default=8192,
-        help="Set fftsize [default=%default]")
+    parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(10.0e6),
+        help="Set Sample Rate [default=%default]")
     parser.add_option("", "--clock", dest="clock", type="eng_float", default=eng_notation.num_to_str(100.0e6),
         help="Set Clock rate [default=%default]")
+    parser.add_option("", "--fftsize", dest="fftsize", type="intx", default=8192,
+        help="Set fftsize [default=%default]")
+    parser.add_option("", "--maxg", dest="maxg", type="intx", default=50,
+        help="Set maxg [default=%default]")
+    parser.add_option("", "--spa", dest="spa", type="eng_float", default=eng_notation.num_to_str(1),
+        help="Set Spectral Averaging Constant [default=%default]")
+    parser.add_option("", "--subdev", dest="subdev", type="string", default="A:0",
+        help="Set USRP Subdevice ID [default=%default]")
+    parser.add_option("", "--rxant", dest="rxant", type="string", default="",
+        help="Set RX Antenna selection [default=%default]")
     (options, args) = parser.parse_args()
-    tb = N200_TPR(dcg=options.dcg, devid=options.devid, srate=options.srate, spa=options.spa, rxant=options.rxant, tpint=options.tpint, rfgain=options.rfgain, frequency=options.frequency, decln=options.decln, subdev=options.subdev, maxg=options.maxg, fftsize=options.fftsize, clock=options.clock)
+    tb = N200_TPR(tpint=options.tpint, dcg=options.dcg, rfgain=options.rfgain, frequency=options.frequency, devid=options.devid, decln=options.decln, srate=options.srate, clock=options.clock, fftsize=options.fftsize, maxg=options.maxg, spa=options.spa, subdev=options.subdev, rxant=options.rxant)
     tb.Start(True)
     tb.Wait()
 
