@@ -1,6 +1,7 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
-%Updated 4/8/2014
+%Updated 4/26/2014
+%Rev. 1.6
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -14,6 +15,11 @@
 %routine to remove all zeros.  If this is not desired (for example turning
 %on and off the recording) please comment it out.
 
+%In April I switched from a UBW32 board to a NI USB DAQ to obtain the
+%square law data.  This changed the output file from a csv file to NI's
+%TDMS binary format.  The original CSV code will remain but will be
+%commented out.
+
 %In theory, this script may also run on Octave, but the file I/O package
 %will be needed to use the file dialog box.
 
@@ -22,12 +28,12 @@ clear all;
 
 %Calibration variables based on two temperature points
 %Enter the temperatures in Kelvin
-temp1 = 293;
+temp1 = 371;
 temp2 = 77;
 
 %Enter the measured data points for temp1 and temp2
-data1 = .156;
-data2 = .104;
+data1 = .170;
+data2 = .103;
 
 %Store the values into a and b
 syms a b;
@@ -35,8 +41,11 @@ syms a b;
 %Solve our two calibration points
 y = solve(data1*a+b==temp1,data2*a+b==temp2);
 
-calibration = [y.a y.b];
+calib1 = double(y.a);
+calib2 = double(y.b);
 
+calibration = [y.a y.b];
+fprintf('Coefficient 1: %.2f Coefficent 2: %.2f \r\n',calib1, calib2);
 
 %Ask for the filename that has the TPR data from GNURadio
 gnuradio_file = uigetfile('*.*','Select the GNURadio data file');
@@ -45,6 +54,10 @@ disp('Importing Radiometer data...')
 %Ask for the filename of the Square law detector.  Comment out if not using
 %square_law = uigetfile('*.*','Select the Square_law data file');
 %disp('Importing Square Law data...')
+
+x2=load('squaredata.mat');
+b=x2.ConvertedData.Data.MeasuredData(1,4).Data;
+
 
 %Call the read_float_binary script
 gnuradio = read_float_binary(gnuradio_file);
@@ -71,14 +84,20 @@ ylabel('Calibrated Noise Temperature in K');
 
 %Plot the raw data
 figure;
+subplot(2,1,1);
 plot(gnuradio);
 title('N200 TPR Raw Data');
 xlabel('Time');
 ylabel('Raw Noise Power Data');
+subplot(2,1,2);
+plot(b);
 
 % Create title
 %title('Power data from N200');
 
+%Parse the NI TDMS file
+
+%-------------------------------------------------------
 %Now parse the Square law file which is comma delimited.
 %Comment out if not parsing square law file
 
