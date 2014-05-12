@@ -45,15 +45,31 @@ The ADL5902 outputs an analog signal that falls between 0.03 volts and 4.8 volts
 
 \subsection{Data acquisition and storage}
 
-In order to analyze the data, a method was developed to acquire the data and store it for later use.  For the N200 software defined radio, this is done automatically by the GNURadio program.  Both the complete signal and the power information is stored to a file for later analysis.  The square-law detector however outputs information as an analot voltage that is linearly proportional to the RF power measured.  This required a system that can capture the analog signal from the ADL5902 and then send the data to be stored.  This was done using a PIC32 processor, specifically the PIC32MX795F512L processor which has a 10-bit analog to digital converter built in.  To aid in rapid development of the system, a BitWhacker board purchased through Sparkfun was used.  Once the data was captured by the A/D converter, the PIC32 processor then sent this information through a RS232 port which can then be read by a computer.  The computer would then store this information to a file.  While it is certainly possible for the PIC32 to store this information to a SD card or other external memory device, the computer was used so that it would be possible to synchronize the data with the data being send from the SDR.
+In order to analyze the data, a method was developed to acquire the data and store it for later use.  For the N200 software defined radio, this is done automatically by the GNURadio program.  Both the complete signal and the power information is stored to a file for later analysis.  The square-law detector however outputs information as an analog voltage that is linearly proportional to the RF power measured.  This required a system that can capture the analog signal from the ADL5902 and then send the data to be stored.  This was accomplished by using a National Instruments USB-6009 data acquisition unit.  This unit has 8 analog inputs that can sample up to 48 ksps with a resolution of 14-bits.  This was more than adequate for our needs.  To use the USB-6009 a fairly simple Lab View program was created.  This program retrieved the information from the USB-6009 and stored the data in both Lav View's binary format and in a more human friendly ASCII format.  The USB-6009 then connects to a host computer through the USB interface.  This made obtaining the data and using device fairly straightforward to use.
 
-\subsubsection{PIC32 Micro-controller system}
+\subsubsection{Lab View Acquisition program}
 
-The PIC32MX795F512L is the processor that was selected to acquire the analog voltage the ADL5902 sends out.  This processor was chosen for the reason that it would allow for additional radiometer functions to be added to it later.  The ISU radiometer currently uses a Rabbit based micro-controller.  However, it was soon discovered that this processor was not able to handle all the tasks given to it efficiently.  A new micro-controller system was known to be needed and thus this processor was chosen to handle not only the task for of obtaining information from the square-law detector but would have plenty of room for doing other tasks needed in the ISU radiometer. 
+The Labview program was created to talk to the USB-6009 and then store the data.  In addition, it is able to display in real time the current readings coming from the USB-6009.  This was beneficial during testing of the program but is also good information to have while running an experiment.  
 
-The ISU radiometer has several analog temperature sensors and two thermal electric coolers (TEC) that also need to be monitored and controlled.  In addition, control lines are needed to control the RF switches within the radiometer as well turning on and off the noise diode source.  The TECs used in the ISU radiometer require a RS232 serial connection.  In addition, it was also known that a GPS unit would also be added.  This meant that at least 4 RS232 ports were needed including sending the data from the square-law detector.  The micro-controller would also need to monitor at least 6 analog temperature sensors that are found at various points within the ISU radiometer.  These requirements combined with the ability to add future sensors and/or tasks to the micro-controller led us to select this processor.
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/labviewGUI.png}
+\isucaption{A screenshot of the Labview GUI interface}
+\label{labviewgui}
+\end{figure}
+}
 
-For the testing that was conducted for this thesis work, the PIC32MX795F512L is setup to capture the analog signal from the square-law detector using one of the 10-bit analog to digital ports it has.  This information is then sent through one of the PIC32MX795F512L UART ports so that it can be read by the host computer.
+The Labview program uses NI's DAQ assitant which allows for quick configuration and setup for the computer to talk to a number of NI devices.  Labview also includes blocks that allows us to easily record the data to a file.  These blocks made up most of the program and resulted in a program that was quickly made.  
+
+While the USB-6009 allows up to 48,000 samples per second, we don't need such a high rate.  A rate of 1,000 samples per second was determined to provide more than enough samples of data.  With such a high rate of samples however, the resulting output will be noisy due to the natural noise found in the RF signal.  Like the software defined radio, we want to filter this noise as well to produce a smoother output.  This was accomplished using a filter block in Labview to help reduce the noise.
+
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/labview-diagram.png}
+\isucaption{A screenshot of the Labview block diagram}
+\label{labviewblock}
+\end{figure}
+}
+
+This program allowed for the data from the square law detector to be easily recorded.  Using Labview also allows us to customize the interface more to our liking and other features such as adding calibration information can also be added as well.  
 
 
 \subsection{Tests on the ADL5902}

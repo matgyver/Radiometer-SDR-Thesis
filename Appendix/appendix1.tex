@@ -28,3 +28,24 @@ This script was developed using GNURadio Companion.  This copy of the script may
 
 \code{Total Power Radiometer}{Code/N200_TPR.py}
 
+\section*{Matlab code for reading and displaying data from GNURadio}
+\lstset{
+  language=Matlab,
+  showstringspaces=false,
+  formfeed=\newpage,
+  tabsize=4,
+  commentstyle=\itshape,
+  basicstyle=\ttfamily,
+  morekeywords={models, lambda, forms}
+}
+
+\newcommand{\matlabcode}[2]{
+  \hrulefill
+  \subsection*{#1}
+  \lstinputlisting{#2}
+  \vspace{2em}
+}
+
+\newpage
+
+\matlabcode{GNURadio Parsing Code}{Code/gnuradio_parse.m}
