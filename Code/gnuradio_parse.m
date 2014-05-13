@@ -1,7 +1,11 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
-%Updated 4/26/2014
-%Rev. 1.6
+%Updated 5/12/2014
+%Rev. 1.8
+
+%Revision History
+%1.7 - Added CSV input file format.  Gave up on reading LVM
+%1.8 - Added User input box
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -26,14 +30,24 @@
 %Clear the workspace
 clear all;
 
+%User Dialog entry
+%The User input box will accecpt the calibration points from the user and
+%will output the calibration data.
+
+prompt = {'Enter calibration temp 1 (K):','Enter calibration temp 2 (K):','Enter Calibration value 1:','Enter Clibration value 2:'};
+dlg_title = 'Calibration Input';
+num_lines = 1;
+def = {'371','77','.170','.103'};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+
 %Calibration variables based on two temperature points
 %Enter the temperatures in Kelvin
-temp1 = 371;
-temp2 = 77;
+temp1 = answer(1);
+temp2 = answer(2);
 
 %Enter the measured data points for temp1 and temp2
-data1 = .170;
-data2 = .103;
+data1 = answer(3);
+data2 = answer(4);
 
 %Store the values into a and b
 syms a b;
@@ -44,6 +58,8 @@ y = solve(data1*a+b==temp1,data2*a+b==temp2);
 calib1 = double(y.a);
 calib2 = double(y.b);
 
+h = msgbox(sprintf('The calibrations points are: %f and %f',calib1,calib2));
+
 calibration = [y.a y.b];
 fprintf('Coefficient 1: %.2f Coefficent 2: %.2f \r\n',calib1, calib2);
 
@@ -52,11 +68,10 @@ gnuradio_file = uigetfile('*.*','Select the GNURadio data file');
 disp('Importing Radiometer data...')
 
 %Ask for the filename of the Square law detector.  Comment out if not using
-%square_law = uigetfile('*.*','Select the Square_law data file');
-%disp('Importing Square Law data...')
+square_law = uigetfile('*.lvm','Select the Square_law data file');
+disp('Importing Square Law data...')
 
-x2=load('squaredata.mat');
-b=x2.ConvertedData.Data.MeasuredData(1,4).Data;
+x2=csvread(square_law);
 
 
 %Call the read_float_binary script
@@ -90,7 +105,7 @@ title('N200 TPR Raw Data');
 xlabel('Time');
 ylabel('Raw Noise Power Data');
 subplot(2,1,2);
-plot(b);
+plot(x2);
 
 % Create title
 %title('Power data from N200');
