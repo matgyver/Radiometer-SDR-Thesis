@@ -3,7 +3,7 @@
 
 \section*{E E 518 Lab Tests}
 
-Further testing of the square-law detector was performed by using the radiometer in a real world event.  This test was exercised in conjunction with the Microwave Remote Sensing class (E E 518) under Dr. Brian Hornbuckle.  In 2012 the radiometer was moved to the roof of agronomy and the EE 518 students conducted a number of tests using the N200 software defined radio to collect the data.
+Further testing of the square-law detector was performed by using the radiometer in a real world event.  This test was exercised in conjunction with the Microwave Remote Sensing class (E E 518) under Dr. Brian Hornbuckle.  In the Spring of 2012 the radiometer was moved to the roof of agronomy and the EE 518 students conducted a number of tests using the N200 software defined radio to collect the data.
 
 
 {\begin{figure}[h!tb] 
@@ -16,4 +16,15 @@ Further testing of the square-law detector was performed by using the radiometer
 
 The E E 518 test however showed that there were additional problems with the radiometer.  While the test showed that the SDR could in fact read data, the data was skewed.  It was later found out that the radiometer was generating an interfering signal that caused the power readings to be elevated.  That was found as a result of having the SDR record the signal and then was analyzed later.  Through this analysis, we found that a strong harmonic was developed and caused a spike in signal being recorded.  Although the exact reason for this has not been found, the problem has been isolated to something in the RF Front End of the ISU radiometer. 
 
-In 2014 the E E 518 class ran another experiment, but this time a different one.  This experiment mimicked the experiments that I ran to calibrate and test the radiometer.  This allowed an outside source to validate the results that I was getting with running the radiometer.  Like my tests, the students submerged a matched load into liquid nitrogen and then in boiling water.  The liquid nitrogen was assumed to be at 77 K and the boiling water was measured to be at 99 C or 372 K.  The students were then given a mystery sample in which they had to determine the temperature of a water sample.  Since the students had to points, they could find the calibration line and determine the temperature.  The experiment was run twice as we expected the radiometer may have drifted between measurements.  
+In the Spring of 2014 the E E 518 class ran another experiment, but this time a different one.  This experiment mimicked the experiments that I ran to calibrate and test the radiometer.  This allowed an outside source to validate the results that I was getting with running the radiometer.  Like my tests, the students submerged a matched load into liquid nitrogen and then in boiling water.  The liquid nitrogen was assumed to be at 77 K and the boiling water was measured to be at 99 C or 372 K.  The students were then given a mystery sample in which they had to determine the temperature of a water sample.  Since the students had to points, they could find the calibration line and determine the temperature.  The experiment was run twice as we expected the radiometer may have drifted between measurements.  
+
+\subsection{Test setup}
+For the E E 518 class, the setup was similar to experiments that was run to test the results in this thesis.  For the E E 518 however the students only used the N200 SDR for recording the total power readings.  The ISU Radiometer was used only to provide the RF front end as in other tests and the output from that RF front end was feed into the N200.  A matched load was attached to the input of the RF front end.  This matched load was then submersed into either the liquid nitrogen or water baths.  
+
+\subsection{Lab Experiment}
+
+Students conducted the experiment by submerging the matched load into Liquid Nitrogen, then boiling water, then an unknown sample.  The LN2 was believed to be at 77 K.  The boiling water was measured by the students and was recorded to be 99 C.  The mystery water was then measured by myself and recorded both before the students placed the match load in there and after to see if it changed temperature between the experiments.  During this time the GNURadio program that I wrote recorded the total power information to the hard drive.  This file was then given to the tests and an example Matlab script was also provided for them to use to read the data file.
+
+\subsection{Lab Results}
+
+Two labs were conducted, however the data from the first lab was more stable and had better results than the second lab.  Therefore the students only used the data set from the first lab experiment.  
