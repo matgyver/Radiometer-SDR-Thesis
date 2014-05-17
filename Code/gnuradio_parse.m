@@ -77,7 +77,7 @@ N200calib2 = double(y.b);
 
 msgbox(sprintf('The calibrations points for the N200 is: %f and %f',N200calib1,N200calib2));
 
-calibration = [y.a y.b];
+N200calibration = [y.a y.b];
 fprintf('N200 Coefficient 1: %.2f N200 Coefficent 2: %.2f \r\n',N200calib1, N200calib2);
 
 %Store the values into a and b
@@ -91,7 +91,7 @@ x2calib2 = double(y.b);
 
 msgbox(sprintf('The calibrations points for the X^2 is: %f and %f',x2calib1,x2calib2));
 
-N200calibration = [y.a y.b];
+x2calibration = [y.a y.b];
 fprintf('X^2 Coefficient 1: %.2f X^2 Coefficent 2: %.2f \r\n',x2calib1, x2calib2);
 
 %---------------------------------------------------------------------------
