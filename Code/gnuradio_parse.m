@@ -6,6 +6,8 @@
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
 %1.8 - Added User input box
+%1.9 - Added Calibration points for square law detector
+%1.91 - Cleaned up some code
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -35,46 +37,89 @@ clear all;
 %will output the calibration data.
 
 prompt = {'Enter calibration temp 1 (K):','Enter calibration temp 2 (K):','Enter Calibration value 1:','Enter Clibration value 2:'};
-dlg_title = 'Calibration Input';
+dlg_title = 'Calibration Input for N200';
 num_lines = 1;
 def = {'371','77','.170','.103'};
-answer = inputdlg(prompt,dlg_title,num_lines,def);
+N200answer = inputdlg(prompt,dlg_title,num_lines,def);
+
+prompt = {'Enter calibration temp 1 (K):','Enter calibration temp 2 (K):','Enter Calibration value 1:','Enter Clibration value 2:'};
+dlg_title = 'Calibration Input for X^2';
+num_lines = 1;
+def = {'371','77','2.1','1.9'};
+x2answer = inputdlg(prompt,dlg_title,num_lines,def);
 
 %Calibration variables based on two temperature points
 %Enter the temperatures in Kelvin
-temp1 = answer(1);
-temp2 = answer(2);
+N200temp1 = N200answer(1);
+N200temp2 = N200answer(2);
 
 %Enter the measured data points for temp1 and temp2
-data1 = answer(3);
-data2 = answer(4);
+N200data1 = N200answer(3);
+N200data2 = N200answer(4);
+
+%Calibration variables based on two temperature points
+%Enter the temperatures in Kelvin
+x2temp1 = x2answer(1);
+x2temp2 = x2answer(2);
+
+%Enter the measured data points for temp1 and temp2
+x2data1 = x2answer(3);
+x2data2 = x2answer(4);
 
 %Store the values into a and b
 syms a b;
 
-%Solve our two calibration points
-y = solve(data1*a+b==temp1,data2*a+b==temp2);
+%Solve our two calibration points for the SDR
+y = solve(N200data1*a+b==N200temp1,N200data2*a+b==N200temp2);
 
-calib1 = double(y.a);
-calib2 = double(y.b);
+N200calib1 = double(y.a);
+N200calib2 = double(y.b);
 
-h = msgbox(sprintf('The calibrations points are: %f and %f',calib1,calib2));
+msgbox(sprintf('The calibrations points for the N200 is: %f and %f',N200calib1,N200calib2));
 
 calibration = [y.a y.b];
-fprintf('Coefficient 1: %.2f Coefficent 2: %.2f \r\n',calib1, calib2);
+fprintf('N200 Coefficient 1: %.2f N200 Coefficent 2: %.2f \r\n',N200calib1, N200calib2);
+
+%Store the values into a and b
+syms a b;
+
+%Solve our two calibration points for the X^2
+y = solve(x2data1*a+b==x2temp1,x2data2*a+b==x2temp2);
+
+x2calib1 = double(y.a);
+x2calib2 = double(y.b);
+
+msgbox(sprintf('The calibrations points for the X^2 is: %f and %f',x2calib1,x2calib2));
+
+N200calibration = [y.a y.b];
+fprintf('X^2 Coefficient 1: %.2f X^2 Coefficent 2: %.2f \r\n',x2calib1, x2calib2);
+
+%---------------------------------------------------------------------------
+%Read data files.  
+%GNURadio outputs a binary file and LabView outputs a TDMS file
+
 
 %Ask for the filename that has the TPR data from GNURadio
 gnuradio_file = uigetfile('*.*','Select the GNURadio data file');
 disp('Importing Radiometer data...')
 
 %Ask for the filename of the Square law detector.  Comment out if not using
-square_law = uigetfile('*.lvm','Select the Square_law data file');
+square_law = uigetfile('*.tdms','Select the Square_law data file');
 disp('Importing Square Law data...')
 
-x2=csvread(square_law);
+%Call the program that will convert the TDMS file format to a .mat file
 
+tdms = convertTDMS2(true,square_law);
 
-%Call the read_float_binary script
+%convertTDMS2 outputs to a .mat file but also puts everything in ans so we
+%can just use the ans for the information
+
+%x2=csvread(square_law);
+%a=load(square_law);
+x2=tdms.Data.MeasuredData(1,4).Data;
+
+%Call the read_float_binary script.  This scripts reads the GNURadio
+%binary protocol
 gnuradio = read_float_binary(gnuradio_file);
 
 
@@ -82,12 +127,19 @@ gnuradio = read_float_binary(gnuradio_file);
 %control flow
 gnuradio = gnuradio(gnuradio~=0);
 
-%Calculate the calibrated noise temperature
-calib_data = ((gnuradio*calibration(1))+calibration(2));
+%-------------------------------------------------------------------
+%Calculate the calibrated noise temperature for the SDR
+N200calib_data = ((gnuradio*N200calibration(1))+N200calibration(2));
 
+%Calculate the calibrated noise temperature for the X^2
+x2calib_data = ((x2*x2calibration(1))+x2calibration(2));
+
+%-------------------------------------------------------------------
 
 %Plot the calibrated data
-plot(calib_data);
+figure;
+subplot(2,1,1);
+plot(N200calib_data);
 
 title('N200 TPR Calibrated Data');
 
@@ -96,6 +148,9 @@ xlabel('Time');
 
 % Create ylabel
 ylabel('Calibrated Noise Temperature in K');
+subplot(2,1,2);
+plot(x2calib_data);
+title('x^2 Calibrated Data');
 
 %Plot the raw data
 figure;
@@ -106,6 +161,7 @@ xlabel('Time');
 ylabel('Raw Noise Power Data');
 subplot(2,1,2);
 plot(x2);
+title('x^2 Raw Data');
 
 % Create title
 %title('Power data from N200');
