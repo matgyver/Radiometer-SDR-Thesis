@@ -27,7 +27,7 @@ Accuracy & 1 & Kelvin \\ \hline
 
 The selection of the N200 SDR from Ettus Research was based on many of the requirements outlined in table~\ref{requirements}.  In addition, we wanted the hardware to be flexible but also affordable.  There are many different kinds of software defined radios on the market.  However, we choose the N200 based on the availability of the device, the large community support especially with regards to support by GNURadio and because it meet and often exceeded the requirements stated above.  
 
-Flexibility was another key aspect of the N200 that made it an excellent selection for our project.  The N200 uses a daughter board setup for configuring the RF interface to the rest of the electronics.  Several different daughter boards are available that have different frequency ranges and offer both receive, transmit and transceiver designs.  For the radiometer we need to operate around 1.4 GHz and receive only.  Based on those requirements we choose the DBSRX2 daughter board.  This board is designed from 800 MHz to 2.3 GHz and has a fairly low noise figure.   
+Flexibility was another key aspect of the N200 that made it an excellent selection for our project.  The N200 uses a daughter board setup for bridging the RF interface to the rest of the electronics.  Several different daughter boards are available that have different frequency ranges and offer both receive, transmit and transceiver designs.  For the radiometer we need to operate around 1.4 GHz and receive only.  Based on those requirements we choose the DBSRX2 daughter board.  This board is designed from 800 MHz to 2.3 GHz and has a fairly low noise figure.   
 
 
 The current RF front end to the radiometer is designed for a 20 MHz wide signal.  This requirement was one of the main driving points for selecting the N200 SDR as it can support up to 50 MHz in bandwidth between the N200 and the host computer.  This is accomplished by using a 1 Gbps Ethernet connection between the N200 and the host computer.
@@ -37,21 +37,13 @@ The current RF front end to the radiometer is designed for a 20 MHz wide signal.
 
 The driving force for the software requirement was to have a system that was easy to use.  The ISU radiometer originally used LabWindows, to retrieve data and control the radiometer.  A revision was made that changed the interface control to LabView.  In both cases the interface was a graphical interface that allowed the user to easily set parameters and download the data.
 
-The original ISU Radiometer did most of it's processing on board the FPGA.  The graphical interface simply downloaded the data and allowed for control of certain parameters.  With the switch to a software defined radio platform, we switched to having most of the processing done by the host computer.  However, we still wanted to keep the interface hardware fairly simple.  GNURadio was selected as it includes GNURadio Companion (GRC) which uses a graphical interface for creating the radio environment.  It also includes options to create a user interface during the operation of the N200 as well.  This allowed us to rapidly create both the critical radio components needed for the radiometer and also a control interface.
+The original ISU Radiometer did most of it's processing on board the FPGA which ran custom firmware provided by the University of Michigan.  The graphical interface simply downloaded the data and allowed for control of certain parameters.  However, since the RF front end used traditional components, there was very little that could be changed in the RF chain.  With the switch to a software defined radio platform, we switched to having most of the processing done by the host computer with digitization and low level processing accomplished by the software defined radio's FPGA.  However, we still wanted to keep the interface hardware fairly simple.  GNURadio was selected as it includes GNURadio Companion (GRC) which uses a graphical interface for creating the radio environment.  It also includes options to create a user interface during the operation of the N200 as well.  This allowed us to rapidly create both the critical radio components needed for the radiometer and also a control interface.
 
 
 \section{Hardware}
 There are two main hardware components that make up the radiometer.  The first and probably the most critical is the RF front end of the radiometer.  This critical component is what reads the RF coming in from the antenna or source.  It is then amplified so that it can then be processed.  Processing is then handled by the software defined radio, which digitizes the signal so it can be processed by the on-board FPGA and computer.  As we will discuss next, due to noise temperature considerations, we need to make sure the incoming RF signal is as noise free as possible so we are able to process the signal that we want.  
 
-%Table~\ref{nevermore}.
 
-%\begin{table}[h!tb] \centering
-%\setlength{\captionwidth}{3.5 in}
-%\isucaption{This table shows a standard empty table with
-%a limited captionwidth}
-%\label{nevermore}
-%\vspace{ 2 in}
-%\end{table}
 
 \subsection{Noise Temperature Consideration}
 
@@ -72,6 +64,15 @@ Finally $\tau$ is the integration time for the radiometer.  This parameter is se
 \subsection{Existing ISU Radiometer RF Front End}
 
 The existing ISU radiometer RF Front end uses a series of cascading low noise amplifiers (LNAs) that increase the power from the antenna while contributing a minimum amount of noise to the system.  In addition, the current ISU Radiometer uses bandpass filters to narrow the bandwidth to the desired 1400 to 1425 MHz that we wish to monitor.  While these are not needed with the addition of the software defined radio, since we can filter in software, they do not contribute much in terms of the noise temperature, and as passive components do not impact the performance of the radiometer.
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=17cm]{Images/ISU_rf_block.png}
+\isucaption{A block diagram provided by the University of Michigan that shows the components used in the ISU radiometer's RF front end.  }
+\label{ISU_rf_block}
+\end{figure}
+}
+
 
 \subsection{DBSRX2 Noise Temperature Consideration}
 
