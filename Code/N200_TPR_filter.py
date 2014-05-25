@@ -4,7 +4,7 @@
 # Title: Total Power Radiometer - N200 with Filter
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR with a bandpass filter
-# Generated: Sun May  4 16:37:02 2014
+# Generated: Sat May 24 21:29:26 2014
 ##################################################
 
 from datetime import datetime
@@ -69,18 +69,18 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.recfile_kelvin = recfile_kelvin = prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
         self.rec_button_tpr = rec_button_tpr = 1
         self.rec_button_iq = rec_button_iq = 1
-        self.noise_amplitude = noise_amplitude = .5
         self.integ = integ = tpint
         self.idecln = idecln = decln
-        self.gain = gain = 23
+        self.gain = gain = 26
         self.freq = freq = frequency
+        self.filter_band = filter_band = 500e3
         self.file_rate = file_rate = 2.0
         self.fftrate = fftrate = int(samp_rate/fftsize)
         self.det_rate = det_rate = int(20.0)
         self.dc_gain = dc_gain = int(dcg)
         self.calib_2 = calib_2 = -342.774
         self.calib_1 = calib_1 = 4.0755e3
-        self.add_noise = add_noise = 0
+        self.add_filter = add_filter = 0
 
         ##################################################
         # Blocks
@@ -194,6 +194,29 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._freq_text_box, 0, 0, 1, 1)
+        _filter_band_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._filter_band_text_box = forms.text_box(
+        	parent=self.Main.GetPage(0).GetWin(),
+        	sizer=_filter_band_sizer,
+        	value=self.filter_band,
+        	callback=self.set_filter_band,
+        	label="Filter Bandwidth",
+        	converter=forms.float_converter(),
+        	proportion=0,
+        )
+        self._filter_band_slider = forms.slider(
+        	parent=self.Main.GetPage(0).GetWin(),
+        	sizer=_filter_band_sizer,
+        	value=self.filter_band,
+        	callback=self.set_filter_band,
+        	minimum=100e3,
+        	maximum=1e6,
+        	num_steps=100,
+        	style=wx.SL_HORIZONTAL,
+        	cast=float,
+        	proportion=1,
+        )
+        self.Main.GetPage(0).GridAdd(_filter_band_sizer, 3, 2, 1, 1)
         self._dc_gain_chooser = forms.radio_buttons(
         	parent=self.Main.GetPage(0).GetWin(),
         	value=self.dc_gain,
@@ -220,6 +243,15 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._calib_1_text_box, 3, 0, 1, 1)
+        self._add_filter_chooser = forms.button(
+        	parent=self.Main.GetPage(0).GetWin(),
+        	value=self.add_filter,
+        	callback=self.set_add_filter,
+        	label="Filter On/Off",
+        	choices=[0,1],
+        	labels=['Off','On'],
+        )
+        self.Main.GetPage(0).GridAdd(self._add_filter_chooser, 3, 3, 1, 1)
         self.wxgui_scopesink2_2 = scopesink2.scope_sink_f(
         	self.Main.GetPage(1).GetWin(),
         	title="Total Power",
@@ -230,7 +262,7 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	ac_couple=False,
         	xy_mode=False,
         	num_inputs=1,
-        	trig_mode=wxgui.TRIG_MODE_AUTO,
+        	trig_mode=wxgui.TRIG_MODE_STRIPCHART,
         	y_axis_label="power level",
         )
         self.Main.GetPage(1).Add(self.wxgui_scopesink2_2.win)
@@ -328,29 +360,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.uhd_usrp_source_0.set_center_freq(freq, 0)
         self.uhd_usrp_source_0.set_gain(gain, 0)
         self.single_pole_iir_filter_xx_0 = filter.single_pole_iir_filter_ff(1.0/((samp_rate*integ)/2.0), 1)
-        _noise_amplitude_sizer = wx.BoxSizer(wx.VERTICAL)
-        self._noise_amplitude_text_box = forms.text_box(
-        	parent=self.Main.GetPage(0).GetWin(),
-        	sizer=_noise_amplitude_sizer,
-        	value=self.noise_amplitude,
-        	callback=self.set_noise_amplitude,
-        	label='noise_amplitude',
-        	converter=forms.float_converter(),
-        	proportion=0,
-        )
-        self._noise_amplitude_slider = forms.slider(
-        	parent=self.Main.GetPage(0).GetWin(),
-        	sizer=_noise_amplitude_sizer,
-        	value=self.noise_amplitude,
-        	callback=self.set_noise_amplitude,
-        	minimum=.01,
-        	maximum=1,
-        	num_steps=100,
-        	style=wx.SL_HORIZONTAL,
-        	cast=float,
-        	proportion=1,
-        )
-        self.Main.GetPage(0).GridAdd(_noise_amplitude_sizer, 3, 2, 1, 1)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,
         	fft_size=fftsize,
@@ -385,18 +394,16 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.blks2_valve_2 = grc_blks2.valve(item_size=gr.sizeof_gr_complex*1, open=bool(rec_button_iq))
         self.blks2_valve_1 = grc_blks2.valve(item_size=gr.sizeof_float*1, open=bool(0))
         self.blks2_valve_0 = grc_blks2.valve(item_size=gr.sizeof_float*1, open=bool(rec_button_tpr))
-        self.band_reject_filter_0 = filter.fir_filter_ccf(1, firdes.band_reject(
-        	.01, samp_rate, 100, 1e6, 250e3, firdes.WIN_HAMMING, 6.76))
-        (self.band_reject_filter_0).set_processor_affinity([1])
-        self._add_noise_chooser = forms.button(
-        	parent=self.Main.GetPage(0).GetWin(),
-        	value=self.add_noise,
-        	callback=self.set_add_noise,
-        	label="Noise Source",
-        	choices=[0,1],
-        	labels=['Off','On'],
+        self.blks2_selector_0 = grc_blks2.selector(
+        	item_size=gr.sizeof_gr_complex*1,
+        	num_inputs=2,
+        	num_outputs=1,
+        	input_index=add_filter,
+        	output_index=0,
         )
-        self.Main.GetPage(0).GridAdd(self._add_noise_chooser, 3, 3, 1, 1)
+        self.band_reject_filter_0 = filter.fir_filter_ccf(1, firdes.band_reject(
+        	.005, samp_rate, 100, filter_band, 100e03, firdes.WIN_HAMMING, 6.76))
+        (self.band_reject_filter_0).set_processor_affinity([1])
 
         ##################################################
         # Connections
@@ -417,11 +424,13 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_4, 0))
         self.connect((self.blocks_keep_one_in_n_4, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_1, 0), (self.single_pole_iir_filter_xx_0, 0))
-        self.connect((self.band_reject_filter_0, 0), (self.blocks_complex_to_mag_squared_1, 0))
-        self.connect((self.band_reject_filter_0, 0), (self.logpwrfft_x_0, 0))
-        self.connect((self.band_reject_filter_0, 0), (self.blks2_valve_2, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.band_reject_filter_0, 0))
-        self.connect((self.band_reject_filter_0, 0), (self.wxgui_fftsink2_0, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.blks2_selector_0, 1))
+        self.connect((self.band_reject_filter_0, 0), (self.blks2_selector_0, 0))
+        self.connect((self.blks2_selector_0, 0), (self.wxgui_fftsink2_0, 0))
+        self.connect((self.blks2_selector_0, 0), (self.blocks_complex_to_mag_squared_1, 0))
+        self.connect((self.blks2_selector_0, 0), (self.logpwrfft_x_0, 0))
+        self.connect((self.blks2_selector_0, 0), (self.blks2_valve_2, 0))
 
 
 # QT sink close method reimplementation
@@ -532,9 +541,9 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.set_fftrate(int(self.samp_rate/self.fftsize))
         self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
         self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
-        self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
-        self.band_reject_filter_0.set_taps(firdes.band_reject(.01, self.samp_rate, 100, 1e6, 250e3, firdes.WIN_HAMMING, 6.76))
+        self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
+        self.band_reject_filter_0.set_taps(firdes.band_reject(.005, self.samp_rate, 100, self.filter_band, 100e03, firdes.WIN_HAMMING, 6.76))
 
     def get_prefix(self):
         return self.prefix
@@ -625,14 +634,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self._rec_button_iq_chooser.set_value(self.rec_button_iq)
         self.blks2_valve_2.set_open(bool(self.rec_button_iq))
 
-    def get_noise_amplitude(self):
-        return self.noise_amplitude
-
-    def set_noise_amplitude(self, noise_amplitude):
-        self.noise_amplitude = noise_amplitude
-        self._noise_amplitude_slider.set_value(self.noise_amplitude)
-        self._noise_amplitude_text_box.set_value(self.noise_amplitude)
-
     def get_integ(self):
         return self.integ
 
@@ -654,9 +655,9 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
 
     def set_gain(self, gain):
         self.gain = gain
+        self.uhd_usrp_source_0.set_gain(self.gain, 0)
         self._gain_slider.set_value(self.gain)
         self._gain_text_box.set_value(self.gain)
-        self.uhd_usrp_source_0.set_gain(self.gain, 0)
 
     def get_freq(self):
         return self.freq
@@ -666,6 +667,15 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self._freq_text_box.set_value(self.freq)
         self.uhd_usrp_source_0.set_center_freq(self.freq, 0)
         self.wxgui_fftsink2_0.set_baseband_freq(self.freq)
+
+    def get_filter_band(self):
+        return self.filter_band
+
+    def set_filter_band(self, filter_band):
+        self.filter_band = filter_band
+        self._filter_band_slider.set_value(self.filter_band)
+        self._filter_band_text_box.set_value(self.filter_band)
+        self.band_reject_filter_0.set_taps(firdes.band_reject(.005, self.samp_rate, 100, self.filter_band, 100e03, firdes.WIN_HAMMING, 6.76))
 
     def get_file_rate(self):
         return self.file_rate
@@ -714,12 +724,13 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self._calib_1_text_box.set_value(self.calib_1)
         self.blocks_multiply_const_vxx_1.set_k((self.calib_1, ))
 
-    def get_add_noise(self):
-        return self.add_noise
+    def get_add_filter(self):
+        return self.add_filter
 
-    def set_add_noise(self, add_noise):
-        self.add_noise = add_noise
-        self._add_noise_chooser.set_value(self.add_noise)
+    def set_add_filter(self, add_filter):
+        self.add_filter = add_filter
+        self._add_filter_chooser.set_value(self.add_filter)
+        self.blks2_selector_0.set_input_index(int(self.add_filter))
 
 if __name__ == '__main__':
     import ctypes
