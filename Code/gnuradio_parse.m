@@ -1,7 +1,7 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
 %Updated 5/25/2014
-%Rev. 1.92
+%Rev. 1.93
 
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
@@ -9,6 +9,7 @@
 %1.9 - Added Calibration points for square law detector
 %1.91 - Cleaned up some code
 %1.92 - Futher clean up of unused code
+%1.93 - Fixed dialog boxes not showing the entire title
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -37,17 +38,23 @@ clear all;
 %The User input box will accecpt the calibration points from the user and
 %will output the calibration data.
 
-prompt = {'Enter calibration temp 1 (K):','Enter calibration temp 2 (K):','Enter Calibration value 1:','Enter Clibration value 2:'};
-dlg_title = 'Calibration Input for N200';
+%Setup dialog options
+options.Resize='on';
+options.WindowStyle='normal';
+options.Interpreter='tex';
+
+prompt = {'                        Enter calibration temp 1 (K)','Enter calibration temp 2 (K)','Enter Calibration value 1:','Enter Clibration value 2:'};
+dlg_title = 'Calibration for N200';
 num_lines = 1;
 def = {'371','77','.170','.103'};
-N200answer = inputdlg(prompt,dlg_title,num_lines,def);
+N200answer = inputdlg(prompt,dlg_title,num_lines,def,options);
 
-prompt = {'Enter calibration temp 1 (K):','Enter calibration temp 2 (K):','Enter Calibration value 1:','Enter Clibration value 2:'};
-dlg_title = 'Calibration Input for X^2';
+
+prompt = {'                        Enter calibration temp 1 (K):','Enter calibration temp 2 (K):','Enter Calibration value 1:','Enter Clibration value 2:'};
+dlg_title = 'Calibration for X^2';
 num_lines = 1;
 def = {'371','77','2.1','1.9'};
-x2answer = inputdlg(prompt,dlg_title,num_lines,def);
+x2answer = inputdlg(prompt,dlg_title,num_lines,def,options);
 
 %Calibration variables based on two temperature points
 
