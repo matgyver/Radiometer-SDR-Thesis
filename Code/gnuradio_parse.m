@@ -1,13 +1,14 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
-%Updated 5/12/2014
-%Rev. 1.8
+%Updated 5/25/2014
+%Rev. 1.92
 
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
 %1.8 - Added User input box
 %1.9 - Added Calibration points for square law detector
 %1.91 - Cleaned up some code
+%1.92 - Futher clean up of unused code
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -49,7 +50,7 @@ def = {'371','77','2.1','1.9'};
 x2answer = inputdlg(prompt,dlg_title,num_lines,def);
 
 %Calibration variables based on two temperature points
-%Enter the temperatures in Kelvin
+
 N200temp1 = N200answer(1);
 N200temp2 = N200answer(2);
 
@@ -58,7 +59,7 @@ N200data1 = N200answer(3);
 N200data2 = N200answer(4);
 
 %Calibration variables based on two temperature points
-%Enter the temperatures in Kelvin
+
 x2temp1 = x2answer(1);
 x2temp2 = x2answer(2);
 
@@ -111,11 +112,7 @@ disp('Importing Square Law data...')
 
 tdms = convertTDMS2(true,square_law);
 
-%convertTDMS2 outputs to a .mat file but also puts everything in ans so we
-%can just use the ans for the information
-
-%x2=csvread(square_law);
-%a=load(square_law);
+%The data created is nested in the array, we need to pull the data we want
 x2=tdms.Data.MeasuredData(1,4).Data;
 
 %Call the read_float_binary script.  This scripts reads the GNURadio
@@ -162,26 +159,3 @@ ylabel('Raw Noise Power Data');
 subplot(2,1,2);
 plot(x2);
 title('x^2 Raw Data');
-
-% Create title
-%title('Power data from N200');
-
-%Parse the NI TDMS file
-
-%-------------------------------------------------------
-%Now parse the Square law file which is comma delimited.
-%Comment out if not parsing square law file
-
-%First, it helps to open the file
-%fid = fopen(square_law);
-%C = textscan(fid,'%s %s %s %s %s %s','delimiter',',');
-%[Date,VRAW,VdB,HRAW,HdB,HASH]=deal(C{:});
-
-%We need to convert the cell to an array
-%v_pol = str2double(VRAW);
-%v_scale = v_pol(1:4.4:length(v_pol));
-
-%Now graph
-%subplot(2,1,2);
-%plot(v_scale,'r')
-%title('Square Law Data');
