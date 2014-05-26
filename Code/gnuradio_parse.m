@@ -10,6 +10,7 @@
 %1.91 - Cleaned up some code
 %1.92 - Futher clean up of unused code
 %1.93 - Fixed dialog boxes not showing the entire title
+%2.0 - Added filter to clean up noisy x^2 data
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -33,6 +34,10 @@
 
 %Clear the workspace
 clear all;
+
+%Constants
+%set's the window size to filter the square-law data
+windowSize = 200;
 
 %User Dialog entry
 %The User input box will accecpt the calibration points from the user and
@@ -137,14 +142,26 @@ N200calib_data = ((gnuradio*N200calibration(1))+N200calibration(2));
 
 %Calculate the calibrated noise temperature for the X^2
 x2calib_data = ((x2*x2calibration(1))+x2calibration(2));
+%Need to filter this data now
+%First, convert from a sym matrix to a double
+temp1=double(x2calib_data);
+avgx2=filter(ones(1,windowSize)/windowSize,1,temp1);
 
+%-------------------------------------------------------------------
+%The square-law datat is fairly noise, so we will filter it to smooth
+%it out.  
+%First, convert from a sym matrix to a double
+temp1=double(x2calib_data);
+temp2=double(x2);
+%Now filter it
+avgx2_calib=filter(ones(1,windowSize)/windowSize,1,temp1);
+avgx2=filter(ones(1,windowSize)/windowSize,1,temp2);
 %-------------------------------------------------------------------
 
 %Plot the calibrated data
 figure;
 subplot(2,1,1);
 plot(N200calib_data);
-
 title('N200 TPR Calibrated Data');
 
 % Create xlabel
@@ -153,7 +170,7 @@ xlabel('Time');
 % Create ylabel
 ylabel('Calibrated Noise Temperature in K');
 subplot(2,1,2);
-plot(x2calib_data);
+plot(avgx2_calib);
 title('x^2 Calibrated Data');
 
 %Plot the raw data
@@ -164,5 +181,5 @@ title('N200 TPR Raw Data');
 xlabel('Time');
 ylabel('Raw Noise Power Data');
 subplot(2,1,2);
-plot(x2);
+plot(avgx2);
 title('x^2 Raw Data');
