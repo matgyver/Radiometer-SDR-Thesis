@@ -77,6 +77,8 @@
 % Allows the use of \toprule, \midrule and \bottomrule in tables
 \usepackage{booktabs} 
 
+\usepackage{multicol}
+
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -108,7 +110,9 @@ Iowa State University \\
 % Table of contents slide, comment this block out to remove it
 \frametitle{Table of Contents} 
 % Anything with a \section or \subsection will get populated here.  allowframebreaks allow for this to go to more than one slide for large presentations
-\tableofcontents 
+\begin{multicols}{2}
+\tableofcontents[hideallsubsections]
+\end{multicols}
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -260,6 +264,13 @@ blah blah blah show how we display the information and data and take a screen sh
 \section{Experimental Setup}
 %-----------------------------
 \section{Performance}
+\subsection{Stability}
+\begin{frame}
+\frametitle{Stability}
+\begin{block}{Stability testing}
+blah blah blah on testing stability
+\end{block}
+\end{frame}
 \subsection{Sensitivity}
 \begin{frame}
 \frametitle{Performance}
