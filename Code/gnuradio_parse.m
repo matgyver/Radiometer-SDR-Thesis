@@ -1,8 +1,8 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
 %Updated 5/25/2014
-%Rev. 1.93
-
+%Rev. 2.1
+%--------------------------------------------------------------------------
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
 %1.8 - Added User input box
@@ -11,6 +11,7 @@
 %1.92 - Futher clean up of unused code
 %1.93 - Fixed dialog boxes not showing the entire title
 %2.0 - Added filter to clean up noisy x^2 data
+%2.1 - Added NEdeltaT (NEAT) calculation, minor change to plot labels
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -31,14 +32,20 @@
 
 %In theory, this script may also run on Octave, but the file I/O package
 %will be needed to use the file dialog box.
-
+%--------------------------------------------------------------------------
 %Clear the workspace
 clear all;
-
+%------------------------------------------------------------------------
 %Constants
 %set's the window size to filter the square-law data
 windowSize = 200;
-
+%Receiver Noise Temperature
+Trec = 370;
+%Integration Time
+tau = 2;
+%Bandwidth
+beta = 10e6;
+%------------------------------------------------------------------------
 %User Dialog entry
 %The User input box will accecpt the calibration points from the user and
 %will output the calibration data.
@@ -47,7 +54,12 @@ windowSize = 200;
 options.Resize='on';
 options.WindowStyle='normal';
 options.Interpreter='tex';
+%Setup MsgBox options
+CreateStruct.Interpreter = 'tex';
+CreateStruct.WindowStyle = 'modal';
+%-------------------------------------------------------------------------
 
+%Ask for user input for calibration
 prompt = {'                        Enter calibration temp 1 (K)','Enter calibration temp 2 (K)','Enter Calibration value 1:','Enter Clibration value 2:'};
 dlg_title = 'Calibration for N200';
 num_lines = 1;
@@ -102,10 +114,22 @@ y = solve(x2data1*a+b==x2temp1,x2data2*a+b==x2temp2);
 x2calib1 = double(y.a);
 x2calib2 = double(y.b);
 
-msgbox(sprintf('The calibrations points for the X^2 is: %f and %f',x2calib1,x2calib2));
+msgbox(sprintf('The calibrations points for the X^2 is: %f and %f',x2calib1,x2calib2),CreateStruct);
 
 x2calibration = [y.a y.b];
 fprintf('X^2 Coefficient 1: %.2f X^2 Coefficent 2: %.2f \r\n',x2calib1, x2calib2);
+
+%Calculate N E Delta T (NEAT)
+%First calculatation is the NEAT expected based on BW and other parameters
+%NEAT = (Ta+Tsys)/SQRT(tau+beta)
+
+NEAT = (Trec)./sqrt(tau+beta);
+
+%Now we can calculate the actual NEAT
+estNEAT = std(gnuradio);
+
+%Now print this information out
+msgbox(sprintf('The calculated NE \Delta T is: %f and the actual NE \Delta T is: ',NEAT,estNEAT),CreateStruct);
 
 %---------------------------------------------------------------------------
 %Read data files.  
@@ -135,20 +159,16 @@ gnuradio = read_float_binary(gnuradio_file);
 %Remove zeros which is common in files that use the valve feature to
 %control flow
 gnuradio = gnuradio(gnuradio~=0);
-
+time=(1:length(gnuradio))./1e3;
 %-------------------------------------------------------------------
 %Calculate the calibrated noise temperature for the SDR
 N200calib_data = ((gnuradio*N200calibration(1))+N200calibration(2));
 
 %Calculate the calibrated noise temperature for the X^2
 x2calib_data = ((x2*x2calibration(1))+x2calibration(2));
-%Need to filter this data now
-%First, convert from a sym matrix to a double
-temp1=double(x2calib_data);
-avgx2=filter(ones(1,windowSize)/windowSize,1,temp1);
 
 %-------------------------------------------------------------------
-%The square-law datat is fairly noise, so we will filter it to smooth
+%The square-law data is fairly noise, so we will filter it to smooth
 %it out.  
 %First, convert from a sym matrix to a double
 temp1=double(x2calib_data);
@@ -156,6 +176,16 @@ temp2=double(x2);
 %Now filter it
 avgx2_calib=filter(ones(1,windowSize)/windowSize,1,temp1);
 avgx2=filter(ones(1,windowSize)/windowSize,1,temp2);
+%-------------------------------------------------------------------
+%Calculate N E Delta T (NEAT)
+%First calculatation is the NEAT expected based on BW and other parameters
+
+%NEAT = (Ta+Tsys)/SQRT(tau+beta)
+
+NEAT = (Trec)./sqrt(tau+beta);
+
+%Now we can calculate the actual NEAT
+expNEAT = std(gnuradio);
 %-------------------------------------------------------------------
 
 %Plot the calibrated data
@@ -179,7 +209,9 @@ subplot(2,1,1);
 plot(gnuradio);
 title('N200 TPR Raw Data');
 xlabel('Time');
-ylabel('Raw Noise Power Data');
+ylabel('rQ Value');
 subplot(2,1,2);
 plot(avgx2);
 title('x^2 Raw Data');
+ylabel('Raw Voltage');
+axis([-inf inf 2.1 2.4]);
