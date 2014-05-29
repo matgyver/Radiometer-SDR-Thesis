@@ -12,6 +12,7 @@
 %1.93 - Fixed dialog boxes not showing the entire title
 %2.0 - Added filter to clean up noisy x^2 data
 %2.1 - Added NEdeltaT (NEAT) calculation, minor change to plot labels
+%2.11 - Added square law voltage to dBm conversion
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -155,11 +156,15 @@ x2=tdms.Data.MeasuredData(1,4).Data;
 %binary protocol
 gnuradio = read_float_binary(gnuradio_file);
 
-
+%--------------------------------------------------------------------
 %Remove zeros which is common in files that use the valve feature to
 %control flow
 gnuradio = gnuradio(gnuradio~=0);
+%Create a time index
 time=(1:length(gnuradio))./1e3;
+
+%Convert voltage from square-law to dBm.  53 mV is 1 dBm
+dbmx2=x2./.053;
 %-------------------------------------------------------------------
 %Calculate the calibrated noise temperature for the SDR
 N200calib_data = ((gnuradio*N200calibration(1))+N200calibration(2));
