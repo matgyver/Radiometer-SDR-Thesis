@@ -1,7 +1,7 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
 %Updated 5/25/2014
-%Rev. 2.1
+%Rev. 2.12
 %--------------------------------------------------------------------------
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
@@ -13,6 +13,8 @@
 %2.0 - Added filter to clean up noisy x^2 data
 %2.1 - Added NEdeltaT (NEAT) calculation, minor change to plot labels
 %2.11 - Added square law voltage to dBm conversion
+%2.12 - Fixed bug on when doing NEAT calc, added a time base calculation
+%for plots
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -120,18 +122,6 @@ msgbox(sprintf('The calibrations points for the X^2 is: %f and %f',x2calib1,x2ca
 x2calibration = [y.a y.b];
 fprintf('X^2 Coefficient 1: %.2f X^2 Coefficent 2: %.2f \r\n',x2calib1, x2calib2);
 
-%Calculate N E Delta T (NEAT)
-%First calculatation is the NEAT expected based on BW and other parameters
-%NEAT = (Ta+Tsys)/SQRT(tau+beta)
-
-NEAT = (Trec)./sqrt(tau+beta);
-
-%Now we can calculate the actual NEAT
-estNEAT = std(gnuradio);
-
-%Now print this information out
-msgbox(sprintf('The calculated NE \Delta T is: %f and the actual NE \Delta T is: ',NEAT,estNEAT),CreateStruct);
-
 %---------------------------------------------------------------------------
 %Read data files.  
 %GNURadio outputs a binary file and LabView outputs a TDMS file
@@ -161,10 +151,9 @@ gnuradio = read_float_binary(gnuradio_file);
 %control flow
 gnuradio = gnuradio(gnuradio~=0);
 %Create a time index
-time=(1:length(gnuradio))./1e3;
+timen200=(1:length(gnuradio))*.5;
+timex2=(1:length(x2));
 
-%Convert voltage from square-law to dBm.  53 mV is 1 dBm
-dbmx2=x2./.053;
 %-------------------------------------------------------------------
 %Calculate the calibrated noise temperature for the SDR
 N200calib_data = ((gnuradio*N200calibration(1))+N200calibration(2));
@@ -182,15 +171,20 @@ temp2=double(x2);
 avgx2_calib=filter(ones(1,windowSize)/windowSize,1,temp1);
 avgx2=filter(ones(1,windowSize)/windowSize,1,temp2);
 %-------------------------------------------------------------------
+%Convert voltage from square-law to dBm.  53 mV is 1 dBm
+dbmx2=x2./.053;
+
 %Calculate N E Delta T (NEAT)
 %First calculatation is the NEAT expected based on BW and other parameters
-
 %NEAT = (Ta+Tsys)/SQRT(tau+beta)
 
 NEAT = (Trec)./sqrt(tau+beta);
 
 %Now we can calculate the actual NEAT
-expNEAT = std(gnuradio);
+estNEAT = std(gnuradio);
+
+%Now print this information out
+fprintf('Calculated NEAT: %.2f Actual NEAT: %.2f \r\n',NEAT, estNEAT);
 %-------------------------------------------------------------------
 
 %Plot the calibrated data
