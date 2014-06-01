@@ -58,7 +58,7 @@ The issue with all radiometers is that it must detect small signal changes in a 
 The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T. 
 
 \begin{equation}
-NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta + \tau}}
+NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}}
 \end{equation}
 
 The sensitivity of the radiometer is based on both the bandwidth, $\beta$, of the incoming signal and the integration time, $\tau$.  As it can be seen in the equation, we would want to have as much bandwidth as possible.  In a traditional radiometer, this bandwidth is often fixed and is dependent on the band-pass filters used in the radiometer.  We can however control $\tau$ and a longer integration time will help improve the sensitivity of the radiometer.[\cite{skou}]
