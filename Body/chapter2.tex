@@ -11,7 +11,7 @@ The hardware that was selected for this research was the Ettus Research N200 Sof
 
 A software defined radio of course is only as good as the software that is written to work with the hardware.  As the name implies, the software defines how the radio will act and function.  From a computer engineering perspective though, software can take on several roles in a system.  There is software that runs on the hardware, in our case the FPGA, and then there is software that may run on a computer to interface with the hardware.  In some cases, the software may only reside on the hardware, however, to increase the user usability of the system, we will be using a combination of firmware that is running on the FPGA and software that runs on a computer.  GNURadio is an open source software define radio framework that runs on multiple OSes and offers a rich set of features.  In addition, GNURadio is well supported by the Ettus Research group and is the preferred software for interfacing with their hardware.  An easy to use interface was another driving requirement for our implementation of a radiometer in a SDR.  GNURadio helps us with this through the use of the GNU Radio Companion or GRC.  This was important as it was anticipated that many operators of the radiometer would not know much about programming.  GNURadio uses a simple to use graphical system that is very similar to things such as LabView, offering a drag and drop system for adding various radio components such as filters.  Like LabView, you can also simply wire up the boxes and complete the circuit path for the RF signal as it gets processed.
 
-\section{Radiometer Theory of Operation}
+\section{Traditional Radiometer Theory of Operation}
 
 The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole.  
 
@@ -74,6 +74,9 @@ V_{OUT}=c*(T_A+T_N)*G
 \end{equation}
 
 Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ and the noise from the antenna, T$_A$ and multiplied by the gain in the system, G.
+
+\section{ISU Radiometer Theory of Operation}
+Add information here about Fichmans paper and how the current ISU radiometer works
 
 
 \section{Software Defined Radio Theory of Operation}
@@ -237,7 +240,7 @@ The DBSRX2 has an onboard Programmable Gain Amplifier (PGA) that is accessible f
 \end{figure}
 }
 
-\section{GNURadio}
+\subsection{GNURadio}
 
 GNURadio fills in the software side of the software defined radio.  Although there is firmware that runs on the FPGA in the N200, this firmware is designed to communicate with a host PC.  It is this software that does most of the work in terms of the calculations that are done with the signal.  The FPGA simply sends the raw IQ data to the host PC, which then performs the necessary math functions.  Again, the reason why software defined radios are desirable is the ability to change the behavior of the radio very quickly.  In our case we can change functionality by simply loading a new software program in the host PC.  
 
@@ -258,3 +261,12 @@ GNUradio Companion works by having many of the common functions as blocks that c
 GNURadio Companion also includes blocks that allow it to create a GUI type of interface.  The typical method it uses for this is using wxGUI although GNURadio Companion does also include blocks that can use QT for generating widgets as well.  However, the wxGUI tends to work better and has better support in GNURadio than QT.  
 
 Through these blocks can not only manipulate the data we need to perform a total power radiometer in software but to also create a user interface that allows us to control the radiometer as well.  We are also able to display the information in real time so the user can see changes in power and even monitor spectral information during the operation of the radiometer. 
+
+\section{A Software Defined Radio Radiometer Theory of Operation}
+\subsection{Hardware}
+
+\subsection{Software}
+
+\section{Comparison of a Software Defined Radio Radiometer vs Traditional Radiometer}
+
+\section{Comparison of a Software Defined Radio Radiometer and ISU Radiometer}

@@ -1,5 +1,20 @@
 % Chapter 3 from the thesis template file
 %   that contains an example table and figure.
+\chapter{Implementation of a Software Defined Radio Radiometer}
+\section{Power detection}
+
+\section{Integrator through a IIR Filter}
+
+\section{GNURadio Blocks}
+
+\section{Control of the SDR Hardware through GNURadio}
+
+\section{GNURadio Data Handling}
+
+\subsection{GNURadio Data Display}
+
+\subsection{GNURadio Data Processing}
+
 \chapter{A GNURadio AND N200 TOTAL POWER RADIOMETER}
 
 One of the principal goals with this research was to implement a fully functioning total power radiometer within software.  The N200 provides us the link between the RF signal captured by the antenna and converts that to a format that the computer can now use to manipulate the signal.  Once the signal has been passed to the computer, GNURadio will implement the correct algorithms to detect the power within the signal.  One of the advantages of course with a SDR is that filtering can also be done within the software.  In addition, thanks to the WxGUI that GNURadio uses, we can also build a user interface that can control several key variables that are useful for us.  This includes controlling the gain on the programmable gain amplifier on the DBSRX2 card, the sampling or bandwidth of the signal, the center frequency, and also the integration time.  All of these can now be controlled in real time as well.  GNURadio will also store the power data so that we are able to do further analysis of the data using a software program like MatLab.  Because GNURadio is a very flexible system, much more can be done with the signal if needed and future updates may add more capabilities or additional analysis on the signal can happen.
