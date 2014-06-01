@@ -1,7 +1,7 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
-%Updated 5/31/2014
-%Rev. 2.13
+%Updated 6/1/2014
+%Rev. 2.14
 %--------------------------------------------------------------------------
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
@@ -16,6 +16,7 @@
 %2.12 - Fixed bug on when doing NEAT calc, added a time base calculation
 %for plots
 %2.13 - Added calibration line plots
+%2.14 - changed graphs to a time base
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
