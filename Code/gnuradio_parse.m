@@ -1,7 +1,7 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
-%Updated 5/25/2014
-%Rev. 2.12
+%Updated 5/31/2014
+%Rev. 2.13
 %--------------------------------------------------------------------------
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
@@ -15,6 +15,7 @@
 %2.11 - Added square law voltage to dBm conversion
 %2.12 - Fixed bug on when doing NEAT calc, added a time base calculation
 %for plots
+%2.13 - Added calibration line plots
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -43,7 +44,7 @@ clear all;
 %set's the window size to filter the square-law data
 windowSize = 200;
 %Receiver Noise Temperature
-Trec = 370;
+Trec = 400;
 %Integration Time
 tau = 2;
 %Bandwidth
@@ -150,9 +151,10 @@ gnuradio = read_float_binary(gnuradio_file);
 %Remove zeros which is common in files that use the valve feature to
 %control flow
 gnuradio = gnuradio(gnuradio~=0);
+
 %Create a time index
 timen200=(1:length(gnuradio))*.5;
-timex2=(1:length(x2));
+timex2=(1:length(x2))./100;
 
 %-------------------------------------------------------------------
 %Calculate the calibrated noise temperature for the SDR
@@ -181,7 +183,12 @@ dbmx2=x2./.053;
 NEAT = (Trec)./sqrt(tau+beta);
 
 %Now we can calculate the actual NEAT
-estNEAT = std(gnuradio);
+%Look at a sample that is stable, in the LN2 area
+
+for n = 1:100;
+    rQ_stdev(n) = gnuradio(n+310);
+end
+estNEAT = std(rQ_stdev);
 
 %Now print this information out
 fprintf('Calculated NEAT: %.2f Actual NEAT: %.2f \r\n',NEAT, estNEAT);
@@ -201,16 +208,31 @@ ylabel('Calibrated Noise Temperature in K');
 subplot(2,1,2);
 plot(avgx2_calib);
 title('x^2 Calibrated Data');
-
+%---------------------------------------------------------------------
 %Plot the raw data
 figure;
 subplot(2,1,1);
-plot(gnuradio);
+plot(timen200,gnuradio);
 title('N200 TPR Raw Data');
 xlabel('Time');
 ylabel('rQ Value');
 subplot(2,1,2);
-plot(avgx2);
+plot(timex2,avgx2);
 title('x^2 Raw Data');
 ylabel('Raw Voltage');
 axis([-inf inf 2.1 2.4]);
+%---------------------------------------------------------------------
+%Plot the calibration line
+figure;
+x=linspace(str2double(N200data2),str2double(N200data1),200);
+y=linspace(str2double(x2data2),str2double(x2data1),200);
+subplot(2,1,1);
+plot(x, N200calib1*x+N200calib2,'-r');
+title('Calibration line for N200 SDR');
+xlabel('raw value');
+ylabel('Noise Temperature K');
+subplot(2,1,2);
+plot(y,x2calib1*y+x2calib2,'-b');
+title('Calibration line for X^2 detector');
+xlabel('raw value');
+ylabel('Noise Temperature K');
