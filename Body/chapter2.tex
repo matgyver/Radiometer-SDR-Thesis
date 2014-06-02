@@ -76,7 +76,7 @@ V_{OUT}=c*(T_A+T_N)*G
 Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ and the noise from the antenna, T$_A$ and multiplied by the gain in the system, G.
 
 \section{ISU Radiometer Theory of Operation}
-Add information here about Fichmans paper and how the current ISU radiometer works
+The current ISU Radiometer was constructed by the University of Michagan and was based on Dr. Mark Fischman's dissertation on a Direct-Sampling Digital Radiometer\cite{Fischman2001}.  This type of radiometer amplifies the signal but then immediately digitizes the signal to be processed.  In many ways, this is how a software defined radio works, however in this case the ISU radiometer is under-sampled.  However, as explained by Dr. Fischman this is acceptable for a total power radiometer since the only information we need is power information.  The radiometer that Dr. Fischman proposes also correlates the signals, one from the vertical polarization and the other from the horizontal polarization from the antenna.  
 
 
 \section{Software Defined Radio Theory of Operation}
