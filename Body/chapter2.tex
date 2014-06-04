@@ -223,7 +223,44 @@ Another factor however is the amount of bandwidth the existing RF front end of t
 
 The N200 is capable of working with up to 100 MS/s signal and can stream up to 50 MS/s through the Gigabit Ethernet connection.  The N200 also has the ability to have up to 2 daughter boards installed.  If we assume each will have up to a 20 MHz signal, this means up to 40 MS/s of data will be required.  This means that the N200 meets are minimum requirements for working with needed bandwidth of the radiometer.  In addition, the FPGA on the N200 is capable of working with up to 100 MS/s, so there is room handling additional bandwidth by using the on board FPGA to process the signal.
 
-\subsection{GNURadio}
+\section{A Software Defined Radio Radiometer Theory of Operation}
+A software defined radio radiometer implements the key features of a radiometer in software instead of relaying on hardware.  While some hardware is still needed, primarily with the RF front end that amplifies the signal while maintaining a low noise factor, we want the software to do as much of the work as possible.  
+
+\subsection{Hardware}
+
+Hardware with a software defined radio still plays a critical role.  A traditional software defined radio will focus on digitizing the signal as soon as possible and the hardware used will be focused on performing that critical digitizing process.  For a software defined radio radiometer, we still want to digitize as soon as possible, but we also need to consider our noise factor.  Most software defined radios are designed for communication purposes such as implementing 802.11b or other wireless protocols.  In these cases a higher noise factor is not as detrimental to the overall system as it would be with a radiometer.  This is mainly due to the fact that we have a known signal that is magnitudes greater than the noise floor.  In a radiometer however, we do not have this large separation between the information we need and the noise of the system.  And so our noise factor is a more critical component.  
+
+To counter this, we use Low Noise Amplifiers to amplify the signal but it can also help lower our noise factor.  The first LNA in the chain contributes significantly to our noise factor, so by selecting a LNA that has a very low noise factor, it reduces the noise factor for the system.  This can be shown by looking at the equation that calculates our noise factor.
+
+\begin{equation}
+F=F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +\frac{F_n-1}{G_1 G_2 G_3 \cdots G_{n-1}}
+\end{equation}
+
+This however is the only major change we need to do for doing radiometer work with an off the shelf radiometer.  The rest will be done within software which is the principal reason for using a software defined radio.  
+
+The rest of the hardware that is needed is the hardware to allow us to digitize the signal as soon as possible.  The Ettus Research N200 SDR uses daughter boards which allow for easy replacement of the RF front end to the software defined radio.  Ettus Research makes a number of daughter boards that range from a a wide range of frequencies and is available with transmitters, receivers and transceivers.  Because these boards are modular and do not touch the analog to digital converters or the on-board FPGA, very little change is required in the software.  The daughter boards however do have the required RF hardware for the signal to be processed.  In this application it was required that the signal was detected at 1.4 GHz with a bandwidth of 20 MHz.  The DBSRX2 receiver met this requirement and was selected to be used with the N200.  In this radiometer application transmission is not needed and is in fact illegal in the 1.4 GHz band, which is reserved for radiometer applications.
+
+\subsubsection{The DBSRX2 Receiver}
+The DBSRX2 receiver board is capable of receiving signals between 800 MHz and 2.3 GHz.  The board is able to plug into one of expansion slots available on the N200 that we are using.  This board then down-coverts the signal into analog I and Q values that are then fed into the N200 analog to digital converter.
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics{Images/dbsrx2}
+\isucaption{The DBSRX2 daughter board from Ettus Research}
+\label{dbsrx2}
+\end{figure}
+}
+
+The DBSRX2 has several key components on it that is used to take the analog RF signal and prepare it for digitization by the analog to digital converter.  First the signal is amplified through a Programmable Gain Amplifier (PGA).  This PGA is accessible from the software and can be configured by the software.  Next the signal goes into a direct-conversion integrated circuit that directly converts the RF signal to analog I and Q values.  The integrated circuit, a Maxim MAX2112 device, also includes a Low Noise Amplifier (LNA), mixer and Low Pass Filter (LPF).  This essentially amplifies the signal, mixes into baseband and then applies a low pass filter.  
+
+These analog I and Q values are then passed to the N200 to be sampled by the analog to digital converter.  The IQ values are differential signals to minimize noise possible interference.
+
+\subsection{Software}
+Software of course plays a critical role in both a software defined radio but also in our software defined radio radiometer.  There are really two pieces of software that are in play with the software defined radio we are using.  The first is the firmware that used in the FPGA of the N200.  However, this firmware currently does not implement the actual radiometer functions but instead provides us a link to both the I/Q data and also the control of the of the SDR itself.  
+
+The second is the software that is running on the host computer.  It is this software that provides the calculations on the I/Q data to give us the information we need and also creates a GUI for the user to interface with the radio.  For this software, we will be using GNURadio, an open source software program that is used in many software defined radios including the N200 SDR that we have.
+
+\subsubsection{GNURadio}
 
 GNURadio fills in the software side of the software defined radio.  Although there is firmware that runs on the FPGA in the N200, this firmware is designed to communicate with a host PC.  It is this software that does most of the work in terms of the calculations that are done with the signal.  The FPGA simply sends the raw IQ data to the host PC, which then performs the necessary math functions.  Again, the reason why software defined radios are desirable is the ability to change the behavior of the radio very quickly.  In our case we can change functionality by simply loading a new software program in the host PC.  
 
@@ -244,38 +281,6 @@ GNUradio Companion works by having many of the common functions as blocks that c
 GNURadio Companion also includes blocks that allow it to create a GUI type of interface.  The typical method it uses for this is using wxGUI although GNURadio Companion does also include blocks that can use QT for generating widgets as well.  However, the wxGUI tends to work better and has better support in GNURadio than QT.  
 
 Through these blocks can not only manipulate the data we need to perform a total power radiometer in software but to also create a user interface that allows us to control the radiometer as well.  We are also able to display the information in real time so the user can see changes in power and even monitor spectral information during the operation of the radiometer. 
-
-\section{A Software Defined Radio Radiometer Theory of Operation}
-A software defined radio radiometer implements the key features of a radiometer in software instead of relaying on hardware.  While some hardware is still needed, primarily with the RF front end that amplifies the signal while maintaining a low noise factor, we want the software to do as much of the work as possible.  
-
-\subsection{Hardware}
-
-Hardware with a software defined radio still plays a critical role.  A traditional software defined radio will focus on digitizing the signal as soon as possible and the hardware used will be focused on performing that critical digitizing process.  For a software defined radio radiometer, we still want to digitize as soon as possible, but we also need to consider our noise factor.  Most software defined radios are designed for communication purposes such as implementing 802.11b or other wireless protocols.  In these cases a higher noise factor is not as detrimental to the overall system as it would be with a radiometer.  This is mainly due to the fact that we have a known signal that is magnitudes greater than the noise floor.  In a radiometer however, we do not have this large separation between the information we need and the noise of the system.  And so our noise factor is a more critical component.  
-
-To counter this, we use Low Noise Amplifiers to amplify the signal but it can also help lower our noise factor.  The first LNA in the chain contributes significantly to our noise factor, so by selecting a LNA that has a very low noise factor, it reduces the noise factor for the system.  This can be shown by looking at the equation that calculates our noise factor.
-
-\begin{equation}
-F=F_1+\frac{F_2-1}/{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +\frac{F_n-1}{G_1 G_2 G_3 \cdots G_{n-1}}
-\end{equation}
-
-The daughter boards allow for easy replacement of the RF front end to the software defined radio.  Ettus Research makes a number of daughter boards that range from a a wide range of frequencies and is available with transmitters, receivers and transceivers.  Because these boards are modular and do not touch the analog to digital converters or the on-board FPGA, very little change is required in the software.  The daughter boards however do have the required RF hardware for the signal to be processed.  In this application it was required that the signal was detected at 1.4 GHz with a bandwidth of 20 MHz.  The DBSRX2 receiver met this requirement and was selected to be used with the N200.  In this radiometer application transmission is not needed and is in fact illegal in the 1.4 GHz band, which is reserved for radiometer applications.
-
-\subsection{The DBSRX2 Receiver}
-The DBSRX2 receiver board is capable of receiving signals between 800 MHz and 2.3 GHz.  The board is able to plug into one of expansion slots available on the N200 that we are using.  This board then down-coverts the signal into analog I and Q values that are then fed into the N200 analog to digital converter.
-
-{\begin{figure}[h!tb] 
-\centering
-\includegraphics{Images/dbsrx2}
-\isucaption{The DBSRX2 daughter board from Ettus Research}
-\label{dbsrx2}
-\end{figure}
-}
-
-The DBSRX2 has several key components on it that is used to take the analog RF signal and prepare it for digitization by the analog to digital converter.  First the signal is amplified through a Programmable Gain Amplifier (PGA).  This PGA is accessible from the software and can be configured by the software.  Next the signal goes into a direct-conversion integrated circuit that directly converts the RF signal to analog I and Q values.  The integrated circuit, a Maxim MAX2112 device, also includes a Low Noise Amplifier (LNA), mixer and Low Pass Filter (LPF).  This essentially amplifies the signal, mixes into baseband and then applies a low pass filter.  
-
-These analog I and Q values are then passed to the N200 to be sampled by the analog to digital converter.  The IQ values are differential signals to minimize noise possible interference.
-
-\subsection{Software}
 
 \section{Comparison of a Software Defined Radio Radiometer vs Traditional Radiometer}
 
