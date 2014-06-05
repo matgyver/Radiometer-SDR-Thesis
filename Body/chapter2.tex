@@ -13,7 +13,7 @@ A software defined radio of course is only as good as the software that is writt
 
 \section{Traditional Radiometer Theory of Operation}
 
-The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole.  
+The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure the correct power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole.  
 
 \subsection{Measuring RF power}
 
@@ -55,9 +55,9 @@ P=k*\beta*G*(T_{A}+T_{N})
 
 The issue with all radiometers is that it must detect small signal changes in a noisy environment.  To understand this, let us look at the example of T$_{A}$ has a value of 200 K and T$_{N}$ has a value of 800 K.  Since T$_{N}$ is added to our antenna signal, we have a total noise temperature of 1,000 K.  This means that if we want to detect a change as small as 1 K, we must be able to measure the difference between 1,000 K and 1,001 K. [\cite{skou}]
 
-The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T. 
+The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T and is shown in equation \ref{NEAT_EQ}. 
 
-\begin{equation}
+\begin{equation} \label{NEAT_EQ}
 NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}}
 \end{equation}
 
@@ -65,15 +65,23 @@ The sensitivity of the radiometer is based on both the bandwidth, $\beta$, of th
 
 This covers a very simplified radiometer, however most radiometers are more complicated than the one shown in Figure~\ref{noiserad}.
 
-%Insert a graph like the one found in Skou, Figure 4.1
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=\textwidth]{Images/Radiometer.png}
+\isucaption{A total power radiometer}
+\label{trad_radiometer}
+\end{figure}
+}
 
-A more typical radiometer can be shown in Figure .  Here we have expanded the blocks used and have separated the bandwidth and gain blocks.  In addition, we have detection, shown as X$^2$, and integration.  These last two blocks make up the detection and results in the power we can measure, which is a voltage represented as V$_{out}$.  This results in equation~\ref{eq:vout_1}.
+A more typical radiometer can be shown in Figure \ref{trad_radiometer}.  Here we have expanded the blocks used and have separated the bandwidth and gain blocks.  In addition, we have detection, shown as X$^2$, and integration.  These last two blocks make up the detection and results in the power we can measure, which is a voltage represented as V$_{out}$.  This results in equation~\ref{eq:vout_1}.
 
 \begin{equation} \label{eq:vout_1}
 V_{OUT}=c*(T_A+T_N)*G
 \end{equation}
 
 Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ and the noise from the antenna, T$_A$ and multiplied by the gain in the system, G.
+
+The voltage output from this radiometer is then either measured or may also be sampled by an analog to digital converter.  In both cases the output has no real meaning until it is calibrated.
 
 \section{ISU Radiometer Theory of Operation}
 The original ISU Radiometer was constructed by the University of Michigan and was based on Dr. Mark Fischman's dissertation on a Direct-Sampling Digital Radiometer[\cite{Fischman2001}].  This type of radiometer amplifies the signal but then immediately digitizes the signal to be processed.  In many ways, this is how a software defined radio works, however in this case the ISU radiometer is under-sampled.  However, as explained by Dr. Fischman this is acceptable for a total power radiometer since the only information we need is power information.  The radiometer that Dr. Fischman proposes also correlates the signals, one from the vertical polarization and the other from the horizontal polarization from the antenna.  
