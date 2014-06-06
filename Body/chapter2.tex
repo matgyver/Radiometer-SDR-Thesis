@@ -49,7 +49,7 @@ However, since we do not have an ideal radiometer, we have another key component
 
 As it can be seen, this additional noise is added to the noise coming from the antenna source.  Therefore T$_{N}$ is added to T$_{A}$ and our final equation for the power measured is shown in equation~\ref{eq:final_power}.  
 
-\begin{equation} \label{eq:final_power_1}
+\begin{equation} \label{eq:final_power}
 P=k*\beta*G*(T_{A}+T_{N})
 \end{equation}
 
@@ -84,18 +84,17 @@ Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ 
 The voltage output from this radiometer is then either measured or may also be sampled by an analog to digital converter.  In both cases the output has no real meaning until it is calibrated.
 
 \section{ISU Radiometer Theory of Operation}
-The original ISU Radiometer was constructed by the University of Michigan and was based on Dr. Mark Fischman's dissertation on a Direct-Sampling Digital Radiometer[\cite{Fischman2001}].  This type of radiometer amplifies the signal but then immediately digitizes the signal to be processed.  In many ways, this is how a software defined radio works, however in this case the ISU radiometer is under-sampled.  However, as explained by Dr. Fischman this is acceptable for a total power radiometer since the only information we need is power information.  The radiometer that Dr. Fischman proposes also correlates the signals, one from the vertical polarization and the other from the horizontal polarization from the antenna.  
-
+The original ISU Radiometer was constructed by the University of Michigan and was based on Dr. Mark Fischman's dissertation on a Direct-Sampling Digital Radiometer[\cite{Fischman2001}].  However, for this paper we will refer to the ISU Radiometer in terms of using the RF Front end of the radiometer.  This RF front end contains the band-pass filters and the Low Noise Amplifiers (LNAs).  The LNAs play an important role as explained in the previous section to amplify the noise we are looking at while minimizing the amount of noise they contribute to the overall system.  While the band-pass filter is not needed, it did ensure that the signal we were looking at was in the 1.4 GHz band.
 
 \section{Software Defined Radio Theory of Operation}
 
 A software defined radio (SDR) attempts to mimic radio functions in software instead of relying on dedicated hardware.  As stated in the previous section, a radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at.  
 
-The SDR is able to do all of this but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal.  This device is simply a diode where the input voltage is squared and the output from the diode is proportional to the AC input voltage.  Therefore a 3 dB increase in the RF power will result in a two times increase in the voltage.  This power measurement will be fluctuating rapidly, therefore we will then run the output from the square-law detector to an integrator and integrate over a set time period.  As shown in equation 2.5, this integration time also affects the NE$\Delta$T or sensitivity of the radiometer as well.
+The SDR is able to do all of this but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal.  This device is simply a diode where the input voltage is squared and the output from the diode is proportional to the AC input voltage.  Therefore a 3 dB increase in the RF power will result in a two times increase in the voltage.  This power measurement will be fluctuating rapidly, therefore we will then run the output from the square-law detector to an integrator and integrate over a set time period.  As shown in equation \ref{NEAT_EQ}, this integration time also affects the NE$\Delta$T or sensitivity of the radiometer as well.
 
-For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
+For the SDR, the incoming signal is sampled and converted to I/Q values.  The I/Q values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs what is shown in equation \ref{sdr_x2}.
 
-\begin{equation}
+\begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
 \end{equation}
 
@@ -111,14 +110,15 @@ To begin with, we look at what an analog RC filter looks like.
 \end{figure}
 }
 
-This circuit can be represented by the following equation.
+This circuit can be represented by equation \ref{eq:rc_circuit_eq}.
+
 \begin{equation}\label{eq:rc_circuit_eq}
 \frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
 \end{equation}
 
-A Finite Impulse Response (FIR) filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by the following equation:
+A Finite Impulse Response (FIR) filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter.
 
-\begin{equation}
+\begin{equation}\label{FIR_Eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}
 \end{equation}
 
@@ -126,53 +126,53 @@ This simply says that the nth output is a weighted average of the most recent P 
 
 An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except that we add an additional summation term which feeds back the previous output.
 
-\begin{equation}
+\begin{equation}\label{IIR_eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
 \end{equation}
 
-It can be seen that a FIR filter is really a IIR filter except that $Q=0$.  
+IEquation \ref{IIR_eq} shows that a FIR filter is really a IIR filter, except that $Q=0$.  
 
 To get a better understanding on how our digital IIR filter relates to our RC filter analog, we can look at the Fourier Transform and the relationship of the input to the output in the frequency domain.
 
-\begin{equation}
+\begin{equation}\label{Fourier_IIR}
 H(f)=\frac{\displaystyle\sum\limits_{j=o}^{P-1} c_je^{-2\pi ijfT}}{1-\displaystyle\sum\limits_{k=1}^{Q} d_ke^{-2\pi ikfT}}
 \end{equation}
 
-Here $f$ is our frequency in Hz and $T$ is the time between samples in seconds.
+In equation \ref{Fourier_IIR}, $f$ is our frequency in Hz and $T$ is the time between samples in seconds and is related to our sampling frequency.
 
-We now want show the link between our analog RC circuit and the IIR filter.  Looking at equation \ref{eq:rc_circuit_eq}, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can substitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is.
+We now want show the link between our analog RC circuit and the IIR filter.  Looking at equation \ref{eq:rc_circuit_eq}, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can substitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is and we can do that using equation \ref{sampling_rate_eq}.
 
-\begin{equation}
+\begin{equation}\label{sampling_rate_eq}
 T=time between samples=\frac{1}{sampling rate}
 \end{equation}
 
 We can now relate our input voltage to the input to our IIR filter and the output voltage to the output of our IIR filter.
 
-\begin{equation}
+\begin{equation}\label{input_IIR}
 x_n=v_{in}(nT)
 \end{equation}
 
-\begin{equation}
+\begin{equation}\label{output_IIR}
 y_n=v_{out}(nT)
 \end{equation}
 
 We can now rewrite our difference equation with $x_n$ and $y_n$.
 
-\begin{equation}
+\begin{equation}\label{diff_xn_yn}
 \frac{x_n-y_n}{R}=C\frac{y_n-y_{n-1}}{T}
 \end{equation}
 
 Now, we can solve for $y_n$ which results in our final equation for showing how a IIR filter is related to an RC filter.
 
-\begin{equation}
+\begin{equation}\label{final_IIR_RC}
 y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
 \end{equation}
 
 It can be seen that an IIR filter can have the same frequency response as we would expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
 
-For the cutoff frequency of a RC circuit, we know that it has the following relationship.
+For the cutoff frequency of a RC circuit, we know that it has the relationship shown in equation \ref{RC_relationship}.
 
-\begin{equation}
+\begin{equation}\label{RC_relationship}
 f_c=\frac{\sqrt{3}}{2\pi RC}\rightarrow RC=\frac{\sqrt{3}}{2\pi f_c}
 \end{equation}
 
@@ -182,6 +182,8 @@ For GNURadio most of the work is done for us.  We can simply enter in our desire
 
 Like a traditional radiometer, the SDR will use an antenna to look at the target of interest.  SDRs still use a RF stage that takes the power from the source and amplifies it.  The difference though begins after that.  A SDR will then sample and generate I and Q values that represents the amplitude and phase of the signal.  From there, this data is sent to a computer to be processed.  We can then use this information to calculate the power that is being seen.  In addition, we can manipulate the signal in other ways such as applying a filter to filter out an unwanted source.
 
+Now that we have the uncalibrated power and we have applied a low-pass filter to smooth out the information, we have replicated the key components that you would find in a traditional radiometer.  All of this has now taken place in the digital domain.  The information can now be stored, displayed or both for further analysis.  
+\subsection{General Specifications}
 
 The N200 is a SDR developed and built by Ettus Research.  It is one of the newer models in the companies USRP line of SDRs.  It offers several key features that were desirable for a radiometer type of application while still being an economical option.  It also offered a highly flexible architecture which will allow this radio to be up-gradable in the foreseeable future.  
 
@@ -192,7 +194,6 @@ The N200 is a SDR developed and built by Ettus Research.  It is one of the newer
 \label{N200}
 \end{figure}
 }
-\subsection{General Specifications}
 
 The N200 has the following features that made it well suited for our specific application.
 
@@ -211,21 +212,9 @@ The analog to digital converters (ADC) allow us to take the analog I and Q value
 % Below \subsubsection
 % Sectional commands: \paragraph and \subparagraph may also be used
 \subsubsection{50 MS/s Bandwidth}
-For this application, the N200 is required to receive a signal at 1.4 GHz and is at least 20 MHz wide.  Bandwidth plays an important role in remote sensing and to the amount of power that we receive.  It also plays a key role in the sensitivity of the radiometer.  To begin, an examination of how much power that is received and the correlation to the bandwidth will be looked at.
+For this application, the N200 is required to receive a signal at 1.4 GHz and is at least 20 MHz wide.  Bandwidth plays an important role in remote sensing and to the amount of power that we receive.  It also plays a key role in the sensitivity of the radiometer.  This was discussed in the theory of a traditional radiometer and equation \ref{eq:final_power} shows us the relationship that our bandwidth plays in the overall power received.    
 
-\begin{equation}
-P=k*\beta*G*(T_{A}+T_{sys})
-\end{equation}
-
-Here we can see that the bandwidth of the signal received directly relates to the amount of power the radiometer will measure.  The higher the bandwidth the more power the radiometer will see.  
-
-Equally important however is the the sensitivity or how small of a change the radiometer can detect.  This sensitivity or NEAT function is shown in equation 2.2
-
-\begin{equation}
-NE\Delta T=\frac{T_{A}+T_{sys}}{\sqrt{\beta * \tau}}
-\end{equation}
-
-Again, the amount of bandwidth the radiometer receives plays a large part in the performance of the radiometer.  
+Equally important however is the the sensitivity or how small of a change the radiometer can detect.  This sensitivity or NEAT function is shown in equation \ref{NEAT_EQ}.  Again, the amount of bandwidth the radiometer receives plays a large part in the performance of the radiometer.  
 
 Another factor however is the amount of bandwidth the existing RF front end of the ISU radiometer is able to provide to us.  The current filters on the ISU Radiometer keep the bandwidth of the signal to 20 MHz.  This meant that at the very minimum a 20 MS/s bandwidth from the SDR is required.  
 
@@ -240,7 +229,7 @@ Hardware with a software defined radio still plays a critical role.  A tradition
 
 To counter this, we use Low Noise Amplifiers to amplify the signal but it can also help lower our noise factor.  The first LNA in the chain contributes significantly to our noise factor, so by selecting a LNA that has a very low noise factor, it reduces the noise factor for the system.  This can be shown by looking at the equation that calculates our noise factor.
 
-\begin{equation}
+\begin{equation}\label{noise_factor}
 F=F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +\frac{F_n-1}{G_1 G_2 G_3 \cdots G_{n-1}}
 \end{equation}
 
@@ -292,4 +281,12 @@ Through these blocks can not only manipulate the data we need to perform a total
 
 \section{Comparison of a Software Defined Radio Radiometer vs Traditional Radiometer}
 
+As outlined above, a software defined radio implements a traditional radiometer but in the digital domain.  For power detection, we simply sum the squares of the I and Q values that have been sampled by the software defined radios analog to digital converters.  As with a traditional radiometer, we also want to filter this information to remove much of the jitters that comes from the rapid fluctuations in the power readings.  This is done using an IIR low pass filter, which mimics a traditional RC low pass filter.  Once completed, we now have the total power reading from the radiometer and we can now store, display or both this information.  
+
 \section{Comparison of a Software Defined Radio Radiometer and ISU Radiometer}
+
+The original ISU Radiometer used similiar components as a software defined radio but in a different way.  Like a software defined radio, the original ISU radiometer used an analog to digital converter to sample the incoming RF signal.  It then sent this information to a FPGA to be processed and then sent to a micro-controller to store this information.  
+
+The difference however lays with how power information is extracted from the signal.  The original ISU radiometer purposefully under-sampled the signal but is still able to extract power information.  It does this however at the cost of losing frequency information.  
+
+The radiometer in this thesis however retains both phase and magnitude information and instead mimics a traditional radiometer in software by summing an squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can a more in-dept analysis of the signal coming into the radiometer which allows for agility in the system.

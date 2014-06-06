@@ -13,10 +13,6 @@ Sensitivity of the radiometer relates to the amount of power that the radio sele
 
 Power from the radiometer can be expressed in equation \ref{eq:final_power} from chapter 2, where we take into consideration bandwidth, gain and the input from the antenna plus the noise added from the antenna.  
 
-\begin{equation} \label{eq:final_power}
-P=k*\beta*G*(T_{A}+T_{N})
-\end{equation}
-
 Sensitivity relates to being able to distinguish one signal from the other.  In other words, we must be able to distinguish, or detect, our wanted signal from noise that is present in the signal.  To demonstrate this, consider a system that has a system noise temperature of 700K and an antenna temperature of 300K.  This gives us a total noise temperature of 1000K.  Therefore, if we wish to detect a change of 1K, we need to be able to detect between 1000K and 1001K.
 
 Since our signal is really random fluctuations about a mean power input to our system, we can reduce the fluctuations by averaging or integrating the signal.  This results in equation \ref{eq:rad_sensitivity} which is derived in chapter 2.
@@ -29,11 +25,7 @@ Since our signal is really random fluctuations about a mean power input to our s
 This equation gives us the radiometer sensitivity based on the input, which is both the noise and input signal with consideration to the bandwidth and integration time, or averaging, that is done to the signal.  
 
 \subsection{Accuracy and Stability}
-Stability and accuracy are additional problems that need to be considered when looking at the radiometer system.  To begin we can once again look at the power received equation
-
-\begin{equation}
-P=k*B*G*({T_{A}+T_{N}})
-\end{equation}
+Stability and accuracy are additional problems that need to be considered when looking at the radiometer system.  To begin we can once again look at the power received equation that we discussed in Chapter 2 and is equation \ref{eq:final_power}.
 
 As we look at this equation, we can see that if k, B, G, and $T_{N}$ are constant, then stability can be assured.  k is a known constant and we can also assume that our bandwidth, B, will also remain constant, or at least while we are taking our measurements.  Gain and the noise temperature however can vary.  
 
