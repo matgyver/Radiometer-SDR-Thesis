@@ -47,15 +47,6 @@ The N200 utilizes a flexible architecture for a variety of RF interface systems 
 
 The daughter board selected was the DBSRX2 card.  This card is a receive only card that operates between 800 MHz and 2.4 GHz and would thus work in the 1.4 GHz band we are interested in.  The DBSRX2 also has built in amplification that is adjustable through software.
 
-%\subsubsection{Parts of the hypothesis}
-
-%Here one particular part of the hypothesis that is 
-%currently being explained is examined and particular
-%elements of that part are given careful scrutiny.
-
-% Below \subsubsection
-% Sectional commands: \paragraph and \subparagraph may also be used
-
 \subsection{GNURadio Software}
 
 For the software, we settled to use GNURadio, an open source software package that is well supported by the community and by the Ettus Research Group and the N200 SDR.  GNURadio also comes with what is known as GNURadio Companion or GRC.  This program provides us with a GUI interface and allows for the drag and drop of blocks that represent certain functions that can be used with the SDR.  GNURadio and GRC use Python as it's main scripting language and GNURadio uses C++ code for directly accessing the hardware.  The hardware interface for the N200 is provided by Ettus as well.  They provide drivers that allow GNURadio to talk to their hardware.  Like GNURadio, these drivers are also available to all platforms.  In addition, Ettus has released these drivers to the open source community.
@@ -63,12 +54,6 @@ For the software, we settled to use GNURadio, an open source software package th
 GNURadio has been ported to several platforms including Windows, Mac OS X and Linux.  Linux is by far the most popular platform to work on and most of this thesis research was done within the Linux environment.  Testing was also done though with a MacBook Pro running OS X 10.8.  Although GNURadio would compile and run on OS X, there were several issues with GRC and some graphs would not display properly under OS X.  
 
 Through GNURadio, we can now write code that will get take the data given to us from the SDR and manipulate the signal as we need to mimic a radiometer.  The power detection, filtering and recording of this data is all done through GNURadio.  This also means that we are shifting more of the computational power done on the signal from the FPGA to a computer running GNURadio.  This is different from the current ISU radiometer where the FPGA did almost all of the work and then simply sent the data to a computer to be stored.  The benefit of this however is that components of the radiometer can be updated by simply changing things in GNURadio and does not require reprogramming the FPGA.  It does however mean that the host computer must be powerful enough to handle the signal.  
-
-%\subsubsection{Parts of the second hypothesis}
-
-%Here one particular part of the hypothesis that is 
-%currently being explained is examined and particular
-%elements of that part are given careful scrutiny.
 
 \subsection{Current ISU Radiometer}
 The current ISU radiometer was designed and built by the University of Michigan and was designed for soil moisture radiometry at 1.4 GHz.  It is a digital direct sample radiometer that directly samples the incoming RF signal after filtering and amplification.  What makes the ISU radiometer unique is that the A/D converters are not fast enough for a 1.4 GHz signal.  This is actually done on purpose and is part of the design.  With radiometers, we are generally only concerned with power of the incoming signal.  Therefore, the current ISU radiometer can under-sample the signal as the only information we need from the signal is the power information.  The ISU radiometer is also a correlating radiometer, where both the vertical and horizontal polarization from the antenna can be correlated.  
@@ -87,8 +72,6 @@ A driving force behind this thesis research was due to the fact that the digital
 Since the current radiometer was very much like a SDR, it was determined to look into the feasibility of using a commercial off the shelf SDR and using it in a radiometer application.  To our knowledge this has not been attempted before and it was determined this would serve as a good thesis platform.
 
 It was assumed in the beginning that the RF front end of the existing radiometer was still functioning properly.  Additional tests on the radiometer did show some intermittent problems which did result in some complications in testing.  These will be explained in more detail later in this thesis.  However, the use of the SDR did help in seeing some of these problems which added an additional benefit to using a SDR to the more traditional radiometers.  
-
-%Note any repairs here based on additional research
 
 \subsection{Related Works}
 As mentioned before, software defined radios have been used in a number of applications.  While as far as the author has determined, this is the first application of using an off the shelf software defined radio for a radiometer in remote sensing for soil moisture measurements, there has been similar applications done.  The closest application that has been found is with radio astronomy.  There are many similarities between radio astronomy and remote sensing of the ground.  Both are using a radiometer to listen to a source of interest.  In radio astronomy the basic principal is that a "hot" source such as a star will produce more noise than the cooler background of space.  In remote sensing we are looking at the overall change of the source to determine it's characteristics.  In both cases we are measuring the total power of the noise and based on that information we can determine some properties of the source we are looking at.
