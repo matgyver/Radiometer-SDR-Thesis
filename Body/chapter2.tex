@@ -130,7 +130,7 @@ An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except 
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
 \end{equation}
 
-IEquation \ref{IIR_eq} shows that a FIR filter is really a IIR filter, except that $Q=0$.  
+Equation \ref{IIR_eq} shows that a FIR filter is really a IIR filter, except that $Q=0$.  
 
 To get a better understanding on how our digital IIR filter relates to our RC filter analog, we can look at the Fourier Transform and the relationship of the input to the output in the frequency domain.
 
@@ -209,8 +209,6 @@ These specifications had a large impact on the selection of the N200 for this ap
 \subsubsection{14-bit ADC}
 The analog to digital converters (ADC) allow us to take the analog I and Q values from the daughter boards and digitize this information.  Once digitized, we can now work with the signal both on the on-board FPGA board or stream it to the computer so that our software can manipulate the signal.  In radiometry, we are primarily looking at the overall power of the signal and this does not require us to accurately recreate the signal.  However, it will be discussed in this paper in further detail that there are times where being able to recreate the signal for additional analysis can be quite beneficial.  For that reason, the resolution of the ADC becomes more important.
 
-% Below \subsubsection
-% Sectional commands: \paragraph and \subparagraph may also be used
 \subsubsection{50 MS/s Bandwidth}
 For this application, the N200 is required to receive a signal at 1.4 GHz and is at least 20 MHz wide.  Bandwidth plays an important role in remote sensing and to the amount of power that we receive.  It also plays a key role in the sensitivity of the radiometer.  This was discussed in the theory of a traditional radiometer and equation \ref{eq:final_power} shows us the relationship that our bandwidth plays in the overall power received.    
 
