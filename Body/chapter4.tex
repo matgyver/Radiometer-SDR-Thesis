@@ -21,7 +21,7 @@ shown below.
 
 \begin{table}[h!tb] \centering
 \isucaption{ADL5902 Specifications}
-\label{data}
+\label{ADL5902_data}
 % Use: \begin{tabular{|lcc|} to put table in a box
 \begin{tabular}{lcc} \hline
 \textbf{Parameter @ 900 MHz} & \textbf{Value} & \textbf{Units} \\ \hline
@@ -35,15 +35,6 @@ Output Voltage Range & 0.03 to 4.8 & V \\ \hline
 \end{table}
 
 The ADL5902 outputs an analog signal that falls between 0.03 volts and 4.8 volts.  It outputs a change of 53.7 millivolt per dB detected by the ADL5902.  
-
-%\subsubsection{Parts of the hypothesis}
-
-%Here one particular part of the hypothesis that is 
-%currently being explained is examined and particular
-%elements of that part are given careful scrutiny.
-
-% Below \subsubsection
-% Sectional commands: \paragraph and \subparagraph may also be used
 
 \subsection{Data acquisition and storage}
 
@@ -91,7 +82,7 @@ Shows that the ADL5902 has a linear output and matches the expected value based 
 \includegraphics[width=\textwidth]{Images/Linearsquarelaw}
 
 \isucaption{Graph showing the linearity of the ADL5902}
-\label{adl5902}
+\label{adl5902_linear}
 \end{figure}
 
 The ADL5902 test board was considered to be used in the final design for the ISU radiometer and in additional tests.  However, Analog Devices decided to make the information to communicate with the BlackFin processor proprietary and this hampered attempts to integrate that system into our overall system design.  For this reason, it was decided to simply record the analog data that the ADL5902 itself puts out and the PIC32 described above was used to capture and send this information.
