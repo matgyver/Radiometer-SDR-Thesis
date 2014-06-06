@@ -15,7 +15,19 @@ However, this temperature stabilization requires extra weight and bulk to be add
 For this thesis we focused on the software that would run on a PC or comparable computer system running a full OS like Linux.  While this aids to speed up development and works just fine for testing the theory on a off the shelf SDR acting as a radiometer, it does require additional hardware.  For some applications of a radiometer, this is not a huge concern.  In the case for the ISU radiometer, the concern is not that large since the radiometer is not designed to be "portable" and requires additional support equipment such as a generator anyway.  However, other remote sensing applications, such as space based applications, would require a more efficient method.  It is very possible to move the software generated in GNURadio into the firmware of the N200.  This will help to offload the work needed by the computer and would allow for the computer or similar system to act as more of a control method and for data storage.  
 
 \subsection{Correlation}  
-One such method is to correlate the information with another input from the antenna.  This can be accomplished by using a dual polarization antenna which the ISU radiometer currently uses.  The previous ISU radiometer setup did just that, it correlated the data from the vertical polarization and from the horizontal polarization on the antenna.  This is very plausible with the SDR we have chosen for this work, the N200.  The N200 can have up to two daughter-boards installed and can stream both ports to the computer to be analyzed.  
+One such method is to correlate the information with another input which can be another antenna looking at the same source or can be two polarization from the same antenna.  This results in two receiver systems looking at the same source and you have two signals, $S_1$ and $S_2$.  Since we are looking at the same source, both signals will be correlated in time, and when multiplied they will provide an output proportional to the strength of the source signal.  The noise introduced by each receiver will then have a lower correlation due to the random nature of the noise.  This results in a radiometer with a greater sensitivity due to the reduction of the noise even though two receivers are used [\cite{Fujimoto}].
+
+The N200 software defined radio was chosen as it is capable of having two different daughter-cards plugged in.  Therefore it is possible to have both sources enter the software defined radio and once digitized we can sum the magnitudes of the two incoming sources.  This is quite easy to do and is shown in figure \ref{correlating_sdr}.
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=14cm]{Images/N200_rad_corr.png}
+\isucaption{The key blocks used for creating a correlating radiometer in software.  The key blocks is the USRP source, which allows us to address both daughter-boards and the ADD block which sums the signals.}
+\label{correlating_sdr}
+\end{figure}
+}
+
+Although figure \ref{correlating_sdr} shows a correlating software defined radio radiometer, it has not been tested.  In theory, this should correlate the signal and improve the sensitivity of the radiometer, however further testing is needed.
 
 \subsection{Improving stability with a feedback loop}
 
