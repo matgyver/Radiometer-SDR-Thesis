@@ -1,7 +1,7 @@
 %Radiometer Parsing script
 %Matthew E. Nelson
-%Updated 6/1/2014
-%Rev. 2.14
+%Updated 6/8/2014
+%Rev. 2.15
 %--------------------------------------------------------------------------
 %Revision History
 %1.7 - Added CSV input file format.  Gave up on reading LVM
@@ -17,6 +17,7 @@
 %for plots
 %2.13 - Added calibration line plots
 %2.14 - changed graphs to a time base
+%2.15 - Added plotting of both x^2 and N200 on same graph for comparasion
 
 %This script uses the read_float_binary.m file to read in a file written by
 %GNURadio.  This data can then be manipulated by Matlab and graphed.  This
@@ -44,11 +45,11 @@ clear all;
 %Constants
 %set's the window size to filter the square-law data
 windowSize = 200;
-%Receiver Noise Temperature
+%Receiver Noise Temperature for NEAT calc
 Trec = 400;
-%Integration Time
+%Integration Time for NEAT calc
 tau = 2;
-%Bandwidth
+%Bandwidth for NEAT calc
 beta = 10e6;
 %------------------------------------------------------------------------
 %User Dialog entry
@@ -176,6 +177,7 @@ avgx2=filter(ones(1,windowSize)/windowSize,1,temp2);
 %-------------------------------------------------------------------
 %Convert voltage from square-law to dBm.  53 mV is 1 dBm
 dbmx2=x2./.053;
+avgdbmx2=avgx2./.053;
 
 %Calculate N E Delta T (NEAT)
 %First calculatation is the NEAT expected based on BW and other parameters
@@ -187,9 +189,13 @@ NEAT = (Trec)./sqrt(tau+beta);
 %Look at a sample that is stable, in the LN2 area
 
 for n = 1:100;
-    rQ_stdev(n) = gnuradio(n+310);
+    rQ_stdev(n) = gnuradio(n+610);
 end
 estNEAT = std(rQ_stdev);
+
+for n = 1:100;
+    rQ_stdev(n) = gnuradio(n+610);
+end
 
 %Now print this information out
 fprintf('Calculated NEAT: %.2f Actual NEAT: %.2f \r\n',NEAT, estNEAT);
@@ -248,3 +254,11 @@ plot(y,x2calib1*y+x2calib2,'-b');
 title('Calibration line for X^2 detector');
 xlabel('raw value');
 ylabel('Noise Temperature K');
+%----------------------------------------------------------------------
+%plot x2 with dBm
+figure
+plot(timex2,avgdbmx2);
+title('x^2 power readings');
+ylabel('dBm');
+xlabel('Time Sec');
+axis([-inf inf 37 40]);
