@@ -193,10 +193,6 @@ for n = 1:100;
 end
 estNEAT = std(rQ_stdev);
 
-for n = 1:100;
-    rQ_stdev(n) = gnuradio(n+610);
-end
-
 %Now print this information out
 fprintf('Calculated NEAT: %.2f Actual NEAT: %.2f \r\n',NEAT, estNEAT);
 %-------------------------------------------------------------------
