@@ -209,19 +209,30 @@ ylabel('Calibrated Noise Temperature in K');
 subplot(2,1,2);
 plot(avgx2_calib);
 title('x^2 Calibrated Data');
+figure
+timeshift = timex2+75;
+plot(timen200,N200calib_data,'r');
+hold on;
+plot(timeshift,avgx2_calib,'g');
+title('X^2 and N200 calibrated data');
+ylabel('Noise Temp K');
+xlabel('Time sec');
+legend('N200','X^2');
 %---------------------------------------------------------------------
 %Plot the raw data
 figure;
 subplot(2,1,1);
 plot(timen200,gnuradio);
 title('N200 TPR Raw Data');
-xlabel('Time');
+xlabel('Time Sec');
 ylabel('rQ Value');
 subplot(2,1,2);
 plot(timex2,avgx2);
 title('x^2 Raw Data');
 ylabel('Raw Voltage');
+xlabel('Time Sec');
 axis([-inf inf 2.1 2.4]);
+
 %---------------------------------------------------------------------
 %Plot the calibration line
 figure;
