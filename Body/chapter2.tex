@@ -5,7 +5,7 @@
 
 \chapter{THEORY OF OPERATION}
 
-The work of this thesis is to use an off the shelf software defined radio (SDR) to perform the same operation or better of a traditional analog radiometer.  Using a SDR radio also means that we are able to be more flexible in how the radiometer performs, is capable of frequency agility and adapting to changing conditions such as interference.  Using a software defined radio also allows for implentation of different radiometer types such as a polarimetric radiometer, a correlation radiometer and also a polarimetric radiometer that uses Stokes parameters [\cite{Wang}].  Normally, these would require changes to hardware, but all of these types of radiometers can be implemented in software increasing the flexibility of the system.  
+The work of this thesis is to use an off the shelf software defined radio (SDR) to perform the same operation or better of a traditional analog radiometer.  Using a SDR radio also means that we are able to be more flexible in how the radiometer performs, is capable of frequency agility and adapting to changing conditions such as interference.  Using a software defined radio also allows for implantation of different radiometer types such as a polarimetric radiometer, a correlation radiometer and also a polarimetric radiometer that uses Stokes parameters [\cite{Wang}].  Normally, these would require changes to hardware, but all of these types of radiometers can be implemented in software increasing the flexibility of the system.  
 
 The hardware that was selected for this research was the Ettus Research N200 Software Defined radio.  Information and rationale behind the selection of this unit will be covered later.  The N200 however gives us the standard building blocks for a typical software defined radio which includes a A/D converter and on-board FPGA.  The N200 however also gives a flexible front end by selecting various daughter boards that fit our application.  In addition, the N200 supports up to two daughter boards to be installed.  
 
@@ -13,7 +13,7 @@ A software defined radio of course is only as good as the software that is writt
 
 \section{Traditional Radiometer Theory of Operation}
 
-The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure the correct power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole.  
+The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure the correct power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole[\cite{Evans}].  
 
 \subsection{Measuring RF power}
 
@@ -61,7 +61,7 @@ The ability of a radiometer to detect these small changes is the radiometer's se
 NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}}
 \end{equation}
 
-The sensitivity of the radiometer is based on both the bandwidth, $\beta$, of the incoming signal and the integration time, $\tau$.  As it can be seen in the equation, we would want to have as much bandwidth as possible.  In a traditional radiometer, this bandwidth is often fixed and is dependent on the band-pass filters used in the radiometer.  We can however control $\tau$ and a longer integration time will help improve the sensitivity of the radiometer.[\cite{skou}]
+The sensitivity of the radiometer is based on both the bandwidth, $\beta$, of the incoming signal and the integration time, $\tau$.  As it can be seen in the equation, we would want to have as much bandwidth as possible.  In a traditional radiometer, this bandwidth is often fixed and is dependent on the band-pass filters used in the radiometer.  We can however control $\tau$ and a longer integration time will help improve the sensitivity of the radiometer.[\cite{ulaby}]
 
 This covers a very simplified radiometer, however most radiometers are more complicated than the one shown in Figure~\ref{noiserad}.
 
@@ -222,7 +222,7 @@ For GNURadio most of the work is done for us.  We can simply enter in our desire
 
 Like a traditional radiometer, the SDR will use an antenna to look at the target of interest.  SDRs still use a RF stage that takes the power from the source and amplifies it.  The difference though begins after that.  A SDR will then sample and generate I and Q values that represents the amplitude and phase of the signal.  From there, this data is sent to a computer to be processed.  We can then use this information to calculate the power that is being seen.  In addition, we can manipulate the signal in other ways such as applying a filter to filter out an unwanted source.
 
-Now that we have the uncalibrated power and we have applied a low-pass filter to smooth out the information, we have replicated the key components that you would find in a traditional radiometer.  All of this has now taken place in the digital domain.  The information can now be stored, displayed or both for further analysis.  
+Now that we have the un-calibrated power and we have applied a low-pass filter to smooth out the information, we have replicated the key components that you would find in a traditional radiometer.  All of this has now taken place in the digital domain.  The information can now be stored, displayed or both for further analysis.  
 \subsection{General Specifications}
 
 The N200 is a SDR developed and built by Ettus Research.  It is one of the newer models in the companies USRP line of SDRs.  It offers several key features that were desirable for a radiometer type of application while still being an economical option.  It also offered a highly flexible architecture which will allow this radio to be up-gradable in the foreseeable future.  
