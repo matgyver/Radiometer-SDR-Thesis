@@ -4,7 +4,7 @@
 # Title: Total Power Radiometer - N200
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR
-# Generated: Sat May 24 19:51:10 2014
+# Generated: Fri Jun 13 00:21:53 2014
 ##################################################
 
 from datetime import datetime
@@ -538,8 +538,8 @@ class N200_TPR(grc_wxgui.top_block_gui):
 
     def set_prefix(self, prefix):
         self.prefix = prefix
-        self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.set_recfile_tpr(self.prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+        self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.blocks_file_sink_1.open(self.prefix+"iq_raw" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
 
     def get_variable_static_text_0_0_0_0(self):

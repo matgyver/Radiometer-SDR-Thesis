@@ -4,7 +4,7 @@
 # Title: Total Power Radiometer - N200 with Filter
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR with a bandpass filter
-# Generated: Sat May 24 21:29:26 2014
+# Generated: Thu Jun 12 23:54:53 2014
 ##################################################
 
 from datetime import datetime
@@ -58,10 +58,12 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.israte = israte = srate
         self.samp_rate = samp_rate = int(israte)
         self.prefix = prefix = "tpr_"
+        self.filter_band = filter_band = 500e3
         self.variable_static_text_0_0_0_0 = variable_static_text_0_0_0_0 = clock
         self.variable_static_text_0_0_0 = variable_static_text_0_0_0 = devid
         self.variable_static_text_0_0 = variable_static_text_0_0 = subdev
         self.variable_static_text_0 = variable_static_text_0 = israte
+        self.taps = taps = firdes.low_pass(1.0, samp_rate,filter_band, 1000)
         self.spec_data_fifo = spec_data_fifo = "spectrum_" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
         self.spavg = spavg = int(spa)
         self.scope_rate = scope_rate = 2
@@ -73,7 +75,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.idecln = idecln = decln
         self.gain = gain = 26
         self.freq = freq = frequency
-        self.filter_band = filter_band = 500e3
         self.file_rate = file_rate = 2.0
         self.fftrate = fftrate = int(samp_rate/fftsize)
         self.det_rate = det_rate = int(20.0)
@@ -194,29 +195,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._freq_text_box, 0, 0, 1, 1)
-        _filter_band_sizer = wx.BoxSizer(wx.VERTICAL)
-        self._filter_band_text_box = forms.text_box(
-        	parent=self.Main.GetPage(0).GetWin(),
-        	sizer=_filter_band_sizer,
-        	value=self.filter_band,
-        	callback=self.set_filter_band,
-        	label="Filter Bandwidth",
-        	converter=forms.float_converter(),
-        	proportion=0,
-        )
-        self._filter_band_slider = forms.slider(
-        	parent=self.Main.GetPage(0).GetWin(),
-        	sizer=_filter_band_sizer,
-        	value=self.filter_band,
-        	callback=self.set_filter_band,
-        	minimum=100e3,
-        	maximum=1e6,
-        	num_steps=100,
-        	style=wx.SL_HORIZONTAL,
-        	cast=float,
-        	proportion=1,
-        )
-        self.Main.GetPage(0).GridAdd(_filter_band_sizer, 3, 2, 1, 1)
         self._dc_gain_chooser = forms.radio_buttons(
         	parent=self.Main.GetPage(0).GetWin(),
         	value=self.dc_gain,
@@ -376,6 +354,31 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._idecln_text_box, 1, 2, 1, 1)
+        _filter_band_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._filter_band_text_box = forms.text_box(
+        	parent=self.Main.GetPage(0).GetWin(),
+        	sizer=_filter_band_sizer,
+        	value=self.filter_band,
+        	callback=self.set_filter_band,
+        	label="Filter Bandwidth",
+        	converter=forms.float_converter(),
+        	proportion=0,
+        )
+        self._filter_band_slider = forms.slider(
+        	parent=self.Main.GetPage(0).GetWin(),
+        	sizer=_filter_band_sizer,
+        	value=self.filter_band,
+        	callback=self.set_filter_band,
+        	minimum=100e3,
+        	maximum=9e6,
+        	num_steps=100,
+        	style=wx.SL_HORIZONTAL,
+        	cast=float,
+        	proportion=1,
+        )
+        self.Main.GetPage(0).GridAdd(_filter_band_sizer, 3, 2, 1, 1)
+        self.fft_filter_xxx_0 = filter.fft_filter_ccc(1, (taps), 1)
+        self.fft_filter_xxx_0.declare_sample_delay(0)
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((calib_1, ))
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((dc_gain, ))
         self.blocks_keep_one_in_n_4 = blocks.keep_one_in_n(gr.sizeof_float*1, samp_rate/det_rate)
@@ -401,9 +404,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	input_index=add_filter,
         	output_index=0,
         )
-        self.band_reject_filter_0 = filter.fir_filter_ccf(1, firdes.band_reject(
-        	.005, samp_rate, 100, filter_band, 100e03, firdes.WIN_HAMMING, 6.76))
-        (self.band_reject_filter_0).set_processor_affinity([1])
 
         ##################################################
         # Connections
@@ -424,13 +424,13 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_4, 0))
         self.connect((self.blocks_keep_one_in_n_4, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.blocks_complex_to_mag_squared_1, 0), (self.single_pole_iir_filter_xx_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.band_reject_filter_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.blks2_selector_0, 1))
-        self.connect((self.band_reject_filter_0, 0), (self.blks2_selector_0, 0))
         self.connect((self.blks2_selector_0, 0), (self.wxgui_fftsink2_0, 0))
         self.connect((self.blks2_selector_0, 0), (self.blocks_complex_to_mag_squared_1, 0))
         self.connect((self.blks2_selector_0, 0), (self.logpwrfft_x_0, 0))
         self.connect((self.blks2_selector_0, 0), (self.blks2_valve_2, 0))
+        self.connect((self.uhd_usrp_source_0, 0), (self.fft_filter_xxx_0, 0))
+        self.connect((self.fft_filter_xxx_0, 0), (self.blks2_selector_0, 1))
+        self.connect((self.uhd_usrp_source_0, 0), (self.blks2_selector_0, 0))
 
 
 # QT sink close method reimplementation
@@ -538,21 +538,30 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.set_taps(firdes.low_pass(1.0, self.samp_rate,self.filter_band, 1000))
         self.set_fftrate(int(self.samp_rate/self.fftsize))
         self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
         self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
-        self.band_reject_filter_0.set_taps(firdes.band_reject(.005, self.samp_rate, 100, self.filter_band, 100e03, firdes.WIN_HAMMING, 6.76))
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
     def get_prefix(self):
         return self.prefix
 
     def set_prefix(self, prefix):
         self.prefix = prefix
-        self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.set_recfile_tpr(self.prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+        self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.blocks_file_sink_1.open(self.prefix+"iq_raw" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+
+    def get_filter_band(self):
+        return self.filter_band
+
+    def set_filter_band(self, filter_band):
+        self.filter_band = filter_band
+        self.set_taps(firdes.low_pass(1.0, self.samp_rate,self.filter_band, 1000))
+        self._filter_band_slider.set_value(self.filter_band)
+        self._filter_band_text_box.set_value(self.filter_band)
 
     def get_variable_static_text_0_0_0_0(self):
         return self.variable_static_text_0_0_0_0
@@ -581,6 +590,13 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
     def set_variable_static_text_0(self, variable_static_text_0):
         self.variable_static_text_0 = variable_static_text_0
         self._variable_static_text_0_static_text.set_value(self.variable_static_text_0)
+
+    def get_taps(self):
+        return self.taps
+
+    def set_taps(self, taps):
+        self.taps = taps
+        self.fft_filter_xxx_0.set_taps((self.taps))
 
     def get_spec_data_fifo(self):
         return self.spec_data_fifo
@@ -655,9 +671,9 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
 
     def set_gain(self, gain):
         self.gain = gain
-        self.uhd_usrp_source_0.set_gain(self.gain, 0)
         self._gain_slider.set_value(self.gain)
         self._gain_text_box.set_value(self.gain)
+        self.uhd_usrp_source_0.set_gain(self.gain, 0)
 
     def get_freq(self):
         return self.freq
@@ -665,17 +681,8 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
     def set_freq(self, freq):
         self.freq = freq
         self._freq_text_box.set_value(self.freq)
-        self.uhd_usrp_source_0.set_center_freq(self.freq, 0)
         self.wxgui_fftsink2_0.set_baseband_freq(self.freq)
-
-    def get_filter_band(self):
-        return self.filter_band
-
-    def set_filter_band(self, filter_band):
-        self.filter_band = filter_band
-        self._filter_band_slider.set_value(self.filter_band)
-        self._filter_band_text_box.set_value(self.filter_band)
-        self.band_reject_filter_0.set_taps(firdes.band_reject(.005, self.samp_rate, 100, self.filter_band, 100e03, firdes.WIN_HAMMING, 6.76))
+        self.uhd_usrp_source_0.set_center_freq(self.freq, 0)
 
     def get_file_rate(self):
         return self.file_rate
