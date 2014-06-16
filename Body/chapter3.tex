@@ -41,8 +41,6 @@ Power detection is a key ability that allows a radiometer to function.  At its c
 
 To implement a total power radiometer in software, we first need to look at how we implement a total power radiometer traditionally.  Traditionally, a square law detector is used to detect the average power that is seen by the radiometer.  This simple device uses a diode that gives a small voltage output based on the RF power present.  This small voltage is then amplified and can now be calibrated with a known source to give us a noise temperature.  
 
-To implement this in software, we need to build a square law detector mathematically.  We can then give this to the software defined radio to process the information accordingly.  A square law detector mathematically, is the sum of the squares.  Once the signal has been digitized, it is expressed in data bits of I and Q, which represent in-phase and quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal.
-
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=17cm]{Images/GNURadio_Block.png}
@@ -51,7 +49,7 @@ To implement this in software, we need to build a square law detector mathematic
 \end{figure}
 }
 
-Add more here
+To implement this in software, we need to build a square law detector mathematically.  We can then give this to the software defined radio to process the information accordingly.  A square law detector mathematically, is the sum of the squares.  Once the signal has been digitized, it is expressed in data bits of I and Q, which represent in-phase and quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal.
 
 \section{Integrator through a IIR Filter}
 
@@ -75,7 +73,7 @@ The GNURadio Companion allows us to create python code that is used to not only 
 \end{figure}
 }
 
-Add more here.
+Through this interface we are able to control several key aspects of not only the radio hardware within the SDR but also with the behavior of the radiometer as well.  Hardware control of the SDR hardware allows us to change frequency and also adjust gain values within the N200.  Bandwidth is another parameter that can be altered from here as well.  Bandwidth affects the bandwidth for the RF signal, but also has an impact on the radiometer sensitivity as well.  Additional controls allows for alterations to the radiometer and includes being able to adjust the integration time of the radiometer.  
 
 \section{GNURadio Data Handling}
 Once we have the data that has been processed by the software defined radio, we will want to display this information and be able to store the data so we can analyze it later if needed.  Data display can be handled GNURadio, where we can plot the total power over time.  This allows the user to be able to visualize the total power and be able to determine if the total power has increased or decreased over the time window shown.  
@@ -97,7 +95,7 @@ The information from the software defined radio can be displayed through GNURadi
 \end{figure}
 }
 
-We are not limited to just total power from the radiometer.  If the radiometer has been calibrated, those calibration points can be entered and GNURadio can calculate the calibrated noise temperature.  
+We are not limited to just total power from the radiometer.  If the radiometer has been calibrated, those calibration points can be entered and GNURadio can calculate the calibrated noise temperature.  Additional information may also be added as needed.  For example, we are able to view the full spectrum that the radiometer sees.  This can be a useful tool for looking at potential RFI issues.    
 
 \subsection{GNURadio Data Processing}
 
