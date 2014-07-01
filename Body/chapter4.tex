@@ -95,6 +95,7 @@ To fully test both the total power radiometer in the software defined radio and 
 
 \subsection{Laboratory Setup}
 For this experiment the, ISU radiometer was setup in a laboratory that had access to measurement tools.  To measure the change in noise, a 50 ohm matched load was attached to the radiometer.  The ISU radiometer, with the current filters and LNAs would then amplify and filter the signal.  This signal was then measured by the square-law detector and the N200 SDR.  The 50 ohm load was then submersed into a hot or cold bath.  These water baths were temperature controlled for 100 degrees Centigrade and to 10 degrees Centigrade.  The load was submersed in each bath for 2 minutes to allow for it to reach the same temperature as the bath.  The noise measured was then recorded using GNURadio with the N200 SDR or with the PIC32 setup on the square-law detector.  In addition to the total power measurements, the raw I-Q data was also recorded.  This allowed us to replay the experiment through GNURadio for further study.
+
 \subsection{Test Results}
 
 Several experiments were conducted with this cold-bath configuration to establish that the results were reproducible.  In each case, the experiment showed that both the square-law detector and the SDR were able to measure a change of noise temperature.  The experiment used a change of only 50 C and the change was easily recorded on the SDR.  Using the experiment described in which the temperatures were held constant, this also gave us a calibration point that we can use to calibrate the radiometer.
@@ -118,9 +119,27 @@ During this experiment both the square law data and data from the software defin
 \label{lab1_x2_n200}
 \end{figure}
 
+Data from the N200 was stored to file using the GNURadio file sink which stores the data in a binary format.  The square-law detector was feed into a LabView DAQ which then stored the data in both an ASCII and LabView's TDMS file format.  In addition the LabView program displayed the square-law data in real time
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/labviewx2_lab0.png}
+
+\isucaption{Screen shot of the Labview program capturing total power information from the radiometer}
+\label{lab1_x2_n200}
+\end{figure}
+
 This experiment showed that both the square-law detector and the software defined radio was able to detect changes in the noise temperature.  It was also able to show that once calibrated, both showed identical results.
 \section{Testing with an injected noise source}
 The addition of an unwanted signal can be a determinant to the radiometer and has an adverse affect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices.  This problem becomes even a greater problem with radiometers used in orbiting spacecrafts as they are able to "see" large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.  This has been seen in some of the SMOS satellite data.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/interfering_signal_edit.png}
+
+\isucaption{Image of the interfering signal appearing on the spectrum display of the SDR Radiometer.}
+\label{lab1_x2_n200}
+\end{figure}
 
 RFI detection and mitigation is not a new topic in radiometry and there have been other methods in both the detection and mitigation of these signals[\cite{Forte}][\cite{McIntyre_RFI}][\cite{DeRoo}][\cite{Ellingson}].
 
