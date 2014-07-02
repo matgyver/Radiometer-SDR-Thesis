@@ -158,11 +158,11 @@ The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ont
 \end{frame}
 \begin{frame}
 \frametitle{Related Works}
-\begin{block}{Senior Design Capstone}
-Students at the University of Illinois and Grand Valley State University built a software defined radio to listen to emissions from Jupiter[\cite{Behnke}].  This software defined radio was built using an Analog Devices AD9460 and a Xilinx Spartan-3E-500 FPGA to build the SDR itself.  A RF front end was also built to filter and amplify the signal coming into the SDR.  Finally, this group also used GNURadio to interface to and talk to the SDR and used both Python and wxGUI to build a working interface.  The students reported that the SDR radiometer worked very well and was able to do so at a fairly low price point.
-\end{block}
+
+Students at the University of Illinois and Grand Valley State University built a software defined radio to listen to emissions from Jupiter\cite{Behnke} by building their own RF section and using GNURadio for the software.  This software defined radio was built using an Analog Devices AD9460 and a Xilinx Spartan-3E-500 FPGA to build the SDR itself.
+
 \begin{figure}\label{behnke}
-\includegraphics[width=0.15\linewidth]{images/behnke_GUI.png}
+\includegraphics[width=0.5\linewidth]{images/behnke_GUI.png}
 \end{figure}
 \end{frame}
 %---------------------------------------
@@ -218,14 +218,14 @@ A software defined radio (SDR) is designed to mimic radio functions in software 
 \begin{frame}
 \frametitle{Comparison}
 \begin{block}{SDR vs Traditional}
-blah blah blah
+As outlined above, a software defined radio implements a traditional radiometer but in the digital domain.  For power detection, we simply sum the squares of the I and Q values that have been sampled by the software defined radios analog to digital converters.  As with a traditional radiometer, we also want to filter this information to remove much of the jitters that comes from the rapid fluctuations in the power readings.  This is done using an IIR low pass filter, which mimics a traditional RC low pass filter.  Once completed, we now have the total power reading from the radiometer and we can now store, display or both this information.  
 \end{block}
 \end{frame}
 \subsection{SDR vs ISU}
 \begin{frame}
 \frametitle{Comparison}
 \begin{block}{SDR vs ISU}
-blah blah blah
+The original ISU Radiometer used similar components as a software defined radio but in a different way.  Like a software defined radio, the original ISU radiometer used an analog to digital converter to sample the incoming RF signal.  It then sent this information to a FPGA to be processed and then sent to a micro-controller to store this information.  
 \end{block}
 \end{frame}
 %---------------------------------
@@ -252,25 +252,32 @@ It can be seen that an IIR filter can have the same frequency response as we wou
 \subsection{GNURadio Blocks}
 \begin{frame}
 \frametitle{Implementation}
-\begin{block}{GRC}
-Blah blah blah, talk about square law block and IIR block, plus others, insert image of block diagram
-\end{block}
+
+Implementation of a total power radiometer in software 
+
+\begin{figure}\label{GNURadio_Block}
+\includegraphics[width=9cm]{images/GNURadio_Block_tpr.png}
+\end{figure}
+
 \end{frame}
 
 \subsection{GNURadio Controls}
 \begin{frame}
 \frametitle{GNURadio Controls}
-\begin{block}{Controlling the SDR}
-blah blah blah, talk about the wxGUI we use to control the N200 and show a screen shot of the control panel
-\end{block}
+GNURadio exposes GUI controls through wxGUI which allows us to implement a GUI system
+\begin{figure}\label{GNURadio_GUI}
+\includegraphics[width=10cm]{images/radiometer_gui.png}
+\end{figure}
+
 \end{frame}
 
 \subsection{GNURadio Display}
 \begin{frame}
 \frametitle{GNURadio Display}
-\begin{block}{Data Display}
-blah blah blah show how we display the information and data and take a screen shot of the displays
-\end{block}
+As well as controls, we can also display information such as spectrum, total power and even a calibrated result.
+\begin{figure}\label{GNURadio_GUI}
+\includegraphics[width=10cm]{images/Lab1_TPR_at_end_exp.png}
+\end{figure}
 \end{frame}
 %-----------------------------
 \section{Experimental Setup}
@@ -279,9 +286,11 @@ blah blah blah show how we display the information and data and take a screen sh
 \subsection{Stability}
 \begin{frame}
 \frametitle{Stability}
-\begin{block}{Stability testing}
-blah blah blah on testing stability
-\end{block}
+
+Stability testing was accomplished by placing the matched load into a constant temperature bath and looking at amount of change over time.  A 4 hour soak test was done using Liquid Nitrogen.
+\begin{figure}\label{money_shot}
+\includegraphics[width=1.0\linewidth]{images/lab1_both_calib.png}
+\end{figure} 
 \end{frame}
 \subsection{Sensitivity}
 \begin{frame}
@@ -307,9 +316,11 @@ blah blah blah
 \section{Results from LN2 Test}
 \begin{frame}
 \frametitle{LN2 Tests}
-\begin{block}{Results}
-blah blah blah talk about LN2 test on this slide
-\end{block}
+Calibration and testing of the radiometer was conducted by using two reference temperature points.  The two points selected was Liquid Nitrogen at 77 K and Ice Water at 273.15 K. 
+
+\begin{figure}\label{money_shot}
+\includegraphics[width=1.0\linewidth]{images/lab1_both_calib.png}
+\end{figure} 
 \end{frame}
 %---------------------------------
 \section{Conclusion}
