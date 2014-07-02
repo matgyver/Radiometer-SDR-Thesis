@@ -52,6 +52,10 @@ $NE\Delta T$ & 1 & Kelvin \\ \hline
 \section{Square-law Detector Performance}
 The Square-law detector was added to our system in order to give us another reference point and to help verify the power output that the software defined radio.  The performance of our square-law detector is based on two items.  The first is the actual square-law detector itself.  The sensitivity of this device accounts for most of the performance factor of the system.  In our system the output of this square-law detector is then feed directly into an analog to digital converter.  Therefore the performance of this A/D converter needs to be accounted for as well [\cite{Terlep}].  
 
+For our square-law detector, it has a noise output of $25nV/ \sqrt{Hz}$ at 100 kHz and will detect a signal as low as $-60$ dBm.  This works will with our needs since the RF front end brings the noise floor to approximately $-30$ dBm.
+
 
 \section{Software Defined Radio Performance}
 Performance of the software defined radio is governed by the system that takes in the RF signal and then digitizes the signal.  Once the signal is in digital form, we no longer are concerned about loss of performance due to additional noise that may get added to the system.  For this reason, we attempt to digitize the signal as soon as possible.
+
+For the N200 this is done by the DBSRX2 daughter-board that plugs into the N200 base system.  While this board does play a part in the overall system performance, because this sits later in the chain however the impact to the performance is low as shown in equation \ref{noise_factor}.  However, this module does need to be in the frequency range of the radiometer, or in our case 1.4 GHz.  This board meets that criteria.  Ideally, we still want the noise figure on this board as low as possible, even though the impact is low.  The DBSRX2 does meet this having a noise figure of approximately 5 dBm.
