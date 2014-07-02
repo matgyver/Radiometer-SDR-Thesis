@@ -133,7 +133,7 @@ The goal of this thesis and presentation is to explore other methods that could 
 \begin{block}{Questions Asked}
 This thesis looks to explore the following questions: 
 \begin{enumerate}
-\item Can we use a SDR along with GNURadio to recreate a radiometer in software?
+\item Can we use a SDR to recreate a radiometer in software?
 \item If so, what performance can we get from the system?
 \item What benefits do we gain (if any) from using a SDR from a more traditional radiometer?
 \end{enumerate}
@@ -142,16 +142,28 @@ This thesis looks to explore the following questions:
 \subsection{Related Works}
 \begin{frame}
 \frametitle{Related Works}
-\begin{block}{Shirleys Bay Radio Astronomy Consortium}
+\begin{block}{Radio Astronomy Analogy}
 \begin{itemize}
 \item Radio Astronomy is very close radiometer remote sensing
 \item Main difference is between looking at specific objects or general trend
 \end{itemize}
 \end{block}
-\pause
+\end{frame}
+
+\begin{frame}
+\frametitle{Related Works}
 \begin{block}{SBRAC}
 The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNU-radio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.
 \end{block}
+\end{frame}
+\begin{frame}
+\frametitle{Related Works}
+\begin{block}{Senior Design Capstone}
+Students at the University of Illinois and Grand Valley State University built a software defined radio to listen to emissions from Jupiter[\cite{Behnke}].  This software defined radio was built using an Analog Devices AD9460 and a Xilinx Spartan-3E-500 FPGA to build the SDR itself.  A RF front end was also built to filter and amplify the signal coming into the SDR.  Finally, this group also used GNURadio to interface to and talk to the SDR and used both Python and wxGUI to build a working interface.  The students reported that the SDR radiometer worked very well and was able to do so at a fairly low price point.
+\end{block}
+\begin{figure}\label{behnke}
+\includegraphics[width=0.15\linewidth]{images/behnke_GUI.png}
+\end{figure}
 \end{frame}
 %---------------------------------------
 \section{General Theory}
@@ -314,14 +326,14 @@ In this thesis we have shown that an off the shelf SDR can be used to perform as
 \begin{itemize}
 \item Make improvements to the ISU RF Front End
 \note<1>{Fix issues with SWR and interference}
-\item Make improvements to the support HW for the ISU Radiometer
+\item Rebuild the ISU radiometer
 \note Replacing the Rabbit uC with PIC32
 \item Correlation
 \item Noise Injection
+\item Stokes parameters
 \end{itemize}
 \end{block}
 \end{frame}
-\note<2>[item]{this is a test note}
 
 \section{References}
 % Beamer does not support BibTeX so references must be inserted manually as below
@@ -340,6 +352,10 @@ In this thesis we have shown that an off the shelf SDR can be used to perform as
 \bibitem[Leech, 2007]{Leech2007} Marcus Leech and David Ocame (2007)
 \newblock A year of Gnu Radio and SDR astronomy: experience, practice and observations
 \newblock \emph{\url{http://www.sbrac.org/documents/gnuradio_at_one_year_20070401.doc}}
+
+\bibitem[Behnke, 2013]{Behnke} Behnke, P. and Soberal, D. and Bredeweg, S. and Dunne, B. and Sterian, A. and Furton, D. (2013)
+\newblock Senior capstone: A software defined radio design for amateur astronomy
+\newblock Interdisciplinary Engineering Design Education Conference (IEDEC), 2013 3rd
 
 \end{thebibliography}
 }
