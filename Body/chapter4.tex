@@ -11,7 +11,6 @@ In addition to these tests, a few real world tests were also done in the Spring 
 \section{Square-law Detector}
 To verify the results of the information that the software defined radio is obtaining, a square-law detector is used to measure the power of the incoming signal in parallel to the software defined radio.  The incoming signal is split using a power divider so that the signal will be the same to both devices with the exception of the 3 dB plus insertion loss the power divider adds.  This allows us to verify the software defined radio with a proven system.  Square-law detectors have traditionally been used in radiometers and have been proven to work in radiometer applications.  They are also a very simple device which means there is little that can go wrong with using them.
 
-
 \subsection{Analog Devices ADL5902}
 
 The square-law detector that we obtained is the Analog Devices ADL5902.  The ADL5902 is a true rms responding power detector that has a square law detector, a variable gain amplifier and an output driver. It also has a temperature sensor and will compensate for temperature variations.  The output driver allows for the small signal from the square law detector to be amplified to a level that most analog to digital devices can detect.  This driver however does have low noise and has a noise output of approximately $25nV/ \sqrt{Hz}$ at 100 kHz.  The ADL5902 operates from 50 MHz to 9 GHz and in most cases can detect down to $-60$ dBm.  This works well in our application since the radiometer operates at 1.4 GHz and after the amplification stage we usually see between $-40$ to $-30$ dBm of power.  
@@ -63,7 +62,6 @@ While the USB-6009 allows up to 48,000 samples per second, we don't need such a 
 }
 
 This program allowed for the data from the square law detector to be easily recorded.  Using Labview also allows us to customize the interface more to our liking and other features such as adding calibration information can also be added as well.  
-
 
 \subsection{Tests on the ADL5902}
 To test the ADL5902 a signal generator was used that had a controlled output.  The specific signal generator that was used was an older model that allowed us to change the output in 10 dBm increments.  The signal generator was also configured for 1.4 GHz as that is the frequency the ISU radiometer is configured to listen at.  Ideally a noise generator would have been desirable, however a noise generator with adjustable power output could not be located on campus.  
@@ -126,10 +124,11 @@ Data from the N200 was stored to file using the GNURadio file sink which stores 
 \includegraphics[width=\textwidth]{Images/labviewx2_lab0.png}
 
 \isucaption{Screen shot of the Labview program capturing total power information from the radiometer}
-\label{lab1_x2_n200}
+\label{labview_tpr}
 \end{figure}
 
 This experiment showed that both the square-law detector and the software defined radio was able to detect changes in the noise temperature.  It was also able to show that once calibrated, both showed identical results.
+
 \section{Testing with an injected noise source}
 The addition of an unwanted signal can be a determinant to the radiometer and has an adverse affect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices.  This problem becomes even a greater problem with radiometers used in orbiting spacecrafts as they are able to "see" large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.  This has been seen in some of the SMOS satellite data.
 
@@ -138,20 +137,32 @@ The addition of an unwanted signal can be a determinant to the radiometer and ha
 \includegraphics[width=\textwidth]{Images/interfering_signal_edit.png}
 
 \isucaption{Image of the interfering signal appearing on the spectrum display of the SDR Radiometer.}
-\label{lab1_x2_n200}
+\label{inter_signal}
 \end{figure}
 
 RFI detection and mitigation is not a new topic in radiometry and there have been other methods in both the detection and mitigation of these signals[\cite{Forte}][\cite{McIntyre_RFI}][\cite{DeRoo}][\cite{Ellingson}].
 
 This test was designed to test a problem that a software defined radio would be to cope with while a square law detector would not be able to cope with it.  This test injected a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  In this test, the square law detector, since it is a wide band device, would not be able to accurately measure the change in the total power of the signal.  However, the SDR is able to create a digital filter to filter out the offending signal.  Since this is done in software, the SDR is able to adapt to changes much faster than an analog radiometer.
+
+For this test however, we kept the experiment simple and fixed the interfering signal to a known frequency and amplitude.  The filter was then designed with these parameters in mind.  This type of radiometer operating in a real world environment would need some additional programming to identify the offending signal and then mitigate.  However this test shows that the SDR is capable of responding to an offending signal.
+
 \subsection{Test setup}
 To test this theory, a similar setup was used as with previous tests.  The ISU radiometer's RF front end was once again used to amplify the signal.  One difference however is that a power combiner, which is the same as a power divider, was used to hook up to a signal generator.  The signal generator then provided the offending signal.  By using the signal generator we can control how much power and what frequency the offending signal is at.  In this case we are performing this in a controlled setup and would know ahead of time where the offending signal is.  In the future the SDR defined could identify the offending signal and then filter it out.
 
 Like the other tests, a power divider is used to split the signal after the ISU radiometer RF front end which was then feed to a square-law detector and then the N200 SDR.  The square-law detector was then hooked up to a National Instruments USB-6009 DAQ.  The DAQ was then feed into a labview program to be processed and recorded.  The N200 continued to use the GNURadio program that was created to record the total power coming out.  However, it has been modified with a band reject filter to filter the offending signal.
 
 \subsection{Test results}
+Results of this test showed two key things with the SDR.  The first being that the SDR is capable of filtering out an offending signal.  This can be seen in figure \ref{filter_on}.
 
-insert test results
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/interfering_signal_filter_on.png}
+
+\isucaption{Image of the being filtered out by the SDR.  It can be seen that the signal is no longer visible.}
+\label{filter_on}
+\end{figure}
+
+The second result is with the SDR still being able to take total power measurements.  
 
 \section{Further testing}
 As discussed earlier, there are some known issues with the RF Front end of the radiometer.  This needs to be explored in more detail or the RF front end may need to be rebuilt.  The issue appears to stem that movement on the RF Front end is causing something to become lose or causes for some local interference to impact the radiometer.  When the radiometer is stationary, it appears to operate normally.  However, as the radiometer is designed to be mounted on a rotational platform and point to the sky for calibration, the movement issue needs to be addressed.  
