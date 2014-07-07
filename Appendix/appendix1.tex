@@ -3,9 +3,11 @@
 \appendix
 \chapter{Source code}
 
-The following is the Python code used with the Ettus N200 software defined radio.  This python code should work on any platform that has the GNURadio libraries installed and also the USRP drivers for communicating with the N200.  This code can also be easily modified to communicate with any SDR that GNURadio can communicate with.  
+The following is the source code to several programs that make the radiometer possible.  The first is the Python code used with the Ettus N200 software defined radio.  This python code should work on any platform that has the GNURadio libraries installed and also the USRP drivers for communicating with the N200.  This code can also be easily modified to communicate with any SDR that GNURadio can communicate with.  This code was generated using GNURadio Companion.  
 
-This script was developed using GNURadio Companion.  This copy of the script may be out of date.  The latest version of the script file can be found on the author's personal website, \url{http://www.rfgeeks.com/research/master-s-thesis}.
+The second code is the Matlab script that can be used to parse the output from GNURadio.  This code will plot the total power output as well as perform some other functions such as a NE$\delta$T calculation and also allows for calibration points to be entered as well.  This code can be used as a foundation for other programs.  
+
+Finally, this code has been included in this thesis as a point of reference.  It may be out of date and some other some other pieces of code was also used for the experimentation used in this thesis.  Copies of this thesis source \LaTeX code, and any other code used can be found on the author's GitHub repository, \url{https://github.com/matgyver/Radiometer-SDR-Thesis}.
 
 
 \section*{Python code for total power radiometer}
