@@ -27,7 +27,9 @@ The following pages is general information about how the Software Defined Radiom
 ### Parsing Data using iPython Notebook
 The following page walks through an example of parsing data from the radiometer using iPython Notebook.  The result are two graphs, one plotting the raw rQ values and the other showing how having two calibration points, we can calibrate the radiometer and graph that.
 
-[Parsing Radiometer data with iPython Notebook]: <http://www.rfgeeks.com/Radiometer-SDR-Thesis/Radiometer_Parse.html>
+[data1]: <http://www.rfgeeks.com/Radiometer-SDR-Thesis/Radiometer_Parse.html>
+
+[Parsing Radiometer data with iPython Notebook][data1]
 
 
 ## Experimental Results
