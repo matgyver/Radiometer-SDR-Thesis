@@ -1,0 +1,24 @@
+---
+layout: page
+title : About
+header : About Page
+group: navigation
+---
+{% include JB/setup %}
+
+RFGeeks.com was started in December of 2004.  It started as a simple website hosted on our server sitting in our apartment where my wife and I posted information and pictures on various things.  From there it morphed into several different things at one time hosting a phpBB forum, full photo gallery, Movable Type Blog, and other services and was moved to a dedicated hosting service.  At it's core though, it's always been a place for me to rant and rave on things.<br \><br \>
+
+In 2011 however many of the services hosted on the RFGeeks server was not being utilized and was becoming cumbersome to maintain.  Therefore I made the decision to move away from a dedicated service and instead moved to Google's Sites server.  This seemed to be a logical step since I was already using many of Google's services and Google Sites allowed for easy integration with these.<br \><br \>
+
+Now I have once again transformed and moved the site.  In addition to blogging, the site was always intended to be a place to log and display the projects I work in.  The move to being hosted on GitHub, where most of my projects reside anyway, and using Jekyll for blogging, appears to be a good match for accomplishing these goals.  Of course I'm still working with these new tools, so the jury is still out on that.<br \><br \>
+
+If you wish to know about the author of this website or some other information, the following pages will guide you.
+<br \><br \>
+
+<ul class="posts">
+{% for post in site.posts %}
+    {% if post.categories contains 'about' %}
+        <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
+    {% endif %}
+{% endfor %}
+</ul>
