@@ -12,14 +12,15 @@ This website covers the research I have done in a software defined radiometer.  
 This website will contain some information and is a project page in GitHub.  It is located in the same repository that also houses the original LaTeX files for the thesis and also any source code used in the experiments.  You can find this repository here {{site.github.repository_url}}
 
 ## Repository Information
-The following is key information about the GitHub repository for this project
+The following is key information about the GitHub repository for this project<br />
+<br />
 Repository name:{{site.github.repository.project_title}}<br />
-Owner URL:{{site.github.repository.owner_url}}<br />
+Owner URL:({{site.github.repository.owner_url}})<br />
 Contributors:{{site.github.contributors}}<br />
 Repository site:{{site.github.repository_url}}<br />
-Download link (zip file):{{site.github.zip_url}}<br />
+Download link (zip file):({{site.github.zip_url}})<br />
 Build Revision:{{site.github.build_revision}}<br />
-Known issues:{{site.github.issues_url}}<br />
+Known issues:({{site.github.issues_url}})<br />
 
 ## General Information
 The following pages is general information about how the Software Defined Radiometer works.  This includes links to setting up and configuring the software used and other general information about the system
