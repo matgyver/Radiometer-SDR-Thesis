@@ -22,8 +22,15 @@ Known issues: <{{site.github.issues_url}}> <br />
 Wiki Site: <{{site.github.wiki_url}}> <br />
 
 ## General Information
-The following pages is general information about how the Software Defined Radiometer works.  This includes links to setting up and configuring the software used and other general information about the system
+The following pages is general information about how the Software Defined Radiometer works.  This includes links to setting up and configuring the software used and other general information about the system.
+
+### Parsing Data using iPython Notebook
+The following page walks through an example of parsing data from the radiometer using iPython Notebook.  The result are two graphs, one plotting the raw rQ values and the other showing how having two calibration points, we can calibrate the radiometer and graph that.
+
+[Parsing Radiometer data with iPython Notebook]: <http://www.rfgeeks.com/Radiometer-SDR-Thesis/Radiometer_Parse.html>
 
 
 ## Experimental Results
 The following pages show some experimental results that were conducted in calibrating and verifying the operation of the software defined radiometer.
+
+
