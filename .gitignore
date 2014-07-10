@@ -1,0 +1,10 @@
+## Temp files
+$*
+
+# VIM
+*~
+*.swp
+
+#Thumbnails file
+
+*.db
