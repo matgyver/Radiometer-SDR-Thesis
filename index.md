@@ -20,3 +20,10 @@ Repository site:{{site.github.repository_url}}
 Download link (zip file):{{site.github.zip_url}}
 Build Revision:{{site.github.build_revision}}
 Known issues:{{site.github.issues_url}}
+
+## General Information
+The following pages is general information about how the Software Defined Radiometer works.  This includes links to setting up and configuring the software used and other general information about the system
+
+
+## Experimental Results
+The following pages show some experimental results that were conducted in calibrating and verifying the operation of the software defined radiometer.
