@@ -83,22 +83,22 @@ Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ 
 
 The voltage output from this radiometer is then either measured or may also be sampled by an analog to digital converter.  In both cases the output has no real meaning until it is calibrated.
 
-\section{ISU Radiometer Theory of Operation}
-The original ISU Radiometer was constructed by the University of Michigan and was based on Dr. Mark Fischman's dissertation on a Direct-Sampling Digital Radiometer[\cite{Fischman2001}].  However, for this paper we will refer to the ISU Radiometer in terms of using the RF Front end of the radiometer.  This RF front end contains the band-pass filters and the Low Noise Amplifiers (LNAs).  The LNAs play an important role as explained in the previous section to amplify the noise we are looking at while minimizing the amount of noise they contribute to the overall system.  While the band-pass filter is not needed, it did ensure that the signal we were looking at was in the 1.4 GHz band.
+\section{Traditional Radiometer Theory of Operation}
+The RF front end used in this thesis was originally built by the University of Michigan.  This RF front end contains the band-pass filters and the Low Noise Amplifiers (LNAs).  The LNAs play an important role as explained in the previous section to amplify the noise we are looking at while minimizing the amount of noise they contribute to the overall system.  While the band-pass filter is not needed, it did ensure that the signal we were looking at was in the 1.4 GHz band.
 
-\subsection{Existing ISU Radiometer RF Front End}
+\subsection{Existing ISU RF Front End}
 
-The existing ISU radiometer RF Front end uses a series of cascading low noise amplifiers (LNAs) that increase the power from the antenna while contributing a minimum amount of noise to the system [\cite{Erbas}].  In addition, the current ISU Radiometer uses bandpass filters to narrow the bandwidth to the desired 1400 to 1425 MHz that we wish to monitor.  While these are not needed with the addition of the software defined radio, since we can filter in software, they do not contribute much in terms of the noise temperature, and as passive components do not impact the performance of the radiometer.
+The existing ISU radiometer RF Front end uses a series of cascading low noise amplifiers (LNAs) that increase the power from the antenna while contributing a minimum amount of noise to the system [\cite{Erbas}].  In addition, the current ISU RF front end uses bandpass filters to narrow the bandwidth to the desired 1400 to 1425 MHz that we wish to monitor.  While these are not needed with the addition of the software defined radio, since we can filter in software, they do not contribute much in terms of the noise temperature, and as passive components do not impact the performance of the radiometer.
 
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=17cm]{Images/ISU_rf_block.png}
-\isucaption{A block diagram provided by the University of Michigan that shows the components used in the ISU radiometer's RF front end.  }
+\isucaption{A block diagram provided by the University of Michigan that shows the components used in the ISU RF front end.}
 \label{ISU_rf_block}
 \end{figure}
 }
 
-As it can be seen in Figure \ref{ISU_rf_block} the current ISU radiometer uses a series of amplifiers, filters and attenuators to amplify and filter the incoming signals.  The attenuators are used to ensure that we do not overload the front end of the LNA proceeding it in the chain.  This RF chain provides us a spectrum from 1400 MHz to 1425 MHz and gives us a total gain of approximately 81 dBm.  This raises the noise floor to approximately -30 dBm which makes it very easy to detect with both a square-law detector and the software defined radio.  The performance of the ISU front end was confirmed by using a spectrum analyzer to look at the output signal and power output.  The spectrum analyzer output can be seen in Figure 
+As it can be seen in Figure \ref{ISU_rf_block} the current ISU rf front end uses a series of amplifiers, filters and attenuators to amplify and filter the incoming signals.  The attenuators are used to ensure that we do not overload the front end of the LNA proceeding it in the chain.  This RF chain provides us a spectrum from 1400 MHz to 1425 MHz and gives us a total gain of approximately 81 dBm.  This raises the noise floor to approximately -30 dBm which makes it very easy to detect with both a square-law detector and the software defined radio.  The performance of the ISU front end was confirmed by using a spectrum analyzer to look at the output signal and power output.  The spectrum analyzer output can be seen in Figure 
 
 {\begin{figure}[h!tb] 
 \centering
@@ -110,9 +110,9 @@ As it can be seen in Figure \ref{ISU_rf_block} the current ISU radiometer uses a
 
 \subsubsection{A note about the ISU RF Front end}
 
-During the work on this thesis a few issues came up with the ISU radiometer and the RF Front end that was used.  When work began on this thesis, it was assumed that the problems that were found with the radiometer was limited to the digital portion of the radiometer.  This meant that the RF front end was performing as expected.  At first, early tests on the ISU radiometer RF front end seemed to confirm this as the output seen on a spectrum analyzer appeared to be normal.  However, further testing started to show unusual behavior.  Later, it was discovered that the ISU radiometer's RF front end was prone to malfunctioning under certain conditions.  These conditions seemed to occur when the radiometer was moving on it's platform and even the lid to the box containing the RF front end would affect it.  
+During the work on this thesis a few issues came up with the ISU RF front end that was used.  When work began on this thesis, it was assumed that the problems that were found with this hardware was limited to the digital portion of the radiometer.  This meant that the RF front end was performing as expected.  At first, early tests on the ISU RF front end seemed to confirm this as the output seen on a spectrum analyzer appeared to be normal.  However, further testing started to show unusual behavior.  Later, it was discovered that the ISU RF front end was prone to malfunctioning under certain conditions.  These conditions seemed to occur when the RF front end was moving on it's platform and even the lid to the box containing the RF front end would affect it.  
 
-A test was done to show this effect with the lid, and further information about the rotation affect is discussed in Appendix 2 in regards to the E E 518 laboratory experiment. For the lid experiment, a spectrum analyzer was hooked up to the ISU radiometer's RF front end.  With the lid off, you can see what appears to be a normal signal that we would expect from the radiometer in Figure \ref{ISU_rf_spectrum}.  However, in Figure we placed the lid on the radiometer and the results are quite different.  Changes to the signal were observed in real time as the lid was placed on the radiometer and it was clear that this was also causing the radiometer to produce undesirable results.  
+A test was done to show this effect with the lid, and further information about the rotation affect is discussed in Appendix 2 in regards to the E E 518 laboratory experiment. For the lid experiment, a spectrum analyzer was hooked up to the ISU RF front end.  With the lid off, you can see what appears to be a normal signal that we would expect from the radiometer in Figure \ref{ISU_rf_spectrum}.  However, in Figure we placed the lid on the radiometer and the results are quite different.  Changes to the signal were observed in real time as the lid was placed on the radiometer and it was clear that this was also causing the radiometer to produce undesirable results.  
 
 {\begin{figure}[h!tb] 
 \centering
@@ -122,7 +122,7 @@ A test was done to show this effect with the lid, and further information about 
 \end{figure}
 }
 
-It was clear that there is something happening with the ISU radiometer's RF section.  This also points out another use for the addition of the software defined radio.  The old ISU radiometer system under-sampled the signal and so frequency information was lost.  Without hooking up something like a spectrum analyzer there would be no way for any to know what was happening with the ISU radiometer.  However, with the SDR we now have power and spectrum information.  In fact, it was during the E E 518 laboratory that we noticed a problem with the ISU radiometer and we discovered this by looking at the data that was captured by the SDR.  
+It was clear that there is something happening with the ISU RF front end.  This also points out another use for the addition of the software defined radio.  The old ISU radiometer system under-sampled the signal and so frequency information was lost.  Without hooking up something like a spectrum analyzer there would be no way for any to know what was happening with the ISU radiometer.  However, with the SDR we now have power and spectrum information.  In fact, it was during the E E 518 laboratory that we noticed a problem with the ISU radiometer and we discovered this by looking at the data that was captured by the SDR.  
 
 In order to keep the thesis research moving and since this thesis focused on the software defined radio side of the radiometer, all experiments were conducted with the radio stationary and with the lid removed.  Before any experiments the spectrum output was verified before continuing with any experiments.  
 
@@ -323,10 +323,12 @@ As outlined above, a software defined radio implements a traditional radiometer 
 
 A traditional radiometer may also use an analog to digital converter in order to digitize the analog voltage from the square-law detector.  Because the sample rate of this voltage is very low, almost any analog to digital can be used for this.  At this point however, there is no frequency information, only the magnitude information is being retained and recorded.  
 
-\section{Comparison of a Software Defined Radio Radiometer and ISU Radiometer}
+\section{Comparison of a Software Defined Radio Radiometer and other Digital Radiometers}
 
-The original ISU Radiometer used similar components as a software defined radio but in a different way.  Like a software defined radio, the original ISU radiometer used an analog to digital converter to sample the incoming RF signal.  It then sent this information to a FPGA to be processed and then sent to a micro-controller to store this information.  
+A digital radiometer is not a new concept.  Early radiometers would often digitize the analog voltage information from the square-law detector and then send that information to a computer for storage or analysis.  
 
-The difference however lays with how power information is extracted from the signal.  The original ISU radiometer purposefully under-sampled the signal but is still able to extract power information, however at the cost of losing frequency information.  
+A pre-cursor to a software defined radio, some radiometers would also digitize the incoming RF signal, but under-sample this information.  Since only power is the information desired this was acceptable.  However, these radiometers did often use the same components you might find in a software defined radio such as an A/D converter and FPGA.  These components however were used in different ways.
 
-The radiometer in this thesis however retains both phase and magnitude information and instead mimics a traditional radiometer in software by summing an squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.  
+One reason why these devices were used differently from a SDR was due to cost.  Most radiometer operations happen at 1.4 GHz or above.  A/D converters at these higher frequencies become more expensive and harder to obtain.  In recent years however, these costs have come down.
+
+The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing an squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
