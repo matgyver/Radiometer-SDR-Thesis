@@ -193,11 +193,11 @@ To measure power in a radiometer, several factors are taken into consideration. 
 \end{block}
 \end{frame}
 
-\subsection{ISU Radiometer}
+\subsection{ISU RF front end}
 \begin{frame}
 \frametitle{ISU Radiometer}
 \begin{block}{}
-ISU currently owns a total power radiometer centered at 1.4 GHz with a fixed bandwidth of 20 MHz.  This radiometer is unique in that it does a total power evaluation by under-sampling the A/D converter.  This current radiometer however has experienced a number of issues that hindered its performance.  
+ISU currently owns a RF front end that is suitable for radiometer work.  This RF front end is used to provide the needed amplification for radiometer work to the software defined radio.  
 \end{block}
 
 \begin{figure}\label{agronomy_roof}
@@ -221,11 +221,11 @@ A software defined radio (SDR) is designed to mimic radio functions in software 
 As outlined above, a software defined radio implements a traditional radiometer but in the digital domain.  For power detection, we simply sum the squares of the I and Q values that have been sampled by the software defined radios analog to digital converters.  As with a traditional radiometer, we also want to filter this information to remove much of the jitters that comes from the rapid fluctuations in the power readings.  This is done using an IIR low pass filter, which mimics a traditional RC low pass filter.  Once completed, we now have the total power reading from the radiometer and we can now store, display or both this information.  
 \end{block}
 \end{frame}
-\subsection{SDR vs ISU}
+\subsection{SDR vs Digital Radiometer}
 \begin{frame}
 \frametitle{Comparison}
 \begin{block}{SDR vs ISU}
-The original ISU Radiometer used similar components as a software defined radio but in a different way.  Like a software defined radio, the original ISU radiometer used an analog to digital converter to sample the incoming RF signal.  It then sent this information to a FPGA to be processed and then sent to a micro-controller to store this information.  
+The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing an squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
 \end{block}
 \end{frame}
 %---------------------------------
@@ -323,7 +323,7 @@ Calibration and testing of the radiometer was conducted by using two reference t
 \end{figure} 
 \end{frame}
 %---------------------------------
-\section{Conclusion and Future WORK}
+\section{Conclusion and Future Work}
 \begin{frame}
 \frametitle{Conclusion}
 \begin{block}{Final Thoughts}
