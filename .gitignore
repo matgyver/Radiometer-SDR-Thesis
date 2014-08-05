@@ -31,4 +31,4 @@
 *.xdy
 *.tdo
 *.db
-.ipynb_checkpoints/
+Code/iPython/.ipynb_checkpoints/
