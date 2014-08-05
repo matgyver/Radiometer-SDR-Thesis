@@ -31,4 +31,4 @@
 *.xdy
 *.tdo
 *.db
-*-checkpoint.ipynb
+.ipynb-checkpoints/
