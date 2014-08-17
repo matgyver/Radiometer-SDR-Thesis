@@ -52,7 +52,7 @@ The Labview program was created to talk to the USB-6009 and then store the data.
 \end{figure}
 }
 
-The Labview program uses NI's DAQ assitant which allows for quick configuration and setup for the computer to talk to a number of NI devices.  Labview also includes blocks that allows us to easily record the data to a file.  These blocks made up most of the program and resulted in a program that was quickly made.  
+The Labview program uses NI's DAQ assistant which allows for quick configuration and setup for the computer to talk to a number of NI devices.  Labview also includes blocks that allows us to easily record the data to a file.  These blocks made up most of the program and resulted in a program that was quickly made.  
 
 While the USB-6009 allows up to 48,000 samples per second, we don't need such a high rate.  A rate of 1,000 samples per second was determined to provide more than enough samples of data.  With such a high rate of samples however, the resulting output will be noisy due to the natural noise found in the RF signal.  Like the software defined radio, we want to filter this noise as well to produce a smoother output.  This was accomplished using a filter block in Labview to help reduce the noise.
 
@@ -68,7 +68,7 @@ This program allowed for the data from the square law detector to be easily reco
 \subsection{Tests on the ADL5902}
 To test the ADL5902 a signal generator was used that had a controlled output.  The specific signal generator that was used was an older model that allowed us to change the output in 10 dBm increments.  The signal generator was also configured for 1.4 GHz as that is the frequency the ISU RF front end is configured to listen at.  Ideally a noise generator would have been desirable, however a noise generator with adjustable power output could not be located on campus.  
 
-The ADL5902 is available from Analog Devices in an evaluation board.  This board pairs the ADL5902 with a AD7466 12-bit analog to digital converter.  This board can then be mated with Analog Devices BlackFin processor which acts as a USB gateway for the AD7466 data.  A test program written in LabView is also provided as well.
+The ADL5902 is available from Analog Devices in an evaluation board.  This board pairs the ADL5902 with a AD7466 12-bit analog to an analog to digital converter.  This board can then be mated with Analog Devices BlackFin processor which acts as a USB gateway for the AD7466 data.  A test program written in LabView is also provided as well.
 
 The test program provided by Analog Devices allows us to query the ADL5902 and record the raw ADC value.  The test program also allows us to enter in the frequency used during testing and the temperature during the test.  The test program also allows us to calibrate the system as well.  All of the data is then stored into an Excel spreadsheet which can be accessed later.
 
@@ -85,16 +85,24 @@ Shows that the ADL5902 has a linear output and matches the expected value based 
 \label{adl5902_linear}
 \end{figure}
 
-The ADL5902 test board was considered to be used in the final design for the ISU radiometer and in additional tests.  However, Analog Devices decided to make the information to communicate with the BlackFin processor proprietary and this hampered attempts to integrate that system into our overall system design.  For this reason, it was decided to simply record the analog data that the ADL5902 itself puts out and a PIC32 with an analog to digital converter was used to capture and send this information.
+Once it was confirmed the ADL5902 does in fact have a linear response, we then looked at ways to work with the ADL5902.  The graph above was generated using Analog Devices program that talked to the Blackfin processor on the daughter-board.  However, the information for talking to the Blackfin is proprietary.  Therefore the daughter-board was removed for future tests and instead we used the USB-6009 data acquisition board to read the raw analog voltages from the ADL5902.  This information was then stored later for additional analysis.  
 
 \section{Software Defined Radio tests}
-Once it was confirmed that the square-law detector was working within the specifications that were given, testing then moved to the software defined radio.  Once the Python program was established for replicating a total power radiometer in software, this was then loaded into GNURadio and used to control the N200 SDR.  GNURadio has a built in noise generator that was then used to test the program and it's ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
+Once it was confirmed that the square-law detector was working within the specifications that were given, testing then moved to the software defined radio.  Once the Python program was established for replicating a total power radiometer in software, this was then loaded into GNURadio and used to control the N200 SDR.  GNURadio has a built in noise generator that was then used to test the program and it's ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
 
 \section{Total Power Radiometer Test with Ice Water Bath}
 To fully test both the total power radiometer in the software defined radio and the square-law detector, a cold water bath experiment was established to verify that both the square-law detector and SDR was able to measure real world changes in the noise.  In addition, this would also give us a calibration line to to calibrate the radiometer.
 
 \subsection{Laboratory Setup}
-For this experiment the, ISU radiometer was setup in a laboratory that had access to measurement tools.  To measure the change in noise, a 50 ohm matched load was attached to the radiometer.  The ISU radiometer, with the current filters and LNAs would then amplify and filter the signal.  This signal was then measured by the square-law detector and the N200 SDR.  The 50 ohm load was then submersed into a hot or cold bath.  These water baths were temperature controlled for 100 degrees Centigrade and to 10 degrees Centigrade.  The load was submersed in each bath for 2 minutes to allow for it to reach the same temperature as the bath.  The noise measured was then recorded using GNURadio with the N200 SDR or with the PIC32 setup on the square-law detector.  In addition to the total power measurements, the raw I-Q data was also recorded.  This allowed us to replay the experiment through GNURadio for further study.
+For this experiment the, ISU radiometer was setup in a laboratory that had access to measurement tools.  To measure the change in noise, a 50 ohm matched load was attached to the radiometer.  The ISU radiometer, with the current filters and LNAs would then amplify and filter the signal.  This signal was then measured by the square-law detector and the N200 SDR.  The 50 ohm load was then submersed into a hot or cold bath.  These water baths were temperature controlled for 100 degrees Centigrade and to 0 degrees Centigrade.  The load was submersed in each bath for 2 minutes to allow for it to reach the same temperature as the bath.  The noise measured was then recorded using GNURadio with the N200 SDR and with the USB-6009 to record the square-law data.  In addition to the total power measurements, the raw I-Q data was also recorded.  This allowed us to replay the experiment through GNURadio for further study.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/20140810_150110.jpg}
+
+\isucaption{An image of the typical lab setup used to test the software defined radiometer}
+\label{LabSetup}
+\end{figure}
 
 \subsection{Test Results}
 
