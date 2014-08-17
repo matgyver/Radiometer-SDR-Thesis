@@ -7,7 +7,9 @@ The following is the source code to several programs that make the radiometer po
 
 The second code is the Matlab script that can be used to parse the output from GNURadio.  This code will plot the total power output as well as perform some other functions such as a NE$\delta$T calculation and also allows for calibration points to be entered as well.  This code can be used as a foundation for other programs.  
 
-Finally, this code has been included in this thesis as a point of reference.  It may be out of date and some other some other pieces of code was also used for the experimentation used in this thesis.  Copies of this thesis source \LaTeX code, and any other code used can be found on the author's GitHub repository, \url{https://github.com/matgyver/Radiometer-SDR-Thesis}.
+The third code supplied is Python code that can be used to read the data generated and plot it.  In many ways it mimics the functions of the Matlab script buy uses Python, NumPy and SciPy to perform the mathematical functions.  This may be a better option for those that wish to look at the data but do not have access to Matlab since Python is free to download.
+
+Finally, this code has been included in this thesis as a point of reference.  It may be out of date and some other pieces of code was also used for the experimentation used in this thesis.  Copies of this thesis source \LaTeX code, and any other code used can be found on the author's GitHub repository, \url{https://github.com/matgyver/Radiometer-SDR-Thesis}.
 
 
 \section*{Python code for total power radiometer}
@@ -30,6 +32,7 @@ Finally, this code has been included in this thesis as a point of reference.  It
 
 \code{Total Power Radiometer}{Code/N200_TPR.py}
 \newpage
+
 \section*{Matlab code for reading and displaying data from GNURadio}
 \lstset{
   language=Matlab,
@@ -49,3 +52,24 @@ Finally, this code has been included in this thesis as a point of reference.  It
 }
 
 \matlabcode{GNURadio Parsing Code}{Code/gnuradio_parse.m}
+
+\section*{Python code for analyzing data}
+\lstset{
+  language=Python,
+  showstringspaces=false,
+  formfeed=\newpage,
+  tabsize=4,
+  commentstyle=\itshape,
+  basicstyle=\ttfamily,
+  morekeywords={models, lambda, forms}
+}
+
+\newcommand{\code}[2]{
+  \hrulefill
+  \subsection*{#1}
+  \lstinputlisting{#2}
+  \vspace{2em}
+}
+
+\code{Total Power Radiometer}{Code/iPython/Radiometer_Parse.py}
+\newpage
