@@ -17,8 +17,14 @@ To verify the results of the information that the software defined radio is obta
 
 The square-law detector that we obtained is the Analog Devices ADL5902.  The ADL5902 is a true rms responding power detector that has a square law detector, a variable gain amplifier and an output driver. It also has a temperature sensor and will compensate for temperature variations.  The output driver allows for the small signal from the square law detector to be amplified to a level that most analog to digital devices can detect.  This driver however does have low noise and has a noise output of approximately $25nV/ \sqrt{Hz}$ at 100 kHz.  The ADL5902 operates from 50 MHz to 9 GHz and in most cases can detect down to $-60$ dBm.  This works well in our application since the radiometer operates at 1.4 GHz and after the amplification stage we usually see between $-40$ to $-30$ dBm of power.  
 
-The specifications of the ADL5902 can be seen in Table~\ref{ADL5902_data}
-shown below.
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/adl5902.jpg}
+\isucaption{An image of the ADL5902 square-law detector used in these experiments}
+\label{ADL5902}
+\end{figure}
+}
+
+The specifications of the ADL5902 can be seen in Table~\ref{ADL5902_data} shown below.
 
 \begin{table}[h!tb] \centering
 \isucaption{ADL5902 Specifications}
