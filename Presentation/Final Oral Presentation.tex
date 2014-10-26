@@ -126,7 +126,7 @@ Iowa State University \\
 \begin{frame}
 \frametitle{Introduction}
 \begin{block}{Presentation Goals}
-The goal of this thesis and presentation is to explore other methods that could be used for a remote sensing radiometer and specifically the implementation of a software defined radio as a total power radiometer.
+The goal of this thesis and presentation is to explore a low cost method for implementing a total power radiometer using software defined radio.
 \end{block}
 \pause
 
@@ -135,26 +135,32 @@ This thesis looks to explore the following questions:
 \begin{enumerate}
 \item Can we use a SDR to recreate a radiometer in software?
 \item If so, what performance can we get from the system?
-\item What benefits do we gain (if any) from using a SDR from a more traditional radiometer?
+\item Can we create a low cost SDR Radiometer that is effective?
 \end{enumerate}
 \end{block}
 \end{frame} 
 \subsection{Related Works}
 \begin{frame}
 \frametitle{Related Works}
-\begin{block}{Radio Astronomy Analogy}
+\begin{block}{Radio Astronomy}
 \begin{itemize}
-\item Radio Astronomy is very close radiometer remote sensing
-\item Main difference is between looking at specific objects or general trend
+\item Radiometers are used in a variety of remote sensing applications
+\item Radio Astronomy is one method of using radiometers for remote sensing
+\item There are current setups using Software Defined Radios for Radio Astronomy
 \end{itemize}
 \end{block}
+
 \end{frame}
 
 \begin{frame}
 \frametitle{Related Works}
-\begin{block}{SBRAC}
+
 The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNU-radio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.
-\end{block}
+
+\begin{figure}\label{sbrac}
+\includegraphics[width=0.2\linewidth]{images/ra.jpg}
+\end{figure}
+
 \end{frame}
 \begin{frame}
 \frametitle{Related Works}
@@ -193,15 +199,15 @@ To measure power in a radiometer, several factors are taken into consideration. 
 \end{block}
 \end{frame}
 
-\subsection{ISU RF front end}
+\subsection{RF Front End}
 \begin{frame}
-\frametitle{ISU Radiometer}
-\begin{block}{}
-ISU currently owns a RF front end that is suitable for radiometer work.  This RF front end is used to provide the needed amplification for radiometer work to the software defined radio.  
-\end{block}
+\frametitle{RF Front End Design}
+
+The RF front end is one of the most critical components in a radiometer.  Although we have moved most of the functionality in to software with the SDR, we still need to amplify the signal.  Unlike other RF front ends though, we can use a fairly simple setup using 3 Low Noise Amplifiers (LNAs) and some basic filtering.  
+
 
 \begin{figure}\label{agronomy_roof}
-\includegraphics[width=0.45\linewidth]{images/agronomy_roof.png}
+\includegraphics[width=0.6\linewidth]{images/RF_Front_end.png}
 \end{figure}
 \end{frame}
 

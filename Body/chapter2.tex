@@ -84,9 +84,17 @@ Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ 
 The voltage output from this radiometer is then either measured or may also be sampled by an analog to digital converter.  In both cases the output has no real meaning until it is calibrated.
 
 \section{Traditional Radiometer Theory of Operation}
-The RF front end used in this thesis was originally built by the University of Michigan.  This RF front end contains the band-pass filters and the Low Noise Amplifiers (LNAs).  The LNAs play an important role as explained in the previous section to amplify the noise we are looking at while minimizing the amount of noise they contribute to the overall system.  While the band-pass filter is not needed, it did ensure that the signal we were looking at was in the 1.4 GHz band.
+The RF front end used in this thesis was originally built by the University of Michigan, however this later proved to be unreliable and was changed out to one that was designed and built by the author.  This RF front end was designed to be low cost while still maintaining excellent noise performance.  To do this, the RF Front end was designed to be very minimal, only using some basic filtering and the amplification needed so the power can be detected by the SDR.  The LNAs play an important role as explained in the previous section to amplify the noise we are looking at while minimizing the amount of noise they contribute to the overall system.  While band-pass filters would not need to be there, since we can filter with digital filters, they did ensure that the signal was in our area of interest.
+
+\subsection{RF Front End Design}
+
+The RF front end plays a critical role in a radiometer as the primary function is to amplify the signal so that it is easier to detect the changes in power or noise temperature.  Of course the amplification comes with a cost that the the LNA itself will contribute to the noise and this contribution is unwanted.  Therefore we want to minimize the contribution and maximize the amplification of the noise we are looking at.  The Noise Figure (NF) is a metric we use to show how well a LNA amplifies a signal while keeping it's contribution to the noise to a minimum.  Well engineered LNAs are now capable of producing very low noise figure numbers and are relatively inexpensive.  
+
+Add more here...
 
 \subsection{Existing ISU RF Front End}
+
+As mentioned before, the ISU Radiometer was used for a while to conduct experiments.  The problems with the ISU radiometer was not a design issue, instead we believe that certain hardware on the radiometer failed causing the erroneous data.  Therefore, the ISU radiometer was studied and some ideas from the ISU radiometer were taken into consideration when designing the new RF front end.
 
 The existing ISU radiometer RF Front end uses a series of cascading low noise amplifiers (LNAs) that increase the power from the antenna while contributing a minimum amount of noise to the system [\cite{Erbas}].  In addition, the current ISU RF front end uses bandpass filters to narrow the bandwidth to the desired 1400 to 1425 MHz that we wish to monitor.  While these are not needed with the addition of the software defined radio, since we can filter in software, they do not contribute much in terms of the noise temperature, and as passive components do not impact the performance of the radiometer.
 
