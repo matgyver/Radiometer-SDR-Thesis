@@ -122,13 +122,11 @@ Iowa State University \\
 %----------------------------------------------------------------------------------------
 
 %------------------------------------------------
-\section{Introduction and Background} 
-\subsection{About this thesis and why}
-%Each begin frame starts a new slide
+\section{Introduction and Background}
 \begin{frame}
 \frametitle{Introduction}
 \begin{block}{Presentation Goals}
-The goal of this thesis and presentation is to explore a low cost method for implementing a total power radiometer using software defined radio.
+The goal of this presentation is to present my research into implementing a total power radiometer using low cost hardware and software used in software defined radios.
 \end{block}
 \pause
 
@@ -138,7 +136,21 @@ This thesis looks to explore the following questions:
 \item Can we use a SDR to recreate a radiometer in software?
 \item If so, what performance can we get from the system?
 \item Can we create a low cost SDR Radiometer that is effective?
+\item What benefits do we obtain by using a SDR Radiometer?
 \end{enumerate}
+\end{block}
+\end{frame}  
+\subsection{About this thesis and why}
+%Each begin frame starts a new slide
+\begin{frame}
+\frametitle{About the thesis}
+\begin{block}{Thesis Overview}
+The goal of this thesis is to explore a low cost method for implementing a total power radiometer using software defined radio and to demonstrate the effectiveness of this system.
+\end{block}
+\pause
+
+\begin{block}{Why a SDR?}
+A software defined radio infrastructure provides a highly flexible system that is able to adapt to different scenarios more quickly and at a lower cost than traditional radiometers.
 \end{block}
 \end{frame} 
 \subsection{Related Works}
@@ -208,7 +220,7 @@ To measure power in a radiometer, several factors are taken into consideration. 
 The RF front end is one of the most critical components in a radiometer.  Although we have moved most of the functionality in to software with the SDR, we still need to amplify the signal.  Unlike other RF front ends though, we can use a fairly simple setup using 3 Low Noise Amplifiers (LNAs) and some basic filtering.  
 
 
-\begin{figure}\label{agronomy_roof}
+\begin{figure}\label{AD_RFSIM}
 \includegraphics[width=0.6\linewidth]{images/RF_Front_end.png}
 \end{figure}
 \end{frame}
@@ -225,36 +237,69 @@ A software defined radio (SDR) is designed to mimic radio functions in software 
 \subsection{SDR vs Traditional}
 \begin{frame}
 \frametitle{Comparison}
-\begin{block}{SDR vs Traditional}
-As outlined above, a software defined radio implements a traditional radiometer but in the digital domain.  For power detection, we simply sum the squares of the I and Q values that have been sampled by the software defined radios analog to digital converters.  As with a traditional radiometer, we also want to filter this information to remove much of the jitters that comes from the rapid fluctuations in the power readings.  This is done using an IIR low pass filter, which mimics a traditional RC low pass filter.  Once completed, we now have the total power reading from the radiometer and we can now store, display or both this information.  
+\begin{block}{Traditional Radiometer}
+A traditional radiometer uses Low Noise Amplifiers, hardware based filters and a square-law detector to measure the power detected.  
+\end{block}
+
+\begin{block}{SDR Radiometer}
+A software defined radiometer eliminates the filters and the square-law detector and replaces this with their mathematical equivalents that is emulated in software.   
 \end{block}
 \end{frame}
 \subsection{SDR vs Digital Radiometer}
 \begin{frame}
-\frametitle{Comparison}
-\begin{block}{SDR vs ISU}
-The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing an squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
+\frametitle{Differences}
+\begin{block}{Traditional Radiometer}
+Most total power radiometers do not retain any frequency information, this information is lost and in most cases can not be recovered.
+\end{block}
+
+\begin{block}{SDR Radiometer}
+A software defined radio captures both phase and magnitude of the signal.  This information allows us to recreate the signal and manipulate the signal any way we wish.  This allows for more in-depth analysis of the signal and gives us the ability to detect things, such as an interfering signal, that might otherwise be missed with a traditional radiometer.
 \end{block}
 \end{frame}
 %---------------------------------
 \section{Implementation of a Software Defined Radiometer}
+\begin{frame}
+\frametitle{Implementation}
+\begin{block}{Implementing a TPR}
+A total power radiometer in software requires us to extract the magnitude (or amplitude) information from the I/Q data captured.  This is equivalent to what a square-law detector does in determining the power measured.
+
+\end{block}
+\end{frame}
 \subsection{Power detection/Square-law detector}
 \begin{frame}
 \frametitle{Implementation}
 \begin{block}{Implementing a TPR}
-The SDR is able to implement a total power radiometer, but in a slightly different way than a traditional radiometer.  A traditional radiometer will use a device called a square-law detector to measure the incoming RF signal power.  For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
+For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
 
 \begin{equation}\label{sumIQ}
 I^2+Q^2 = P_{out}
 \end{equation}
 \end{block}
 \end{frame}
+\subsection{Filtering}
+\begin{frame}
+\frametitle{Filtering}
+Filtering requirements in a software defined radio is different from a hardware based or traditional radiometer.
+\begin{itemize}
+\item The bandwidth setting of the SDR only samples data within that bandwidth
+\item Additional filters can be added at a cost of additional processing requirements
+\item Because filtering is a simple software change, filters can be added and removed with no additional hardware
+\end{itemize}
+
+\end{frame}
 \subsection{IIR as an integrator}
 \begin{frame}
-\frametitle{Implementation}
+\frametitle{Integration}
+The data we get from these power measurements fluctuate very quickly.  We want to smooth out or filter this data by integrating this over time.  In a traditional radiometer a hardware integrator is often used.  In software, we can use an Infinite Impulse Response (IIR) filter as an integrator.
+\end{frame}
+\begin{frame}
+\frametitle{IIR as an integrator implementation}
 \begin{block}{IIR and RC filter}
 It can be seen that an IIR filter can have the same frequency response as we would expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
 \end{block}
+\begin{equation}\label{final_IIR_RC}
+y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
+\end{equation}
 \end{frame}
 
 \subsection{GNURadio Blocks}
@@ -323,12 +368,24 @@ blah blah blah
 
 \section{Results and Analysis}
 \begin{frame}
+\frametitle{Experimentation}
+To verify that a software defined radio based radiometer can perform the same or better as a traditional radiometer, experiments were run to compare data captured from the SDR and data collected from a square-law detector, typically used to detect power in radiometers.  
+
+In addition, we also wanted to test how a SDR can perform better than most traditional radiometers since frequency information is retained.  To do this, we tested with the ability to filter out an unwanted signal and compared the results.
+\end{frame}
+\subsection{SDR compared with square-law detector}
+\begin{frame}
 \frametitle{LN2 Tests}
 Calibration and testing of the radiometer was conducted by using two reference temperature points.  The two points selected was Liquid Nitrogen at 77 K and Ice Water at 273.15 K. 
 
-\begin{figure}\label{money_shot}
+\begin{figure}\label{LN2_stability}
 \includegraphics[width=1.0\linewidth]{images/lab1_both_calib.png}
 \end{figure} 
+\end{frame}
+\subsection{Filtering an unwanted signal}
+\begin{frame}
+\frametitle{Unwanted signal filter}
+Another experiment was conducted, but this time with a signal injected that interferes with the radiometer.
 \end{frame}
 %---------------------------------
 \section{Conclusion and Future Work}
