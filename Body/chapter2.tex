@@ -90,21 +90,12 @@ The RF front end used in this thesis was originally built by the University of M
 
 The RF front end plays a critical role in a radiometer as the primary function is to amplify the signal so that it is easier to detect the changes in power or noise temperature.  Of course the amplification comes with a cost that the the LNA itself will contribute to the noise and this contribution is unwanted.  Therefore we want to minimize the contribution and maximize the amplification of the noise we are looking at.  The Noise Figure (NF) is a metric we use to show how well a LNA amplifies a signal while keeping it's contribution to the noise to a minimum.  Well engineered LNAs are now capable of producing very low noise figure numbers and are relatively inexpensive.  
 
-The strategy with the new design of the RF front end was to keep it simple.  This would result in a RF front end that used fewer components and would contribute less noise overall to the system.  An additional reason for doing this was to also keep the cost low.  Fewer components would require fewer interconnects and cables needed to connect the various components.  
 
-{\begin{figure}[h!tb] 
-\centering
-\includegraphics[width=0.8\linewidth]{Images/RF_Front_end.png}
-\isucaption{The ADISIMRF program used to verify the design of the RF Front End}
-\label{ISU_Rad}
-\end{figure}
-}
+A typical design is a 3 stage system that uses 2 bandpass filters to help maintain the signal to the band of interest.  A traditional radiometer requires the use of bandpass filters since most LNAs have a fairly large operating bandwidth.  The filters ensure that the radiometer is operating in the band of interest, in our case the L-band from 1400 to 1426 MHz.  
 
-The result of the design is a 3 stage system that uses 2 bandpass filters to help maintain the signal to the band of interest.  The final design, which can be seen in Figure \ref{ISU_Rad}, uses 3 identical LNAs.  The LNAs selected provide approximately 20 dB of gain at 1400 MHz.  After losses are taken out, our system gain is approximately 52.5 dB.  This system gain is very close to the ISU radiometer which gives us results that are similar to the ISU radiometer.  
+The software defined radio radiometer however does not require bandpass filters added.  There are two reasons for this.  One, the sampling rate set on the software defined radio sets a bandwidth and thus will limit the frequencies we are listening to.  Second, if needed additional filters can be created in software.  There is a cost to these filters in that additional processing power is needed, but otherwise they can be added with no additional cost to the system. 
 
 \subsection{Existing ISU RF Front End}
-
-As mentioned before, the ISU Radiometer was used for a while to conduct experiments.  The problems with the ISU radiometer was not a design issue, instead we believe that certain hardware on the radiometer failed causing the erroneous data.  Therefore, the ISU radiometer was studied and some ideas from the ISU radiometer were taken into consideration when designing the new RF front end.
 
 The existing ISU radiometer RF Front end uses a series of cascading low noise amplifiers (LNAs) that increase the power from the antenna while contributing a minimum amount of noise to the system [\cite{Erbas}].  In addition, the current ISU RF front end uses bandpass filters to narrow the bandwidth to the desired 1400 to 1425 MHz that we wish to monitor.  While these are not needed with the addition of the software defined radio, since we can filter in software, they do not contribute much in terms of the noise temperature, and as passive components do not impact the performance of the radiometer as much as the LNAs do.
 
@@ -126,6 +117,8 @@ As it can be seen in Figure \ref{ISU_rf_block} the current ISU rf front end uses
 \end{figure}
 }
 
+The ISU Radiometer front end was dismantled and was used for the experiments used in this thesis.  The LNAs and bandpass filters were kept intact to be used for experimentation.  While the bandpass filters were not needed for the software defined radio, since we were comparing our data to a square-law detector, they were still required for that device so that both the SDR and the Square-law detector could be looking at approximately the same signal.
+
 \subsubsection{A note about the ISU RF Front end}
 
 During the work on this thesis a few issues came up with the ISU RF front end that was used.  When work began on this thesis, it was assumed that the problems that were found with this hardware was limited to the digital portion of the radiometer.  This meant that the RF front end was performing as expected.  At first, early tests on the ISU RF front end seemed to confirm this as the output seen on a spectrum analyzer appeared to be normal.  However, further testing started to show unusual behavior.  Later, it was discovered that the ISU RF front end was prone to malfunctioning under certain conditions.  These conditions seemed to occur when the RF front end was moving on it's platform and even the lid to the box containing the RF front end would affect it.  
@@ -140,7 +133,11 @@ A test was done to show this effect with the lid, and further information about 
 \end{figure}
 }
 
-It was clear that there is something happening with the ISU RF front end.  This also points out another use for the addition of the software defined radio.  The old ISU radiometer system under-sampled the signal and so frequency information was lost.  Without hooking up something like a spectrum analyzer there would be no way for any to know what was happening with the ISU radiometer.  However, with the SDR we now have power and spectrum information.  In fact, it was during the E E 518 laboratory that we noticed a problem with the ISU radiometer and we discovered this by looking at the data that was captured by the SDR.  It was due to these issues that came up that the RF front end was rebuilt.  
+It was clear that there is something happening with the ISU RF front end.  This also points out another use for the addition of the software defined radio.  The old ISU radiometer system under-sampled the signal and so frequency information was lost.  Without hooking up something like a spectrum analyzer there would be no way for any to know what was happening with the ISU radiometer.  However, with the SDR we now have power and spectrum information.  In fact, it was during the E E 518 laboratory that we noticed a problem with the ISU radiometer and we discovered this by looking at the data that was captured by the SDR.  It was due to these issues that came up that the RF front end was rebuilt. 
+
+Work was done to re-stabilize and make the ISU radiometer front usable for the experiments used in this thesis.  First, all non-essential equipment was deactivated and powered down.  This included the on board microcontroler, the A/D converters and the FPGA unit that was originally used in this radiometer.  The thermal electric coolers were also deactivated as well.  Since the LNAs were in a temperature controlled room, they were not needed for these experiments.  
+
+Next, the LNAs were powered from a lab bench power supply instead of the power supplies that were used in the radiometer.  It is theorized that the power supplies feeding the radiometer may have been damaged due to water that had entered the case and were no longer stable in the power they provided.  To eliminate any issues, they were removed and a new and known to be working lab power supply was used to power both the LNAs and the square-law detector circuitry.   
 
 \section{Software Defined Radio Theory of Operation}
 
