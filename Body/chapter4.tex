@@ -174,11 +174,19 @@ Results of this test showed two key things with the SDR.  The first being that t
 
 \includegraphics[width=\textwidth]{Images/interfering_signal_filter_on.png}
 
-\isucaption{Image of the being filtered out by the SDR.  It can be seen that the signal is no longer visible.}
+\isucaption{Image of the offending signal being filtered out by the SDR.  It can be seen that the signal is no longer visible.}
 \label{filter_on}
 \end{figure}
 
-The second result is with the SDR still being able to take total power measurements.  
+The second result is with the SDR still being able to take total power measurements. 
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/moneyshot.png}
+
+\isucaption{Image showing both the SDR and square-law detector recording TPR, but with the SDR using a filter to remove the offending signal.}
+\label{sdr_x2_filter}
+\end{figure} 
 
 \section{Further testing}
-As discussed earlier, there are some known issues with the RF Front end of the radiometer.  This needs to be explored in more detail or the RF front end may need to be rebuilt.  The issue appears to stem that movement on the RF Front end is causing something to become lose or causes for some local interference to impact the radiometer.  When the radiometer is stationary, it appears to operate normally.  However, as the radiometer is designed to be mounted on a rotational platform and point to the sky for calibration, the movement issue needs to be addressed.  
+The software defined radio radiometer can be used in other configurations as well.  Further testing is needed to compare some of these other modes to a traditional radiometer to verify their operation, but in theory these additional configurations should operate the same in a software defined radio as they do with a traditional radiometer.
