@@ -14,7 +14,10 @@
 %	PACKAGES AND THEMES
 %----------------------------------------------------------------------------------------
 
-\documentclass{beamer}
+%\documentclass{beamer}
+
+%Uncomment this out and comment out the above to print out notes
+\documentclass[notes]{beamer}
 
 \mode<presentation> {
 
@@ -145,7 +148,7 @@ This thesis looks to explore the following questions:
 \begin{frame}
 \frametitle{About the thesis}
 \begin{block}{Thesis Overview}
-The goal of this thesis is to explore a low cost method for implementing a total power radiometer using software defined radio and to demonstrate the effectiveness of this system.
+The goal of this thesis is to explore a low cost method for implementing a total power radiometer using software defined radio and to demonstrate the effectiveness and benefits of this system.
 \end{block}
 \pause
 
@@ -163,18 +166,18 @@ A software defined radio infrastructure provides a highly flexible system that i
 \item There are current setups using Software Defined Radios for Radio Astronomy
 \end{itemize}
 \end{block}
-
+\note{Radiometers are used in remote sensing of soil, ocean and deep space.  SMOS is an excellent example of a working soil and ocean measurement system.} 
 \end{frame}
 
 \begin{frame}
 \frametitle{Related Works}
 
-The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNU-radio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.
+The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNURadio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.
 
 \begin{figure}\label{sbrac}
 \includegraphics[width=0.2\linewidth]{images/ra.jpg}
 \end{figure}
-
+\note{Marcus is the Principal Investigator at SBRAC and also a contributor to the radiometer branch in GNURadio.  Although this branch is no longer maintained, he still answers questions about using radiometers with GNURadio}
 \end{frame}
 \begin{frame}
 \frametitle{Related Works}
@@ -184,6 +187,7 @@ Students at the University of Illinois and Grand Valley State University built a
 \begin{figure}\label{behnke}
 \includegraphics[width=0.5\linewidth]{images/behnke_GUI.png}
 \end{figure}
+\note{While the students in this paper built their own hardware, GNURadio was still used to develop the software.  Another goal of this project was to produce a low cost solution using GNURadio.}
 \end{frame}
 %---------------------------------------
 \section{Radiometer Theory of Operation}
@@ -202,7 +206,7 @@ The primary goal of a radiometer is to measure power.  While that statement soun
 \begin{frame}
 \frametitle{General Theory}
 \begin{block}{Measuring power}
-To measure power in a radiometer, several factors are taken into consideration.  To begin with we have the noise signal coming from the antenna.  Our antenna is assumed to be looking at our target of interest and it is assumed that we can relate the antenna noise to the noise from the source.  It is often easier to refer to this noise as the brightness temperature.  Therefore the brightness temperature of the source can be related to the brightness temperature at the antenna.  We will refer to this brightness temperature as T$_{A}$.  
+To measure power we begin with the noise signal coming from the antenna.  Our antenna is assumed to be looking at our target of interest and it is assumed that we can relate the antenna noise to the noise from the source.  It is often easier to refer to this noise as the brightness temperature.  Therefore the brightness temperature of the source can be related to the brightness temperature at the antenna.  We will refer to this brightness temperature as T$_{A}$\cite{Ulaby}.  
 
 {\begin{figure}[h!tb] 
 \centering
@@ -223,6 +227,7 @@ The RF front end is one of the most critical components in a radiometer.  Althou
 \begin{figure}\label{AD_RFSIM}
 \includegraphics[width=0.6\linewidth]{images/RF_Front_end.png}
 \end{figure}
+\note{The image shown is Analog Devices program for analyzing gain, noise temperature and losses in a RF chain.  This program was used to analyze ours and other RF Front end systems.  The system shown is a simplified version of the RF front end used in testing.}
 \end{frame}
 
 \subsection{Software Defined Radio}
@@ -230,6 +235,7 @@ The RF front end is one of the most critical components in a radiometer.  Althou
 \begin{block}{SDR}
 A software defined radio (SDR) is designed to mimic radio functions in software instead of using dedicated hardware.  A radiometer is a radio that can detect changes in power.  Therefore the SDR needs to be able to measure power coming from the source that we are looking at. 
 \end{block}
+\note{Software defined radios have been used in a number of applications, but usually related to communication systems.  Changes to modulation and encoding/decoding is very easy for a SDR and this is why SDRs have grown in recent years.  Use in remote sensing applications, as far as I know, is a relatively new application of SDRs.} 
 \end{frame}
 \subsection{SDR Radiometer}
 %---------------------------------
@@ -244,6 +250,7 @@ A traditional radiometer uses Low Noise Amplifiers, hardware based filters and a
 \begin{block}{SDR Radiometer}
 A software defined radiometer eliminates the filters and the square-law detector and replaces this with their mathematical equivalents that is emulated in software.   
 \end{block}
+\note{SDRs can filter in two ways.  First, by limiting the sampling rate we effectively put a bandwidth filter on the system.  Two, we can also filter by constructing a filter in software, although there is some cost with this option in terms of CPU and memory requirements on the system}
 \end{frame}
 \subsection{SDR vs Digital Radiometer}
 \begin{frame}
@@ -253,8 +260,9 @@ Most total power radiometers do not retain any frequency information, this infor
 \end{block}
 
 \begin{block}{SDR Radiometer}
-A software defined radio captures both phase and magnitude of the signal.  This information allows us to recreate the signal and manipulate the signal any way we wish.  This allows for more in-depth analysis of the signal and gives us the ability to detect things, such as an interfering signal, that might otherwise be missed with a traditional radiometer.
+Since we have both magnitude and phase information we can recreate the signal or manipulate it as needed.  This allows for more in-dept analysis such as RFI and also using Stokes parameters on the signal as well.  We therefore have more information without any additional hardware\cite{Ruf}.
 \end{block}
+\note{SDRs give us a lot more information to work with.  At the core of a radiometer, this information is not needed which is why it was often discarded.  However, several papers have now been written that bring to light the need for additional information in order to deal with known issues with radiometers such as interference or new methods for determining total power such as the Stokes method.  A key thing with a SDR radiometer is that in many ways it flexible enough to handle any future methods with either very little or no change in hardware.}
 \end{frame}
 %---------------------------------
 \section{Implementation of a Software Defined Radiometer}
@@ -262,14 +270,14 @@ A software defined radio captures both phase and magnitude of the signal.  This 
 \frametitle{Implementation}
 \begin{block}{Implementing a TPR}
 A total power radiometer in software requires us to extract the magnitude (or amplitude) information from the I/Q data captured.  This is equivalent to what a square-law detector does in determining the power measured.
-
 \end{block}
+\note{Unlike an analog radiometer, the magnitude information is there and a simple squaring gives us total power.  A square-law detector however has to do just that, it detects the power and then extracts that as a voltage.}
 \end{frame}
 \subsection{Power detection/Square-law detector}
 \begin{frame}
 \frametitle{Implementation}
 \begin{block}{Implementing a TPR}
-For the SDR, the incoming signal is sampled and converted to IQ values.  The IQ values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
+For the SDR, the incoming signal is sampled and converted to I/Q values.  The I/Q values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs the following:
 
 \begin{equation}\label{sumIQ}
 I^2+Q^2 = P_{out}
@@ -435,6 +443,12 @@ In this thesis we have shown that an off the shelf SDR can be used to perform as
 \bibitem[Behnke, 2013]{Behnke} Behnke, P. and Soberal, D. and Bredeweg, S. and Dunne, B. and Sterian, A. and Furton, D. (2013)
 \newblock Senior capstone: A software defined radio design for amateur astronomy
 \newblock Interdisciplinary Engineering Design Education Conference (IEDEC), 2013 3rd
+
+\bibitem[Ruf, 2010]{Ruf} Ruf, C. and Gross, S. (2010)
+
+\newblock Digital radiometers for earth science
+
+\newblock Microwave Symposium Digest (MTT), 2010 IEEE MTT-S International
 
 \end{thebibliography}
 }
