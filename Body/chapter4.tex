@@ -96,7 +96,16 @@ Shows that the ADL5902 has a linear output and matches the expected value based 
 Once it was confirmed the ADL5902 does in fact have a linear response, we then looked at ways to work with the ADL5902.  The graph above was generated using Analog Devices program that talked to the Blackfin processor on the daughter-board.  However, the information for talking to the Blackfin is proprietary.  Therefore the daughter-board was removed for future tests and instead we used the USB-6009 data acquisition board to read the raw analog voltages from the ADL5902.  This information was then stored later for additional analysis.  
 
 \section{Software Defined Radio tests}
-Once it was confirmed that the square-law detector was working within the specifications that were given, testing then moved to the software defined radio.  Once the Python program was established for replicating a total power radiometer in software, this was then loaded into GNURadio and used to control the N200 SDR.  GNURadio has a built in noise generator that was then used to test the program and it's ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
+Once it was confirmed that the square-law detector was working within the specifications that were given, testing then moved to the software defined radio.  Once the Python program was established for replicating a total power radiometer in software, this was then loaded into GNURadio and used to control the N200 SDR.  
+
+Before testing the program with the N200, testing was done with the built in noise generator in GNURadio.  This was used to test it's ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
+
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/noisesrc_radiometer.png}
+\isucaption{A screenshot of the GNURadio program using a noise generator block.}
+\label{noise_test}
+\end{figure}
+}
 
 \section{Total Power Radiometer Test with Ice Water Bath}
 To fully test both the total power radiometer in the software defined radio and the square-law detector, a cold water bath experiment was established to verify that both the square-law detector and SDR was able to measure real world changes in the noise.  In addition, this would also give us a calibration line to to calibrate the radiometer.
