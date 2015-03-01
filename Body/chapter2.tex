@@ -342,6 +342,12 @@ The DBSRX2 has several key components on it that is used to take the analog RF s
 
 These analog I and Q values are then passed to the N200 to be sampled by the analog to digital converter.  The IQ values are differential signals to minimize noise possible interference.
 
+\subsection{DBSRX2 Noise Temperature Consideration}
+
+The N200 uses daughter board cards that allow for us to easily swap out different RF front ends.  The DBSRX2 was selected due to the fact that it is receive only and that it will work in the frequency spectrum that we are interested in, primarily in the 1.4 GHz range.  Since we are using the DBSRX2 after the LNAs that are already on the, the noise temperature added by the DBSRX2 will be quite small.  The DBSRX2 adds approximately 5 dB to the noise factor of the system.  Again though, since this is at the end of the RF chain, the total contribution of the DBSRX2 to the overall system noise temperature is small, and has been calculated to be 1.05 dB to the overall noise factor of the system.
+
+While the DBSRX2 does have additional gain, this gain is not as critical since we have the additional gain from the ISU radiometer front end.  While the gain the DBSRX2 is significant, the noise figure on the DBSRX2 by itself is quite high.  Therefore, the DBSRX2 would not be a good candidate if the N200 would be used solely by itself.  Ideally, there would be at least one if not multiple LNA's that have much better noise figure numbers than what the DBSRX2 and would be placed in front of the DBSRX2 daughter-board.  
+
 \section{Comparison of a Software Defined Radio Radiometer vs Traditional Radiometer}
 
 As outlined above, a software defined radio implements a traditional radiometer but in the digital domain.  For power detection, we simply sum the squares of the I and Q values that have been sampled by the software defined radios analog to digital converters.  As with a traditional radiometer, we also want to filter this information to remove much of the jitters that comes from the rapid fluctuations in the power readings.  This is done using an IIR low pass filter, which mimics a traditional RC low pass filter.  Once completed, we now have the total power reading from the radiometer and we can now store, display or do both with this information.  
