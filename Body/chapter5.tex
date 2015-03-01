@@ -68,15 +68,17 @@ A study was conducted on what benefits a software defined radio radiometer would
 \subsection{Cost Benefits}
 Software defined radios have become more commonplace in recent years and this has generated a number of COTS solutions.  A COTS solution is often a lower cost solution due to the mass manufacturing that takes place.  This has drive the cost of many SDRs to under one thousand dollars while still having excellent performance characteristics.  The N200 SDR purchased for this research cost fifteen hundred dollars and the daughter-board cost one hundred and fifty dollars approximately.  Many other software defined radios however have come out on the market since then.  Ettus for example has some that are below one thousand dollars and the author has also obtained the HackRF One SDR that now sells for three hundred dollars.  
 
-However, the SDR is not the only component of a radiometer.  One of the key components is the amplification of the noise so that it can be detected.  This is a component that is hard to remove from the system.  
-
-Add more after I run a few experiments
+The largest cost benefit is that key components that you find in a radiometer, the filters and square-law detector can now be all done in software instead of needed additional equipment.  The system is also much more frequency agile, which means it can work on a broader range of frequencies than most traditional radiometers with very little change in hardware and in some cases may require no change in hardware.  Some of this does depend on the SDR hardware however.  The Ettus N200 for example uses daughter-boards to provide the RF interface.  While these boards provide a high quality in the RF signal, it does come at a cost and are usually designed for certain bands of frequencies.  Other low cost SDRs however are also very wide range in the frequencies they will work in.  The HackRF for example works from 10 MHz to 6 GHz, but does so at the cost of lower resolution and less gain in its front end.
 
 \subsection{Weight and component size benefits}
 
-Look into various weights and sizes.  Talk about how we can now remove many filters (can be done in software) to reduce size, weight and complexity.  Talk about 
+A typical radiometer has many components that are involved in the design of the radiometer.  This includes filters, LNAs and the power detection or square-law detector used.  These components add both weight, size and costs to the radiometer.  A software defined radio however digitizes the signal and we are able to replace the filters and sqaure-law detector with their software equivalent.  While a software defined radio does add both the ADC and usually a FPGA to do the processing on the signal, advances in semiconductor technology has continued to shrink these components.  These components are also lighter than the filters often used in radiometers.
 
 \subsection{Value added benefits}
+
+A software defined radio radiometer adds additional value for two reasons.  One, it is able to work with both frequency and magnitude where most radiometers do not.  This allows for additional analysis on the signal and can help identify issues such as an interfering signal that was demonstrated in this thesis.  
+
+Second, we are able to have an agile system that is able to adapt to changing conditions with very little or no change to hardware.  
 
 \section{Disadvantages of a SDR Radiometer}
 Although we have outlined a number of advantages of using a COTS SDR Radiometer and how a SDR can add additional value to the radiometer system, there are some disadvantages to a SDR Radiometer.

@@ -8,6 +8,8 @@ Testing and verification ensures that the new components that we have added to t
 
 Testing began with the square-law detector as this was one of the first components that was obtained.  Next, testing was done with the the software defined radio as a whole.  Finally a cold bath test was done with both the software defined radio and with the square law detector as a system to verify both functionality and to compare the results from both devices.  
 
+Additional testing was also performed to test additional functions that are not found on a typical radiometer.  This test involved injecting a signal and having the software defined radio remove the offending signal.  A comparison was then performed to show the difference between the SDR radiometer which is able to remove the offending signal and the square-law detector which is not able to remove it unless additional hardware filters are placed in front of it.
+
 In addition to these tests, a few real world tests were also done in the Spring of 2012 and the Spring of 2014.  These tests were conducted by Dr. Brian Hornbuckle's E E 518 class was conducted as part of their lab requirement for the test.  These test results can be found in Appendix 2.
 
 \section{Square-law Detector}
@@ -58,7 +60,7 @@ The Labview program was created to talk to the USB-6009 and then store the data.
 \end{figure}
 }
 
-The Labview program uses NI's DAQ assistant which allows for quick configuration and setup for the computer to talk to a number of NI devices.  Labview also includes blocks that allows us to easily record the data to a file.  These blocks made up most of the program and resulted in a program that was quickly made.  
+The Labview program uses National Instruments DAQ assistant which allows for quick configuration and setup for the computer to talk to a number of NI devices.  Labview also includes blocks that allows us to easily record the data to a file.  These blocks made up most of the program and resulted in a program that was quickly made.  
 
 While the USB-6009 allows up to 48,000 samples per second, we don't need such a high rate.  A rate of 1,000 samples per second was determined to provide more than enough samples of data.  With such a high rate of samples however, the resulting output will be noisy due to the natural noise found in the RF signal.  Like the software defined radio, we want to filter this noise as well to produce a smoother output.  This was accomplished using a filter block in Labview to help reduce the noise.
 
