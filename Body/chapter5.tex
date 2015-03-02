@@ -66,13 +66,37 @@ For the N200 this is done by the DBSRX2 daughter-board that plugs into the N200 
 A study was conducted on what benefits a software defined radio radiometer would have over a more traditional radiometer.  This was focused on looking at three main areas; cost, weight and size, and the value a SDR radiometer can add over traditional radiometers.
 
 \subsection{Cost Benefits}
-Software defined radios have become more commonplace in recent years and this has generated a number of COTS solutions.  A COTS solution is often a lower cost solution due to the mass manufacturing that takes place.  This has drive the cost of many SDRs to under one thousand dollars while still having excellent performance characteristics.  The N200 SDR purchased for this research cost fifteen hundred dollars and the daughter-board cost one hundred and fifty dollars approximately.  Many other software defined radios however have come out on the market since then.  Ettus for example has some that are below one thousand dollars and the author has also obtained the HackRF One SDR that now sells for three hundred dollars.  
+Software defined radios have become more commonplace in recent years and this has generated a number of COTS solutions.  A COTS solution is often a lower cost solution due to the mass manufacturing that takes place.  This has driven the cost of many SDRs to under one thousand dollars while still having excellent performance characteristics.  The N200 SDR purchased for this research cost fifteen hundred dollars and the daughter-board cost one hundred and fifty dollars approximately.  Many other software defined radios however have come out on the market since then.  Ettus for example has some that are below one thousand dollars and the author has also obtained the HackRF One SDR that now sells for three hundred dollars.  The main difference with these software defined radios is with both the resolution, or how many bits the ADC is, and the bandwidth they are able to handle.
 
-The largest cost benefit is that key components that you find in a radiometer, the filters and square-law detector can now be all done in software instead of needed additional equipment.  The system is also much more frequency agile, which means it can work on a broader range of frequencies than most traditional radiometers with very little change in hardware and in some cases may require no change in hardware.  Some of this does depend on the SDR hardware however.  The Ettus N200 for example uses daughter-boards to provide the RF interface.  While these boards provide a high quality in the RF signal, it does come at a cost and are usually designed for certain bands of frequencies.  Other low cost SDRs however are also very wide range in the frequencies they will work in.  The HackRF for example works from 10 MHz to 6 GHz, but does so at the cost of lower resolution and less gain in its front end.
+\begin{table}[h!tb] \centering
+\isucaption{Cost Analysis}
+\label{cost_table}
+% Use: \begin{tabular{|lcc|} to put table in a box
+\begin{tabular}{lcc} \hline
+\textbf{Device} & \textbf{Quantity} & \textbf{Cost} \\ \hline
+\textbf{SDR Solution}& & \\ \hline
+N200 SDR & 1 & \$1515 \\
+LNA at \$60 ea. & 3 & \$180 \\
+DBSRX2 Daughter-board & 1 & \$152 \\
+GNURadio & 1 & \$0 \\ \hline
+Total & & \$1847 \\ \hline
+\textbf{ISU Radiometer} \\ \hline
+LNA, FPGA, ADC, Microcontroller and power supplies & 1 & \$10,000\tablefootnote{Purchase price in 2005} \\ \hline
+\textbf{Commercial Off the Shelf Unit}\\ \hline
+Spectracyber 1420 MHz Hydrogen Line Spectrometer & 1 & \$2,650 \\ \hline
+
+\end{tabular}
+\end{table}
+
+As see in table \ref{cost_table}, even the higher cost Ettus research equipment is a lower cost option than the custom built ISU radiometer purchased from University of Michigan and even a comparable off the shelf radiometer.  It should be noted that the radiometer from the University of Michigan is also a dual polarization radiometer so there are two RF front ends and two ADCs that feed into a FPGA board.  It would be quite easy to add dual polarization to the Ettus N200 SDR as it does support two daughter-boards.  This would increase the cost to \$2,179 for the additional LNAs and daughter-board.
+
+The largest cost benefit is that key components that you find in a radiometer, the filters and square-law detector can now be all done in software instead of needed additional equipment.  The system is also much more frequency agile, which means it can work on a broader range of frequencies than most traditional radiometers with very little change in hardware and in some cases may require no change in hardware.  Some of this does depend on the SDR hardware however.  The Ettus N200 for example uses daughter-boards to provide the RF interface.  While these boards provide a high quality in the RF signal, it does come at a cost and are usually designed for certain bands of frequencies.  Other low cost SDRs however are also very wide range in the frequencies they will work in.  The HackRF for example works from 10 MHz to 6 GHz, but does so at the cost of lower resolution, less gain in its front end and a lower bandwidth that it can handle.
 
 \subsection{Weight and component size benefits}
 
-A typical radiometer has many components that are involved in the design of the radiometer.  This includes filters, LNAs and the power detection or square-law detector used.  These components add both weight, size and costs to the radiometer.  A software defined radio however digitizes the signal and we are able to replace the filters and sqaure-law detector with their software equivalent.  While a software defined radio does add both the ADC and usually a FPGA to do the processing on the signal, advances in semiconductor technology has continued to shrink these components.  These components are also lighter than the filters often used in radiometers.
+A typical radiometer has many components that are involved in the design of the radiometer.  This includes filters, LNAs and the power detection or square-law detector used.  These components add both weight, size and costs to the radiometer.  A software defined radio however digitizes the signal and we are able to replace the filters and square-law detector with their software equivalent.  While a software defined radio does add both the ADC and usually a FPGA to do the processing on the signal, advances in semiconductor technology has continued to shrink these components.  These components are also lighter than the filters often used in radiometers.
+
+Size is another benefit as since semiconductor technology has continued to shrink components 
 
 \subsection{Value added benefits}
 
