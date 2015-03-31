@@ -34,6 +34,10 @@ As we look at this equation, we can see that if k, B, G, and $T_{N}$ are constan
 
 Gain is usually our largest factor that can change on a radiometer and even with a software defined radio this is still a large source of variation.  This is due to the analog nature of the amplifiers that affect a large portion of the gain in our system.  Various things can affect our gain, but the two largest factors is the physical temperature of the amplifier and the voltage that feeds the amplifier.  Voltage can be controlled to a degree.  High accuracy voltage regulators can help control fluctuations in voltages that can in turn affect the gain.  A factor however that is harder to control is temperature.  It is because of this that the current ISU radiometer has gone to great strides to control the temperature of the amplifiers to maintain a constant temperature.
 
+\begin{equation} \label{eq:rad_stability}
+\Delta G=T_{sys} \left(\frac{\Delta G}{G}\right)
+\end{equation}
+
 To verify stability of the radiometer, we look to see how much change the radiometer records over a long period of time.  To test this a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for one hour.  The readings were then looked at to study the trend of the data.  The data is graphed in figure \ref{Stability}.
 
 \begin{figure}[h!tb] \centering
@@ -42,7 +46,7 @@ To verify stability of the radiometer, we look to see how much change the radiom
 \label{Stability}
 \end{figure}
 
-As it can be seen in figure \ref{Stability}, the amount of change over a period of one hour is quite small.  A change in rQ of .002 is observed with a standard deviation of $7.6 x 10^-6$.  This equates to roughly a change of .6 kelvin and is well within our desired change of less than 1 kelvin for our radiometer.
+As it can be seen in figure \ref{Stability}, the amount of change over a period of one hour is quite small.  A change in rQ of .0003 is observed with a standard deviation of $7.6 x 10^-6$.  This equates to roughly a change of .6 kelvin and is well within our desired change of less than 1 kelvin for our radiometer.
 
 \section{Required Performance Requirements}
 
