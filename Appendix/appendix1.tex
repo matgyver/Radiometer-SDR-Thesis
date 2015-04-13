@@ -3,7 +3,7 @@
 \appendix
 \chapter{Source code}
 
-The following is the source code to several programs that make the radiometer possible.  The first is the Python code used with the Ettus N200 software defined radio.  This python code should work on any platform that has the GNURadio libraries installed and also the USRP drivers for communicating with the N200.  This code can also be easily modified to communicate with any SDR that GNURadio can communicate with.  This code was generated using GNURadio Companion.  
+The following is the source code to several programs that make the radiometer possible.  The first is the Python code used with the Ettus N200 software defined radio.  This code is a heir block, which means it can be imported into GNURadio and used as a block.  This python code should work on any platform that has the GNURadio libraries installed and also the USRP drivers for communicating with the N200.  Other SDRs and other source blocks can be used as well, just replace the USRP source with the source you intend to use.  This code can also be easily modified to communicate with any SDR that GNURadio can communicate with.  This code was generated using GNURadio Companion.  
 
 The second code is the Matlab script that can be used to parse the output from GNURadio.  This code will plot the total power output as well as perform some other functions such as a NE$\delta$T calculation and also allows for calibration points to be entered as well.  This code can be used as a foundation for other programs.  
 
@@ -13,6 +13,15 @@ Finally, this code has been included in this thesis as a point of reference.  It
 
 
 \section*{Python code for total power radiometer}
+The main code that acts as the total power radiometer is the TPR.py code.  This module adds a custom block to GRC that can then be called and used like any other block in GRC.  A screenshot of the blocks used in this is shown below.
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=0.8\linewidth]{Images/TPR_grc.png}
+\isucaption{Blocks used for creating a total power radiometer in software}
+\label{TPR_GRC}
+\end{figure}
+}
 \lstset{
   language=Python,
   showstringspaces=false,
@@ -31,7 +40,7 @@ Finally, this code has been included in this thesis as a point of reference.  It
   \vspace{2em}
 }
 
-\code{Total Power Radiometer}{Code/N200_TPR.py}
+\code{Total Power Radiometer Block}{Code/TPR.py}
 \newpage
 
 \section*{Matlab code for reading and displaying data from GNURadio}
