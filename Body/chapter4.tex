@@ -210,6 +210,43 @@ We now want to compare both the Software Defined Radio and the square-law to mak
 
 We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up very nicely.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
 \subsection{Application with Soil Moisture Readings}
+A common application of radiometers is in the measurement of soil moisture.  All items naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature, but the amount that reaches the antenna varies by the amount of moisture in the soil.  If we can calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  At this time, we will simply look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
+
+Using the Software Defined Radio, we can setup two methods to visually look at the noise temperature and thus the soil moisture percentage.  Since we do not have an antenna hooked up, we will simulate this by using two reference temperatures.  In this case the ice water bath and the LN2 that we just used and was shown earlier.  
+
+A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/LN2_waterfall.png}
+
+\isucaption{Screenshot of the waterfall display used in Experiment 1}
+\label{LN2_waterfall}
+\end{figure}
+
+Let's take a look at two screen shots of the waterfall.  We will put them side by side so we can better compare the display when the thermal load is in the ice water bath and when the load is in LN2.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/waterfall_side.pdf}
+
+\isucaption{Side by side comparison of the waterfall display for Experiment 1}
+\label{side_waterfall}
+\end{figure}
+
+Here can see that the ice water screen shot appears "warmer" than the right side screen shot which appears "cooler".  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
+
+If we assume that our LN2 is dry soil and that our ice water bath is wet soil, we can now interpolate the data to this scale and show the information we obtained in Experiment one as both a noise temperature and soil moisture.  Figure \ref{SDR_soil} shows the same data we looked at earlier but we have now added a scale to show soil moisture as a percentage.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/sdr_soilmoisture.pdf}
+
+\isucaption{Plot of the noise temperature of Experiment 1 with soil moisture percentage}
+\label{SDR_soil}
+\end{figure}
+
+While this demonstrates that we can collate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers. ADD CITATION
 
 \section{Experiment 2 - Interfering Signal Mitigation}
 Experiment 2 is used to show additional benefits of using a software defined radio compared to a more traditional radiometer.  One benefit of using a SDR is that key components such as filters are created in software instead of using hardware.  This means that filters can be created on the fly and can be adjusted simply by updating the software.  For this experiment we will use both the Software Defined Radio running GNURadio with the radiometer firmware and a square-law detector that is connected to a data acquisition unit.  The experiment uses a 50 ohm matched load that is attached to the radiometer.  This matched load is then submerged into two different baths, a Liquid Nitrogen at ~ 77 K and an Ice bath at ~ 273.15 K.  Finally the HackRF One is used to generate the offending signal.  This signal is generated within the 1400 to 1425 MHz that the radiometer is configured for.   for an extended period of time.  This was to determine the stability of the radiometer as it is expected that as long as the LN2 is covering the matched load, it should maintain the temperature at 77 K.  
