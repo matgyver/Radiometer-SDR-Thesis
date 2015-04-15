@@ -241,7 +241,6 @@ If we assume that our LN2 is dry soil and that our ice water bath is wet soil, w
 \begin{figure}[h!tb] \centering
 
 \includegraphics[width=\textwidth]{Experiments/Exp1/sdr_soilmoisture.pdf}
-
 \isucaption{Plot of the noise temperature of Experiment 1 with soil moisture percentage}
 \label{SDR_soil}
 \end{figure}
@@ -252,32 +251,53 @@ While this demonstrates that we can collate our total power readings with a soil
 Experiment 2 is used to show additional benefits of using a software defined radio compared to a more traditional radiometer.  One benefit of using a SDR is that key components such as filters are created in software instead of using hardware.  This means that filters can be created on the fly and can be adjusted simply by updating the software.  For this experiment we will use both the Software Defined Radio running GNURadio with the radiometer firmware and a square-law detector that is connected to a data acquisition unit.  The experiment uses a 50 ohm matched load that is attached to the radiometer.  This matched load is then submerged into two different baths, a Liquid Nitrogen at ~ 77 K and an Ice bath at ~ 273.15 K.  Finally the HackRF One is used to generate the offending signal.  This signal is generated within the 1400 to 1425 MHz that the radiometer is configured for.   for an extended period of time.  This was to determine the stability of the radiometer as it is expected that as long as the LN2 is covering the matched load, it should maintain the temperature at 77 K.  
 
 \subsection{Laboratory Setup}
-To run this test, we need to have some equipment for this.  First and foremost, we need a radiometer.  For this test we used the ISU Radiometer front end, with the LNAs and band-pass filters in place.  The noise diode was turned off for these experiments.  A fifty ohm matched load was then attached to low loss coax and represented our source to the radiometer.  Finally, the output of the radiometer was run to the Ettus N200 software defined radio instead of running the on-board Analog to Digital converter and FPGA.  The data from the N200 was then sent to a computer running GNURadio and the custom software that I had written.  This data is sent to the computer through a 1 gigabit Ethernet connection due to the large bandwidth coming from the N200.
+We will use a similar setup to experiment one with the addition of a signal source that we will inject into RF chain.  Our signal source will be another software defined radio, the HackRF One shown in figure \ref{HackRF}.  This SDR is a cheaper SDR and thus has lower specifications than the Ettus Research N200.  However, for the task of a signal source, it will suit our needs.  With the exception of this additional SDR as our signal source, the setup is exactly as experiment one using the same LNAs and other hardware.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/Hack_RF.jpg}
+\isucaption{Image of the HackRF used to generate the offending signal}
+\label{HackRF}
+\end{figure} 
+
+For this experiment, the HackRF will generate a sinusoidal wave at a fixed frequency.  We will then change the amplitude of this signal a few times during the experiment.  This allows us to verify that the signal is still present in the total power measurements in both the software defined radio and the square-law detector.  Since the square-law detector does retain any frequency information, this was the only method to verify the operation of the square-law detector.   
+
+\subsection{Software Defined Radio Configuration}
+Our Software Defined Radio software is now altered to include a band-reject filter that will filter out the offending signal.  The filter was first designed using the included GNU Radio Filter Design tool that is part of the suite of software with GNURadio.  Figure \ref{GRC_Filter_DSN} shows a screen shot of the tool when designing the band-reject filter for this application.  This tool generates filter values also called taps that GNURadio will use for defining the filter.  The GUI program shown in figure \ref{GRC_Filter_DSN} allows us to interactively create a filter.  However, in our GNURadio program, we can call this program directly from our program to generate the taps needed.  This is quite easy to do since both GNURadio and the program that generates the taps are both Python programs.  
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/GNURadio_Filter_dsn.jpg}
+\isucaption{Image of the GNU Radio Filter Design tool}
+\label{GRC_Filter_DSN}
+\end{figure}  
+
+Once we have the taps we can now apply the filter to our system.  The band-reject filter will of course affect our performance as we will lose some bandwidth to the filter.  However, as we will shortly show we are still able to function as a total power radiometer while filtering this signal.  
 
 \subsection{Test Results}
-The first test run was conducted to help verify that the radiometer was operating correctly and to start to build up data for calibration.  This test was conducted by placing the matched load into the liquid nitrogen bath, which has a boiling temperature of 77 K and then putting the matched load into a ice water bath which has a temperature of 273.15 K.  This would give us two points to figure out a calibration point.
-
-During this experiment both the square law data and data from the software defined radio was recorded.  This information was then feed into a Matlab script that is able to read the data files, perform the needed calculations and then plot the data.  
+We begin with the test results by looking at the what happens to our total power readings with no filter applied.  As we stated in the Lab Setup portion, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
 
 \begin{figure}[h!tb] \centering
 
-\includegraphics[width=\textwidth]{Experiments/Exp1/x2_SDR_Calibrated.pdf}
+\includegraphics[width=\textwidth]{Experiments/Exp4/sdr_raw_unfiltered.pdf}
 
-\isucaption{Graph showing both the square-law detector and the software defined radio total power readings.}
-\label{lab1_x2_n200}
+\isucaption{Graph showing the unfiltered total power measurements on the software defined radio}
+\label{sdr_unfilt_raw}
 \end{figure}
 
-Data from the N200 was stored to file using the GNURadio file sink which stores the data in a binary format.  The square-law detector was feed into a LabView DAQ which then stored the data in both an ASCII and LabView's TDMS file format.  In addition the LabView program displayed the square-law data in real time
+We can see that there are pulses that occur in the graph in figure \ref{sdr_unfilt_raw} and that changes in the amplitude of the offending signal affect our total power readings.  These same pulses can also be seen in the square-law detector data as well which can be seen in figure 
 
 \begin{figure}[h!tb] \centering
 
-\includegraphics[width=\textwidth]{Images/labviewx2_lab0.png}
+\includegraphics[width=\textwidth]{Experiments/Exp4/sdr_raw_unfiltered.pdf}
 
-\isucaption{Screen shot of the Labview program capturing total power information from the radiometer}
+\isucaption{Graph showing the raw total power read from the square-law detector with an interfering signal.}
 \label{labview_tpr}
 \end{figure}
 
-This experiment showed that both the square-law detector and the software defined radio was able to detect changes in the noise temperature.  It was also able to show that once calibrated, both showed identical results.
+We can clearly see in both the software defined radio and the square-law detector that there is an interferring signal.  If we now look at the spectrum view on the software defined radio, we can see the signal in questions.
+
+
 
 \section{Testing with an injected noise source}
 The addition of an unwanted signal can be a determinant to the radiometer and has an adverse affect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices.  This problem becomes even a greater problem with radiometers used in orbiting spacecrafts as they are able to "see" large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.  This has been seen in some of the SMOS satellite data.
