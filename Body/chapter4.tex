@@ -139,7 +139,7 @@ The first data we will look at with be with the software defined radio.  The SDR
 \label{SDR_rQ}
 \end{figure}
 
-Figure \ref{SDR_rQ} shows the total power reading versus time and is also marked when the matched load was submerged in Ice Water, LN2, or a hot water bath.  Since we know what the temperatures are for the ice water and LN2, we can now calibrate these readings to a noise temperature reading.  This is done by reading in a calibration file we have stored in csv format and performing linear algbra to solve the slope of the line.  This was done in our iPython Notebook using the following code.
+Figure \ref{SDR_rQ} shows the total power reading versus time and is also marked when the matched load was submerged in Ice Water, LN2, or a hot water bath.  Since we know what the temperatures are for the ice water and LN2, we can now calibrate these readings to a noise temperature reading.  This is done by reading in a calibration file we have stored in csv format and performing linear algebra to solve the slope of the line.  This was done in our iPython Notebook using the following code.
 \lstset{language=Python}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 a = numpy.array([[rQ_values[0],1.0],[rQ_values[1],1.0]],numpy.float32)
@@ -147,7 +147,7 @@ b = numpy.array([temp_values[0],temp_values[1]])
 z = numpy.linalg.solve(a,b)
 \end{lstlisting}
 
-Now that we have our calibration points, we can now re-graph this data but now have it reference the noise temperature. 
+Now that we have our calibration points, we can now re-graph this data but now have it reference the noise temperature. Figure \ref{SDR_Calibrated} shows a calibrated graph of the data in relation to noise temperature.  In addition we have colorized this graph to show "warmer" to "cooler" temps.  This is helpful as we often refer to these as noise temperatures.
 
 \begin{figure}[h!tb] \centering
 
@@ -178,7 +178,7 @@ h=scipy.signal.firwin(numtaps=N, cutoff=40, nyq=Fs/2)
 x2_filt=scipy.signal.lfilter(h,1.0,x2_voltage)
 \end{lstlisting}
 
-Now we can re-graph this with a better with the filter in place.
+Now we can re-graph this with a better with the filter in place.  Figure \ref{X2_filter} now shows our data but with less noise since we have now applied a low pass filter.
 
 \begin{figure}[h!tb] \centering
 
@@ -188,7 +188,7 @@ Now we can re-graph this with a better with the filter in place.
 \label{X2_filter}
 \end{figure}
 
-Using the same technique as earlier, we can now calibrate the raw voltages from the square-law detector to the noise temperature.
+Using the same technique as earlier, we can now calibrate the raw voltages from the square-law detector to the noise temperature.  Like the software defined radio data, we can calibrate the voltages from the square-law detector to the physical temperature that our matched load is placed in.  Figure \ref{X2_Calibrated} shows the data from the square-law detector calibrated to our known temperature points.  This now allows us to to directly compare the square-law detector to the software defined radio data since we have a common reference point in which to compare the data.
 
 \begin{figure}[h!tb] \centering
 
@@ -214,7 +214,7 @@ A common application of radiometers is in the measurement of soil moisture.  All
 
 Using the Software Defined Radio, we can setup two methods to visually look at the noise temperature and thus the soil moisture percentage.  Since we do not have an antenna hooked up, we will simulate this by using two reference temperatures.  In this case the ice water bath and the LN2 that we just used and was shown earlier.  
 
-A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.
+A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.  This is the same program we have used but with the waterfall display now added.  The data for the waterfall is pulled directly from our source block or in our case the N200 software defined radio.
 
 \begin{figure}[h!tb] \centering
 
@@ -234,7 +234,7 @@ Let's take a look at two screen shots of the waterfall.  We will put them side b
 \label{side_waterfall}
 \end{figure}
 
-Here can see that the ice water screen shot appears "warmer" than the right side screen shot which appears "cooler".  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
+In figure \ref{side_waterfall} we can see that the ice water screen shot appears "warmer" than the right side screen shot which appears "cooler".  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
 
 If we assume that our LN2 is dry soil and that our ice water bath is wet soil, we can now interpolate the data to this scale and show the information we obtained in Experiment one as both a noise temperature and soil moisture.  Figure \ref{SDR_soil} shows the same data we looked at earlier but we have now added a scale to show soil moisture as a percentage.
 
@@ -251,10 +251,10 @@ While this demonstrates that we can collate our total power readings with a soil
 \section{Experiment 2 - Interfering Signal Mitigation}
 Experiment 2 is used to show additional benefits of using a software defined radio compared to a more traditional radiometer.  One benefit of using a SDR is that key components such as filters are created in software instead of using hardware.  This means that filters can be created on the fly and can be adjusted simply by updating the software.  For this experiment we will use both the Software Defined Radio running GNURadio with the radiometer firmware and a square-law detector that is connected to a data acquisition unit.  The experiment uses a 50 ohm matched load that is attached to the radiometer.  This matched load is then submerged into two different baths, a Liquid Nitrogen at ~ 77 K and an Ice bath at ~ 273.15 K.  Finally the HackRF One is used to generate the offending signal.  This signal is generated within the 1400 to 1425 MHz that the radiometer is configured for.   for an extended period of time.  This was to determine the stability of the radiometer as it is expected that as long as the LN2 is covering the matched load, it should maintain the temperature at 77 K.  
 
-\subsection{Testing Apparatus}
-To run this test, we need to have some equipment for this.  First and foremost, we need a radiometer.  For this test we used the ISU Radiometer front end, with the LNAs and bandpass filters in place.  The noise diode was turned off for these experiments.  A fifty ohm matched load was then attached to low loss coax and represented our source to the radiometer.  Finally, the output of the radiometer was run to the Ettus N200 software defined radio instead of running the on-board Analog to Digital converter and FPGA.  The data from the N200 was then sent to a computer running GNURadio and the custom software that I had written.  This data is sent to the computer through a 1 gigabit Ethernet connection due to the large bandwidth coming from the N200.
+\subsection{Laboratory Setup}
+To run this test, we need to have some equipment for this.  First and foremost, we need a radiometer.  For this test we used the ISU Radiometer front end, with the LNAs and band-pass filters in place.  The noise diode was turned off for these experiments.  A fifty ohm matched load was then attached to low loss coax and represented our source to the radiometer.  Finally, the output of the radiometer was run to the Ettus N200 software defined radio instead of running the on-board Analog to Digital converter and FPGA.  The data from the N200 was then sent to a computer running GNURadio and the custom software that I had written.  This data is sent to the computer through a 1 gigabit Ethernet connection due to the large bandwidth coming from the N200.
 
-\subsection{Calibration and verification experiment}
+\subsection{Test Results}
 The first test run was conducted to help verify that the radiometer was operating correctly and to start to build up data for calibration.  This test was conducted by placing the matched load into the liquid nitrogen bath, which has a boiling temperature of 77 K and then putting the matched load into a ice water bath which has a temperature of 273.15 K.  This would give us two points to figure out a calibration point.
 
 During this experiment both the square law data and data from the software defined radio was recorded.  This information was then feed into a Matlab script that is able to read the data files, perform the needed calculations and then plot the data.  
