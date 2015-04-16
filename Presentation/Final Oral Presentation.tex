@@ -180,7 +180,7 @@ A software defined radio infrastructure provides a highly flexible system that i
 \frametitle{Related Works}
 \begin{block}{Radio Astronomy}
 \begin{itemize}
-\item Radiometers are used in a variety of remote sensing applications
+\item Radiometers are used in a variety of remote sensing applications such as soil moisture and ocean salinity
 \item Radio Astronomy is one method of using radiometers for remote sensing
 \item There are current setups using Software Defined Radios for Radio Astronomy
 \end{itemize}
@@ -191,12 +191,20 @@ A software defined radio infrastructure provides a highly flexible system that i
 \begin{frame}
 \frametitle{Related Works}
 
-The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNURadio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.
+The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is currently using a USRP software defined radio in conjunction with GNURadio\cite{Leech2007}.  
+
+\begin{itemize}
+\item Tuned to the hydrogen line at 1420.4058 MHz
+\item Marcus Leech is the Principal Investigator
+\item Mr. Leech has made contributions to GNURadio related to radiometry
+\end{itemize}
 
 \begin{figure}\label{sbrac}
 \includegraphics[width=0.2\linewidth]{images/ra.jpg}
 \end{figure}
-\note{Marcus is the Principal Investigator at SBRAC and also a contributor to the radiometer branch in GNURadio.  Although this branch is no longer maintained, he still answers questions about using radiometers with GNURadio}
+\note{Marcus is the Principal Investigator at SBRAC and also a contributor to the radiometer branch in GNURadio.  Although this branch is no longer maintained, he still answers questions about using radiometers with GNURadio
+
+SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz \cite{Leech2007}.  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.}
 \end{frame}
 
 \begin{frame}
@@ -214,26 +222,33 @@ Students at the University of Illinois and Grand Valley State University built a
 \begin{frame}
 \frametitle{General Theory}
 \begin{block}{Traditional Radiometer}
-The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole. 
+The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  In order to accurately measure power, we need to keep the following in mind. 
 \end{block}
 
+\begin{itemize}
+\item Total system noise
+\item Bandwidth of the signal
+\item Stability of the system
+\end{itemize}
 \begin{figure}\label{crookes}
 \includegraphics[width=0.15\linewidth]{images/Crookes_radiometer.jpg}
 \end{figure}
+
+\note{The primary goal of a radiometer is to measure power.  While that statement sounds easy, there are in fact many factors that go in to how well a radiometer can measure the power it sees.  A better statement would be that a radiometer's primary goal is to accurately measure power within a certain degree of accuracy.  In order to accurately and within a high degree of precision measure power, a radiometer must take into account various factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole. }
 \end{frame}
 
 \begin{frame}
 \frametitle{General Theory}
 \begin{block}{Measuring power}
-To measure power we begin with the noise signal coming from the antenna.  Our antenna is assumed to be looking at our target of interest and it is assumed that we can relate the antenna noise to the noise from the source.  It is often easier to refer to this noise as the brightness temperature.  Therefore the brightness temperature of the source can be related to the brightness temperature at the antenna.  We will refer to this brightness temperature as T$_{A}$\cite{Ulaby}.  
-
+A very simple radiometer is an antenna that amplifies a signal with a gain of G and within a bandwidth of B.  To measure power we begin with the noise signal coming from the antenna.  Our antenna is assumed to be looking at our target of interest and it is assumed that we can relate the antenna noise to the noise from the source.  It is often easier to refer to this noise as the brightness temperature.  Therefore the brightness temperature of the source can be related to the brightness temperature at the antenna.  We will refer to this brightness temperature as T$_{A}$\cite{Ulaby}.  
+\end{block}
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=\textwidth]{../Images/simple_rad.png}
 \label{simplerad}
 \end{figure}
 }
-\end{block}
+\note{To measure power we begin with the noise signal coming from the antenna.  Our antenna is assumed to be looking at our target of interest and it is assumed that we can relate the antenna noise to the noise from the source.  It is often easier to refer to this noise as the brightness temperature.  Therefore the brightness temperature of the source can be related to the brightness temperature at the antenna.  We will refer to this brightness temperature as T$_{A}$}
 \end{frame}
 
 \subsection{RF Front End}
