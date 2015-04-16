@@ -178,7 +178,7 @@ h=scipy.signal.firwin(numtaps=N, cutoff=40, nyq=Fs/2)
 x2_filt=scipy.signal.lfilter(h,1.0,x2_voltage)
 \end{lstlisting}
 
-Now we can re-graph this with a better with the filter in place.  Figure \ref{X2_filter} now shows our data but with less noise since we have now applied a low pass filter.
+Figure \ref{X2_filter} now shows our data that has been filtered by the low pass filter.  This is similar to the low pass filter that is also used by the software defined radio.
 
 \begin{figure}[h!tb] \centering
 
@@ -248,10 +248,20 @@ If we assume that our LN2 is dry soil and that our ice water bath is wet soil, w
 While this demonstrates that we can collate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers. ADD CITATION
 
 \section{Experiment 2 - Interfering Signal Mitigation}
-Experiment 2 is used to show additional benefits of using a software defined radio compared to a more traditional radiometer.  One benefit of using a SDR is that key components such as filters are created in software instead of using hardware.  This means that filters can be created on the fly and can be adjusted simply by updating the software.  For this experiment we will use both the Software Defined Radio running GNURadio with the radiometer firmware and a square-law detector that is connected to a data acquisition unit.  The experiment uses a 50 ohm matched load that is attached to the radiometer.  This matched load is then submerged into two different baths, a Liquid Nitrogen at ~ 77 K and an Ice bath at ~ 273.15 K.  Finally the HackRF One is used to generate the offending signal.  This signal is generated within the 1400 to 1425 MHz that the radiometer is configured for.   for an extended period of time.  This was to determine the stability of the radiometer as it is expected that as long as the LN2 is covering the matched load, it should maintain the temperature at 77 K.  
+The addition of an unwanted signal can be a determinant to the radiometer and has an adverse affect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices.  This problem becomes even a greater problem with radiometers used in orbiting spacecrafts as they are able to "see" large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.
+
+RFI detection and mitigation is not a new topic in radiometry and there have been other methods in both the detection and mitigation of these signals[\cite{Forte}][\cite{McIntyre_RFI}][\cite{DeRoo}][\cite{Ellingson}].
+
+Experiment 2 is used to show additional benefits of using a software defined radio compared to a more traditional radiometer by being able to filter out these unwanted signals.  One benefit of using a SDR is that key components such as filters are created in software instead of using hardware.  This means that filters can be created on the fly and can be adjusted simply by updating the software.  
+
+For this experiment we will use both the Software Defined Radio running GNURadio with the radiometer firmware and a square-law detector that is connected to a data acquisition unit.  The experiment uses a 50 ohm matched load that is attached to the radiometer.  This matched load is then submerged into two different baths, a Liquid Nitrogen at ~ 77 K and an Ice bath at ~ 273.15 K.  Finally the HackRF One is used to generate the offending signal.  This signal is generated within the 1400 to 1425 MHz that the radiometer is configured for.   for an extended period of time.  This was to determine the stability of the radiometer as it is expected that as long as the LN2 is covering the matched load, it should maintain the temperature at 77 K.  
 
 \subsection{Laboratory Setup}
-We will use a similar setup to experiment one with the addition of a signal source that we will inject into RF chain.  Our signal source will be another software defined radio, the HackRF One shown in figure \ref{HackRF}.  This SDR is a cheaper SDR and thus has lower specifications than the Ettus Research N200.  However, for the task of a signal source, it will suit our needs.  With the exception of this additional SDR as our signal source, the setup is exactly as experiment one using the same LNAs and other hardware.
+We will use a similar setup to experiment one with the addition of a signal source that we will inject into the RF chain.  Our signal source will be another software defined radio, the HackRF One shown in figure \ref{HackRF}.  This SDR is a cheaper SDR and thus has lower specifications than the Ettus Research N200.  However, for the task of a signal source, it will suit our needs.  With the exception of this additional SDR as our signal source, the setup is exactly as experiment one using the same LNAs and other hardware.
+
+The ISU RF front end was once again used to amplify the signal.  One difference however is that a power combiner, which is the same as a power divider, was used to hook up to a signal generator.  The signal generator then provided the offending signal.  By using the signal generator we can control how much power and what frequency the offending signal is at.  In this case we are performing this in a controlled setup and would know ahead of time where the offending signal is.  In the future the SDR defined could identify the offending signal and then filter it out.
+
+Like the other tests, a power divider is used to split the signal after the ISU RF front end which was then feed to a square-law detector and then the N200 SDR.  The square-law detector was then hooked up to a National Instruments USB-6009 DAQ.  The DAQ was then feed into a Labview program to be processed and recorded.  The N200 continued to use the GNURadio program that was created to record the total power coming out.  However, it has been modified with a band reject filter to filter the offending signal.
 
 \begin{figure}[h!tb] \centering
 
@@ -260,14 +270,17 @@ We will use a similar setup to experiment one with the addition of a signal sour
 \label{HackRF}
 \end{figure} 
 
-For this experiment, the HackRF will generate a sinusoidal wave at a fixed frequency.  We will then change the amplitude of this signal a few times during the experiment.  This allows us to verify that the signal is still present in the total power measurements in both the software defined radio and the square-law detector.  Since the square-law detector does retain any frequency information, this was the only method to verify the operation of the square-law detector.   
+For this experiment, the HackRF will generate a sinusoidal wave at a fixed frequency.  We will then change the amplitude of this signal a few times during the experiment.  This allows us to verify that the signal is still present in the total power measurements in both the software defined radio and the square-law detector.  Since the square-law detector does retain any frequency information, this was the only method to verify the operation of the signal generator with the square-law detector.   
 
 \subsection{Software Defined Radio Configuration}
+
+This test was designed to test a problem that a software defined radio would be to cope with while a square law detector would not be able to cope with it.  This test injected a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  In this test, the square law detector, since it is a wide band device, would not be able to accurately measure the change in the total power of the signal.  However, the SDR is able to create a digital filter to filter out the offending signal.  Since this is done in software, the SDR is able to adapt to changes much faster than an analog radiometer.
+
 Our Software Defined Radio software is now altered to include a band-reject filter that will filter out the offending signal.  The filter was first designed using the included GNU Radio Filter Design tool that is part of the suite of software with GNURadio.  Figure \ref{GRC_Filter_DSN} shows a screen shot of the tool when designing the band-reject filter for this application.  This tool generates filter values also called taps that GNURadio will use for defining the filter.  The GUI program shown in figure \ref{GRC_Filter_DSN} allows us to interactively create a filter.  However, in our GNURadio program, we can call this program directly from our program to generate the taps needed.  This is quite easy to do since both GNURadio and the program that generates the taps are both Python programs.  
 
 \begin{figure}[h!tb] \centering
 
-\includegraphics[width=\textwidth]{Images/GNURadio_Filter_dsn.jpg}
+\includegraphics[width=\textwidth]{Images/GNURadio_Filter_dsn.png}
 \isucaption{Image of the GNU Radio Filter Design tool}
 \label{GRC_Filter_DSN}
 \end{figure}  
@@ -275,7 +288,7 @@ Our Software Defined Radio software is now altered to include a band-reject filt
 Once we have the taps we can now apply the filter to our system.  The band-reject filter will of course affect our performance as we will lose some bandwidth to the filter.  However, as we will shortly show we are still able to function as a total power radiometer while filtering this signal.  
 
 \subsection{Test Results}
-We begin with the test results by looking at the what happens to our total power readings with no filter applied.  As we stated in the Lab Setup portion, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
+We begin by looking at the what happens to our total power readings with no filter applied.  As we stated in the Lab Setup portion, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
 
 \begin{figure}[h!tb] \centering
 
@@ -285,44 +298,47 @@ We begin with the test results by looking at the what happens to our total power
 \label{sdr_unfilt_raw}
 \end{figure}
 
-We can see that there are pulses that occur in the graph in figure \ref{sdr_unfilt_raw} and that changes in the amplitude of the offending signal affect our total power readings.  These same pulses can also be seen in the square-law detector data as well which can be seen in figure 
+We can see that there are pulses that occur in the graph in figure \ref{sdr_unfilt_raw} and that changes in the amplitude of the offending signal affect our total power readings.  These same pulses can also be seen in the square-law detector data as well which can be seen in figure \ref{x2_unfilt}.
 
 \begin{figure}[h!tb] \centering
 
-\includegraphics[width=\textwidth]{Experiments/Exp4/sdr_raw_unfiltered.pdf}
+\includegraphics[width=\textwidth]{Experiments/Exp4/x2_voltage.pdf}
 
 \isucaption{Graph showing the raw total power read from the square-law detector with an interfering signal.}
-\label{labview_tpr}
+\label{x2_unfilt}
 \end{figure}
 
-We can clearly see in both the software defined radio and the square-law detector that there is an interferring signal.  If we now look at the spectrum view on the software defined radio, we can see the signal in questions.
-
-
-
-\section{Testing with an injected noise source}
-The addition of an unwanted signal can be a determinant to the radiometer and has an adverse affect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices.  This problem becomes even a greater problem with radiometers used in orbiting spacecrafts as they are able to "see" large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.  This has been seen in some of the SMOS satellite data.
+We can clearly see in both the software defined radio and the square-law detector that there is an interfering signal.  If we now look at the spectrum view on the software defined radio, we can see the signal in questions which is at 1.405 GHz.  Figure \ref{spectrum_interfering} shows us what the software defined radio sees which is a spike at 1.405 GHz.  The square-law detector of course has no frequency information, so our only method to detect an interfering signal is by looking at the total power readings.  In our case there is elevated readings and we can see the spikes in the square-law data.  However, we do not know where in the spectrum the signal is at.
 
 \begin{figure}[h!tb] \centering
 
-\includegraphics[width=\textwidth]{Images/interfering_signal_edit.png}
+\includegraphics[width=\textwidth]{Images/spectrum_interference.png}
 
-\isucaption{Image of the interfering signal appearing on the spectrum display of the SDR Radiometer.}
-\label{inter_signal}
+\isucaption{Image showing the spectrum view from the software defined radio}
+\label{spectrum_interfering}
 \end{figure}
 
-RFI detection and mitigation is not a new topic in radiometry and there have been other methods in both the detection and mitigation of these signals[\cite{Forte}][\cite{McIntyre_RFI}][\cite{DeRoo}][\cite{Ellingson}].
+Since we know where the offending signal is, we can now design our filter to filter out this signal.  In our GNURadio program we can specify both the frequency and the bandwidth our band-reject filter that we desire.  Ideally we want to keep the bandwidth of the filter as tight as possible to the offending signal but we also want to make sure our filter is effective in removing the signal.  Figure \ref{spectrum_filter} shows the spectrum display from the software defined radio with the filter now turned on and filtering the offending signal.
 
-This test was designed to test a problem that a software defined radio would be to cope with while a square law detector would not be able to cope with it.  This test injected a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  In this test, the square law detector, since it is a wide band device, would not be able to accurately measure the change in the total power of the signal.  However, the SDR is able to create a digital filter to filter out the offending signal.  Since this is done in software, the SDR is able to adapt to changes much faster than an analog radiometer.
+\begin{figure}[h!tb] \centering
 
-For this test however, we kept the experiment simple and fixed the interfering signal to a known frequency and amplitude.  The filter was then designed with these parameters in mind.  This type of radiometer operating in a real world environment would need some additional programming to identify the offending signal and then mitigate.  However this test shows that the SDR is capable of responding to an offending signal.
+\includegraphics[width=\textwidth]{Images/spectrum_filter.png}
 
-\subsection{Test setup}
-To test this theory, a similar setup was used as with previous tests.  The ISU RF front end was once again used to amplify the signal.  One difference however is that a power combiner, which is the same as a power divider, was used to hook up to a signal generator.  The signal generator then provided the offending signal.  By using the signal generator we can control how much power and what frequency the offending signal is at.  In this case we are performing this in a controlled setup and would know ahead of time where the offending signal is.  In the future the SDR defined could identify the offending signal and then filter it out.
+\isucaption{Image showing the software defined radio with the filter on and filtering the offending signal}
+\label{spectrum_filter}
+\end{figure}
 
-Like the other tests, a power divider is used to split the signal after the ISU RF front end which was then feed to a square-law detector and then the N200 SDR.  The square-law detector was then hooked up to a National Instruments USB-6009 DAQ.  The DAQ was then feed into a Labview program to be processed and recorded.  The N200 continued to use the GNURadio program that was created to record the total power coming out.  However, it has been modified with a band reject filter to filter the offending signal.
+Since we have now removed the offending signal, we will want to re-run our experiment and once again compare the difference between the software defined radio and the square law detector. We can begin by looking at the software defined radio total power readings.  In figure \ref{sdr_calib_filter} we can see a calibrated graph of the noise temperature seen by the software defined radio.  This graph is very similar to the graphs we expect from our total power radiometer.  However, we want to compare this to our square-law detector as well.  
 
-\subsection{Test results}
-Results of this test showed two key things with the SDR.  The first being that the SDR is capable of filtering out an offending signal.  This can be seen in figure \ref{filter_on}.
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp4/calib_filtered.pdf}
+
+\isucaption{Graph showing the calibrated total power readings with the filter removing the offending signal}
+\label{sdr_calib_filter}
+\end{figure}
+
+Figure \ref{filter_on} now shows both the software defined radio and the square-law detector calibrated total power readings.  In this graph you can see that the software defined radio is able to make normal readings where the square-law detector still shows the changes in amplitude which would make both calibration and obtaining useful data difficult.
 
 \begin{figure}[h!tb] \centering
 
@@ -332,15 +348,6 @@ Results of this test showed two key things with the SDR.  The first being that t
 \label{filter_on}
 \end{figure}
 
-The second result is with the SDR still being able to take total power measurements. 
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Images/moneyshot.png}
-
-\isucaption{Image showing both the SDR and square-law detector recording TPR, but with the SDR using a filter to remove the offending signal.}
-\label{sdr_x2_filter}
-\end{figure} 
 
 \section{Further testing}
 The software defined radio radiometer can be used in other configurations as well.  Further testing is needed to compare some of these other modes to a traditional radiometer to verify their operation, but in theory these additional configurations should operate the same in a software defined radio as they do with a traditional radiometer.
