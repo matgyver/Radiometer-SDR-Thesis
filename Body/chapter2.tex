@@ -83,8 +83,6 @@ Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ 
 
 The voltage output from this radiometer is then either measured or may also be sampled by an analog to digital converter.  In both cases the output has no real meaning until it is calibrated.
 
-%\section{Key Components in a Traditional Radiometer}
-%The RF front end used in this thesis was originally built by the University of Michigan, however this later proved to be unreliable and was changed out to one that was designed and built by the author.  This RF front end was designed to be low cost while still maintaining excellent noise performance.  To do this, the RF Front end was designed to be very minimal, only using some basic filtering and the amplification needed so the power can be detected by the SDR.  The LNAs play an important role as explained in the previous section to amplify the noise we are looking at while minimizing the amount of noise they contribute to the overall system.  While band-pass filters would not need to be there, since we can filter with digital filters, they did ensure that the signal was in our area of interest.
 
 %\subsection{RF Front End Design}
 
@@ -146,11 +144,15 @@ The SDR is able to do all of this but in a slightly different way than a traditi
 
 \subsection{Software Defined Power Detection}
 
-For a SDR, the incoming signal is sampled and converted to I/Q values by the hardware within the SDR.  The I/Q values represent the amplitude and phase information of the signal.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs what is shown in equation \ref{sdr_x2}.
+A traditional radiometer uses a square-law detector which takes the input signal and produces a voltage that is proportional to the square of the voltage.  This allows us to take an analog RF signal and convert the noise voltage that for all intense and purposes has a mean value of zero, and produce a noise power.
+
+For a SDR, the incoming signal is sampled and converted to I/Q values by the hardware within the SDR.  The I/Q values represent the amplitude and phase information of the signal.  For a SDR our voltages in the signal is represented by the amplitude values recorded by the SDR.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs what is shown in equation \ref{sdr_x2}.
 
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
 \end{equation}
+
+Therefore, like the analog square-law detector we are taking amplitude values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.
 
 Like the analog square-law detector, this signal will fluctuate rapidly and to improve the sensitivity of the radiometer we wish to integrate this signal.  We now want to look at how we can replicate a RC filter or integrator in the software defined radio.
 
