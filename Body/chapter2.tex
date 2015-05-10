@@ -7,9 +7,11 @@
 
 The work of this thesis is to use an off the shelf software defined radio (SDR) to perform the same operation or better of a traditional analog radiometer.  Using a SDR radio also means that we are able to be more flexible in how the radiometer performs, is capable of frequency agility and adapting to changing conditions such as interference.  Using a software defined radio also allows for implantation of different radiometer types such as a polarimetric radiometer, a correlation radiometer and also a polarimetric radiometer that uses Stokes parameters [\cite{Wang}].  Normally, these would require changes to hardware, but all of these types of radiometers can be implemented in software increasing the flexibility of the system.  
 
-The hardware that was selected for this research was the Ettus Research N200 Software Defined radio.  Information and rationale behind the selection of this unit will be covered later.  The N200 however gives us the standard building blocks for a typical software defined radio which includes a A/D converter and on-board FPGA.  The N200 however also gives a flexible front end by selecting various daughter boards that fit our application.  In addition, the N200 supports up to two daughter boards to be installed.  
+The hardware that was selected for this research was the Ettus Research N200 Software Defined radio.  Information and rationale behind the selection of this unit will be covered later.  The N200 however gives us the standard building blocks for a typical software defined radio which includes an A/D converter and on-board FPGA.  The N200 however also gives a flexible front end by selecting various daughter boards that fit our application.  In addition, the N200 supports up to two daughter boards to be installed.  
 
-A software defined radio of course is only as good as the software that is written to work with the hardware.  As the name implies, the software defines how the radio will act and function.  From a computer engineering perspective though, software can take on several roles in a system.  There is software that runs on the hardware, in our case the FPGA, and then there is software that may run on a computer to interface with the hardware.  In some cases, the software may only reside on the hardware, however, to increase the user usability of the system, we will be using a combination of firmware that is running on the FPGA and software that runs on a computer.  GNURadio is an open source software define radio framework that runs on multiple OSes and offers a rich set of features.  In addition, GNURadio is well supported by the Ettus Research group and is the preferred software for interfacing with their hardware.  An easy to use interface was another driving requirement for our implementation of a radiometer in a SDR.  GNURadio helps us with this through the use of the GNU Radio Companion or GRC.  This was important as it was anticipated that many operators of the radiometer would not know much about programming.  GNURadio uses a simple to use graphical system that is very similar to things such as LabView, offering a drag and drop system for adding various radio components such as filters.  Like LabView, you can also simply wire up the boxes and complete the circuit path for the RF signal as it gets processed.
+A software defined radio of course is only as good as the software that is written to work with the hardware.  As the name implies, the software defines how the radio will act and function.  From a computer engineering perspective though, software can take on several roles in a system.  There is software that runs on the hardware, in our case the FPGA, and then there is software that may run on a computer to interface with the hardware.  In some cases, the software may only reside on the hardware, however, to increase the user usability of the system, we will be using a combination of firmware that is running on the FPGA and software that runs on a computer.  
+
+For the computer, GNURadio will be used to do all signal processing that is needed.  GNURadio is an open source software define radio framework that runs on multiple OSes and offers a rich set of features.  In addition, GNURadio is well supported by the Ettus Research group and is the preferred software for interfacing with their hardware.  An easy to use interface was another driving requirement for our implementation of a radiometer in a SDR.  GNURadio helps us with this through the use of the GNU Radio Companion or GRC.  This was important as it was anticipated that many operators of the radiometer would not know much about programming.  GNURadio uses a simple to use graphical system that is very similar to things such as LabView, offering a drag and drop system for adding various radio components such as filters.  Like LabView, you can also simply wire up the boxes and complete the circuit path for the RF signal as it gets processed.
 
 \section{Traditional Radiometer Theory of Operation}
 
@@ -29,7 +31,7 @@ To measure power in a radiometer, several factors are taken into consideration. 
 
 Figure~\ref{simplerad} shows us an ideal radiometer.  That is a radiometer that has an input from the antenna, T$_{A}$, a known bandwidth denoted as B and a known gain denoted as G.  At the end of the block is the detector, which measures the power from the radiometer.
 
-Only a certain selection of the radio spectrum is observed by the radiometer.  This is referred to as the bandwidth of the radiometer and is denoted as B or as $\beta$.  This bandwidth is then centered around a center frequency.  In our case, we center around 1.4125 GHz.  There is a reason why 1.4125 GHz is selected and that is from 1.4000 to 1.4260 GHz is protected internationally to be as radio frequency interference free as possible.  This reduces interference from outside sources such as transmitters that can interfere with the operation of the radiometer.  
+Only a certain selection of the radio spectrum is observed by the radiometer.  This is referred to as the bandwidth of the radiometer and is denoted as B or as $\beta$.  This bandwidth is then centered around a center frequency.  In our case, we center around 1.4125 GHz.  There is a reason why 1.4125 GHz is selected and that is from 1.4000 to 1.4250 GHz is protected internationally to be as radio frequency interference free as possible.  This reduces interference from outside sources such as transmitters that can interfere with the operation of the radiometer.  
 
 The power coming from the antenna is amplified so it is easier to determine changes in the brightness temperature.  The overall gain of the radiometer system is referred to as G in this case.  Finally, we need to apply Boltzmann's constant, referred to as \textit{k}.  With these values, we can now compute the power the radiometer will see for an ideal radiometer.  This can be shown in equation~\ref{eq:power_rad_eq}
 
@@ -55,13 +57,13 @@ P=k*\beta*G*(T_{A}+T_{N})
 
 The issue with all radiometers is that it must detect small signal changes in a noisy environment.  To understand this, let us look at the example of T$_{A}$ has a value of 200 K and T$_{N}$ has a value of 800 K.  Since T$_{N}$ is added to our antenna signal, we have a total noise temperature of 1,000 K.  This means that if we want to detect a change as small as 1 K, we must be able to measure the difference between 1,000 K and 1,001 K. [\cite{skou}]
 
-The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent $\Delta$ Temperature or NE$\Delta$T and is shown in equation \ref{NEAT_EQ}. 
+The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent Delta ($\Delta$) Temperature or NE$\Delta$T and is shown in equation \ref{NEAT_EQ}. 
 
 \begin{equation} \label{NEAT_EQ}
 NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}}
 \end{equation}
 
-The sensitivity of the radiometer is based on both the bandwidth, $\beta$, of the incoming signal and the integration time, $\tau$.  As it can be seen in the equation, we would want to have as much bandwidth as possible.  In a traditional radiometer, this bandwidth is often fixed and is dependent on the band-pass filters used in the radiometer.  We can however control $\tau$ and a longer integration time will help improve the sensitivity of the radiometer.[\cite{ulaby}]
+The sensitivity of the radiometer is based on both the bandwidth, $\beta$, of the incoming signal and the integration time, $\tau$.  As it can be seen in the equation, we would want to have as much bandwidth as possible.  In a traditional radiometer, this bandwidth is often fixed and is dependent on the band-pass filters used in the radiometer.  We can however control $\tau$ and a longer integration time will help improve the sensitivity of the radiometer to a certain degree.[\cite{ulaby}]
 
 This covers a very simplified radiometer, however most radiometers are more complicated than the one shown in Figure~\ref{noiserad}.
 
@@ -79,9 +81,9 @@ A more typical radiometer can be shown in Figure \ref{trad_radiometer}.  Here we
 V_{OUT}=c*(T_A+T_N)*G
 \end{equation}
 
-Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ and the noise from the antenna, T$_A$ and multiplied by the gain in the system, G.
+Here V$_{OUT}$ is shown by the addition of both the noise from the system T$_N$ and the noise from the antenna, T$_A$ and multiplied by the gain in the system, G[\cite{skou}].  A constant factor $c$ is useful for when we are looking at a radiometer like a Dicke radiometer in which case the value of $c$ would be $\frac{1}{2}$.  In most applications outside of a Dicke radiometer, $c$ would be 1 and can be ignored.  
 
-The voltage output from this radiometer is then either measured or may also be sampled by an analog to digital converter.  In both cases the output has no real meaning until it is calibrated.
+The voltage output from this radiometer is then either measured or may also be sampled by an analog to digital converter.  This voltage then represents the total power measured by the radiometer, however this measurement is not calibrated.
 
 
 %\subsection{RF Front End Design}
@@ -146,18 +148,23 @@ The SDR is able to do all of this but in a slightly different way than a traditi
 
 A traditional radiometer uses a square-law detector which takes the input signal and produces a voltage that is proportional to the square of the voltage.  This allows us to take an analog RF signal and convert the noise voltage that for all intense and purposes has a mean value of zero, and produce a noise power.
 
-For a SDR, the incoming signal is sampled and converted to I/Q values by the hardware within the SDR.  The I/Q values represent the amplitude and phase information of the signal.  For a SDR our voltages in the signal is represented by the amplitude values recorded by the SDR.  In GNURadio we are then able to square these values within software.  This block in GNURadio mathematically performs what is shown in equation \ref{sdr_x2}.
+For a SDR, the incoming signal is sampled and converted to I/Q values by the hardware within the SDR.  The I/Q values together can be used to recontruct both the phase, frequency and amplitude information of the signal and can do so much more accurately then if we just recorded the frequency and amplitude information.  In GNURadio we are then able to square these values within software which give us our peak voltage of the signal.  This block in GNURadio mathematically performs what is shown in equation \ref{sdr_x2}.
 
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
 \end{equation}
 
-Therefore, like the analog square-law detector we are taking amplitude values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.
+Therefore, like the analog square-law detector we are taking peak voltage values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.
 
 Like the analog square-law detector, this signal will fluctuate rapidly and to improve the sensitivity of the radiometer we wish to integrate this signal.  We now want to look at how we can replicate a RC filter or integrator in the software defined radio.
 
 \subsection{Software Defined Integrator}
-A RC filter is analogous to an integrator where the R and C values determine our time constant and our integration time for the filter[\cite{Aitken}].  A SDR however operates in the digital domain at discrete intervals.  One type of filter that can be used is the Infinite Impulse Response (IIR) filter. 
+A RC filter is analogous to an integrator where the R and C values determine our time constant and our integration time for the filter[\cite{Aitken}].  We know a RC filter is analogous to an integrator by looking at equation \ref{eq:rc_int}.  A SDR however operates in the digital domain at discrete intervals.  One type of filter that can be used is the Infinite Impulse Response (IIR) filter. 
+
+\begin{equation}\label{eq:rc_int}
+\frac{1}{RC}\int{V_idt}
+\end{equation}
+
 
 To begin with, we look at what an analog RC filter looks like. 
 
@@ -199,7 +206,7 @@ H(f)=\frac{\displaystyle\sum\limits_{j=o}^{P-1} c_je^{-2\pi ijfT}}{1-\displaysty
 
 In equation \ref{Fourier_IIR}, $f$ is our frequency in Hz and $T$ is the time between samples in seconds and is related to our sampling frequency.
 
-We now want show the link between our analog RC circuit and the IIR filter.  Looking at equation \ref{eq:rc_circuit_eq}, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can substitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is and we can do that using equation \ref{sampling_rate_eq}.
+We now want to show the link between our analog RC circuit and the IIR filter.  Looking at equation \ref{eq:rc_circuit_eq}, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can substitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is and we can do that using equation \ref{sampling_rate_eq}.
 
 \begin{equation}\label{sampling_rate_eq}
 T=time between samples=\frac{1}{sampling rate}
@@ -237,7 +244,7 @@ f_c=\frac{\sqrt{3}}{2\pi RC}\rightarrow RC=\frac{\sqrt{3}}{2\pi f_c}
 
 The $RC$ term gives us our time constant of the circuit and can be used to calculate out our coefficients.  We are not concerned about the actual values of R and C with our IIR filter, instead we just need the product of R and C.  
 
-For GNURadio most of the work is done for us.  We can simply enter in our desired cutoff frequency and GNURadio will calculate our IIR filter coefficients.  However, this shows that an IIR filter works very much like an analog RC low pass filter.
+In GNURadio most of the work is done for us.  We can simply enter in our desired cutoff frequency and GNURadio will calculate our IIR filter coefficients.  However, this shows that an IIR filter works very much like an analog RC low pass filter.
 
 Like a traditional radiometer, the SDR will use an antenna to look at the target of interest.  SDRs still use a RF stage that takes the power from the source and amplifies it.  The difference though begins after that.  A SDR will then sample and generate I and Q values that represents the amplitude and phase of the signal.  From there, this data is sent to a computer to be processed.  We can then use this information to calculate the power that is being seen.  In addition, we can manipulate the signal in other ways such as applying a filter to filter out an unwanted source.
 
@@ -286,7 +293,7 @@ GNUradio Companion works by having many of the common functions as blocks that c
 
 GNURadio Companion also includes blocks that allow it to create a GUI type of interface.  The typical method it uses for this is using wxGUI although GNURadio Companion does also include blocks that can use QT for generating widgets as well.  However, the wxGUI tends to work better and has better support in GNURadio than QT.  
 
-Through these blocks can not only manipulate the data we need to perform a total power radiometer in software but to also create a user interface that allows us to control the radiometer as well.  We are also able to display the information in real time so the user can see changes in power and even monitor spectral information during the operation of the radiometer. 
+Through these blocks we can not only manipulate the data we need to perform a total power radiometer in software but to also create a user interface that allows us to control the radiometer as well.  We are also able to display the information in real time so the user can see changes in power and even monitor spectral information during the operation of the radiometer. 
 
 \section{General Specifications}
 In general, since we are digitizing the signal early on the components do not add much in terms of noise when we look at the performance of the radiometer, at least when comparing to a traditional radiometer.  There are however other performance metrics that we need to look at that come in to play with a digital system.  These performance metrics deal with how well the system can handle the bandwidth, the frequency and the resolution of the signal as it is digitized.  The information below outlines the specification of the devices used and it's impact on the performance of the SDR as a digital radiometer.  
@@ -298,7 +305,7 @@ The N200 is a SDR developed and built by Ettus Research.  It is one of the newer
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics{Images/n200}
-\isucaption{The USRP N200 from Ettus Research}
+\isucaption{The USRP N200 from Ettus Research (Image from Ettus Research Website - www.ettus.com)}
 \label{N200}
 \end{figure}
 }
@@ -334,13 +341,21 @@ The DBSRX2 receiver board is capable of receiving signals between 800 MHz and 2.
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics{Images/dbsrx2}
-\isucaption{The DBSRX2 daughter board from Ettus Research}
+\includegraphics{Images/dbsrx2.jpg}
+\isucaption{The DBSRX2 daughter board from Ettus Research (Image from Ettus Research Website - www.ettus.com)}
 \label{dbsrx2}
 \end{figure}
 }
 
 The DBSRX2 has several key components on it that is used to take the analog RF signal and prepare it for digitization by the analog to digital converter.  First the signal is amplified through a Programmable Gain Amplifier (PGA).  This PGA is accessible from the software and can be configured by the software.  Next the signal goes into a direct-conversion integrated circuit that directly converts the RF signal to analog I and Q values.  The integrated circuit, a Maxim MAX2112 device, also includes a Low Noise Amplifier (LNA), mixer and Low Pass Filter (LPF).  This essentially amplifies the signal, mixes into baseband and then applies a low pass filter.  
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=\textwidth]{Images/dbsrx2.pdf}
+\isucaption{The DBSRX2 Schematic (Image from Ettus Research Website - www.ettus.com)}
+\label{dbsrx2_sch}
+\end{figure}
+}
 
 These analog I and Q values are then passed to the N200 to be sampled by the analog to digital converter.  The IQ values are differential signals to minimize noise possible interference.
 
@@ -356,12 +371,3 @@ As outlined above, a software defined radio implements a traditional radiometer 
 
 A traditional radiometer may also use an analog to digital converter in order to digitize the analog voltage from the square-law detector.  Because the sample rate of this voltage is very low, almost any analog to digital can be used for this.  At this point however, there is no frequency information, only the magnitude information is being retained and recorded.
 
-\section{Comparison of a Software Defined Radio Radiometer and other Digital Radiometers}
-
-A digital radiometer is not a new concept.  Early radiometers would often digitize the analog voltage information from the square-law detector and then send that information to a computer for storage or analysis.  
-
-A pre-cursor to a software defined radio, some radiometers would also digitize the incoming RF signal, but under-sample this information.  Since only power is the information desired this was acceptable.  However, these radiometers did often use the same components you might find in a software defined radio such as an A/D converter and FPGA.  These components however were used in different ways.
-
-One reason why these devices were used differently from a SDR was due to cost.  Most radiometer operations happen at 1.4 GHz or above.  A/D converters at these higher frequencies become more expensive and harder to obtain.  In recent years however, these costs have come down.
-
-The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing and squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
