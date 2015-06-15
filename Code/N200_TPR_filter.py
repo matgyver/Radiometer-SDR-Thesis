@@ -1,18 +1,28 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 ##################################################
-# Gnuradio Python Flow Graph
+# GNU Radio Python Flow Graph
 # Title: Total Power Radiometer - N200 with Filter
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR with a bandpass filter
-# Generated: Thu Jun 12 23:54:53 2014
+# Generated: Sun Jun 14 19:03:12 2015
 ##################################################
 
+if __name__ == '__main__':
+    import ctypes
+    import sys
+    if sys.platform.startswith('linux'):
+        try:
+            x11 = ctypes.cdll.LoadLibrary('libX11.so')
+            x11.XInitThreads()
+        except:
+            print "Warning: failed to XInitThreads()"
+
 from datetime import datetime
+from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import filter
 from gnuradio import gr
-from gnuradio import uhd
 from gnuradio import wxgui
 from gnuradio.eng_option import eng_option
 from gnuradio.fft import logpwrfft
@@ -25,32 +35,29 @@ from gnuradio.wxgui import scopesink2
 from grc_gnuradio import blks2 as grc_blks2
 from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
-import time
 import wx
 
 class N200_TPR_filter(grc_wxgui.top_block_gui):
 
-    def __init__(self, tpint=2.0, dcg=1, rfgain=0.0, frequency=1.406e9, decln=-28.0, srate=10.0e6, clock=100.0e6, fftsize=8192, maxg=50, subdev="A:0", spa=1, rxant="", devid="addr=192.168.10.2"):
+    def __init__(self, clock=100.0e6, dcg=1, decln=-28.0, devid="addr=192.168.10.2", fftsize=8192, frequency=1.406e9, maxg=50, rfgain=0.0, rxant="", spa=1, srate=10.0e6, subdev="A:0", tpint=2.0):
         grc_wxgui.top_block_gui.__init__(self, title="Total Power Radiometer - N200 with Filter")
-        _icon_path = "/usr/share/icons/hicolor/32x32/apps/gnuradio-grc.png"
-        self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 
         ##################################################
         # Parameters
         ##################################################
-        self.tpint = tpint
-        self.dcg = dcg
-        self.rfgain = rfgain
-        self.frequency = frequency
-        self.decln = decln
-        self.srate = srate
         self.clock = clock
-        self.fftsize = fftsize
-        self.maxg = maxg
-        self.subdev = subdev
-        self.spa = spa
-        self.rxant = rxant
+        self.dcg = dcg
+        self.decln = decln
         self.devid = devid
+        self.fftsize = fftsize
+        self.frequency = frequency
+        self.maxg = maxg
+        self.rfgain = rfgain
+        self.rxant = rxant
+        self.spa = spa
+        self.srate = srate
+        self.subdev = subdev
+        self.tpint = tpint
 
         ##################################################
         # Variables
@@ -164,29 +171,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	proportion=1,
         )
         self.Main.GetPage(0).GridAdd(_integ_sizer, 0, 2, 1, 1)
-        _gain_sizer = wx.BoxSizer(wx.VERTICAL)
-        self._gain_text_box = forms.text_box(
-        	parent=self.Main.GetPage(0).GetWin(),
-        	sizer=_gain_sizer,
-        	value=self.gain,
-        	callback=self.set_gain,
-        	label="RF Gain (dB)",
-        	converter=forms.float_converter(),
-        	proportion=0,
-        )
-        self._gain_slider = forms.slider(
-        	parent=self.Main.GetPage(0).GetWin(),
-        	sizer=_gain_sizer,
-        	value=self.gain,
-        	callback=self.set_gain,
-        	minimum=0,
-        	maximum=maxg,
-        	num_steps=100,
-        	style=wx.SL_HORIZONTAL,
-        	cast=float,
-        	proportion=1,
-        )
-        self.Main.GetPage(0).GridAdd(_gain_sizer, 0, 1, 1, 1)
         self._freq_text_box = forms.text_box(
         	parent=self.Main.GetPage(0).GetWin(),
         	value=self.freq,
@@ -327,16 +311,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._variable_static_text_0_static_text, 2, 0, 1, 1)
-        self.uhd_usrp_source_0 = uhd.usrp_source(
-        	device_addr=devid,
-        	stream_args=uhd.stream_args(
-        		cpu_format="fc32",
-        		channels=range(1),
-        	),
-        )
-        self.uhd_usrp_source_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_source_0.set_center_freq(freq, 0)
-        self.uhd_usrp_source_0.set_gain(gain, 0)
         self.single_pole_iir_filter_xx_0 = filter.single_pole_iir_filter_ff(1.0/((samp_rate*integ)/2.0), 1)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,
@@ -354,6 +328,29 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._idecln_text_box, 1, 2, 1, 1)
+        _gain_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._gain_text_box = forms.text_box(
+        	parent=self.Main.GetPage(0).GetWin(),
+        	sizer=_gain_sizer,
+        	value=self.gain,
+        	callback=self.set_gain,
+        	label="RF Gain (dB)",
+        	converter=forms.float_converter(),
+        	proportion=0,
+        )
+        self._gain_slider = forms.slider(
+        	parent=self.Main.GetPage(0).GetWin(),
+        	sizer=_gain_sizer,
+        	value=self.gain,
+        	callback=self.set_gain,
+        	minimum=0,
+        	maximum=maxg,
+        	num_steps=100,
+        	style=wx.SL_HORIZONTAL,
+        	cast=float,
+        	proportion=1,
+        )
+        self.Main.GetPage(0).GridAdd(_gain_sizer, 0, 1, 1, 1)
         _filter_band_sizer = wx.BoxSizer(wx.VERTICAL)
         self._filter_band_text_box = forms.text_box(
         	parent=self.Main.GetPage(0).GetWin(),
@@ -404,77 +401,35 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	input_index=add_filter,
         	output_index=0,
         )
+        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, .5, 0)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_1, 0))
-        self.connect((self.blocks_keep_one_in_n_1, 0), (self.blks2_valve_0, 0))
-        self.connect((self.blks2_valve_0, 0), (self.blocks_file_sink_4, 0))
-        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_add_const_vxx_1, 0))
-        self.connect((self.blocks_add_const_vxx_1, 0), (self.wxgui_numbersink2_0, 0))
-        self.connect((self.blocks_add_const_vxx_1, 0), (self.blks2_valve_1, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_numbersink2_0_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_scopesink2_2, 0))
-        self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_multiply_const_vxx_1, 0))
-        self.connect((self.blks2_valve_2, 0), (self.blocks_file_sink_1, 0))
-        self.connect((self.logpwrfft_x_0, 0), (self.blocks_keep_one_in_n_3, 0))
-        self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_file_sink_5, 0))
-        self.connect((self.blks2_valve_1, 0), (self.blocks_file_sink_0, 0))
-        self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_4, 0))
-        self.connect((self.blocks_keep_one_in_n_4, 0), (self.blocks_multiply_const_vxx_0, 0))
-        self.connect((self.blocks_complex_to_mag_squared_1, 0), (self.single_pole_iir_filter_xx_0, 0))
-        self.connect((self.blks2_selector_0, 0), (self.wxgui_fftsink2_0, 0))
-        self.connect((self.blks2_selector_0, 0), (self.blocks_complex_to_mag_squared_1, 0))
-        self.connect((self.blks2_selector_0, 0), (self.logpwrfft_x_0, 0))
-        self.connect((self.blks2_selector_0, 0), (self.blks2_valve_2, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.fft_filter_xxx_0, 0))
-        self.connect((self.fft_filter_xxx_0, 0), (self.blks2_selector_0, 1))
-        self.connect((self.uhd_usrp_source_0, 0), (self.blks2_selector_0, 0))
+        self.connect((self.analog_noise_source_x_0, 0), (self.blks2_selector_0, 0))    
+        self.connect((self.analog_noise_source_x_0, 0), (self.fft_filter_xxx_0, 0))    
+        self.connect((self.blks2_selector_0, 0), (self.blks2_valve_2, 0))    
+        self.connect((self.blks2_selector_0, 0), (self.blocks_complex_to_mag_squared_1, 0))    
+        self.connect((self.blks2_selector_0, 0), (self.logpwrfft_x_0, 0))    
+        self.connect((self.blks2_selector_0, 0), (self.wxgui_fftsink2_0, 0))    
+        self.connect((self.blks2_valve_0, 0), (self.blocks_file_sink_4, 0))    
+        self.connect((self.blks2_valve_1, 0), (self.blocks_file_sink_0, 0))    
+        self.connect((self.blks2_valve_2, 0), (self.blocks_file_sink_1, 0))    
+        self.connect((self.blocks_add_const_vxx_1, 0), (self.blks2_valve_1, 0))    
+        self.connect((self.blocks_add_const_vxx_1, 0), (self.wxgui_numbersink2_0, 0))    
+        self.connect((self.blocks_complex_to_mag_squared_1, 0), (self.single_pole_iir_filter_xx_0, 0))    
+        self.connect((self.blocks_keep_one_in_n_1, 0), (self.blks2_valve_0, 0))    
+        self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_multiply_const_vxx_1, 0))    
+        self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_file_sink_5, 0))    
+        self.connect((self.blocks_keep_one_in_n_4, 0), (self.blocks_multiply_const_vxx_0, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_1, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_numbersink2_0_0, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_scopesink2_2, 0))    
+        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_add_const_vxx_1, 0))    
+        self.connect((self.fft_filter_xxx_0, 0), (self.blks2_selector_0, 1))    
+        self.connect((self.logpwrfft_x_0, 0), (self.blocks_keep_one_in_n_3, 0))    
+        self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_4, 0))    
 
-
-# QT sink close method reimplementation
-
-    def get_tpint(self):
-        return self.tpint
-
-    def set_tpint(self, tpint):
-        self.tpint = tpint
-        self.set_integ(self.tpint)
-
-    def get_dcg(self):
-        return self.dcg
-
-    def set_dcg(self, dcg):
-        self.dcg = dcg
-        self.set_dc_gain(int(self.dcg))
-
-    def get_rfgain(self):
-        return self.rfgain
-
-    def set_rfgain(self, rfgain):
-        self.rfgain = rfgain
-
-    def get_frequency(self):
-        return self.frequency
-
-    def set_frequency(self, frequency):
-        self.frequency = frequency
-        self.set_freq(self.frequency)
-
-    def get_decln(self):
-        return self.decln
-
-    def set_decln(self, decln):
-        self.decln = decln
-        self.set_idecln(self.decln)
-
-    def get_srate(self):
-        return self.srate
-
-    def set_srate(self, srate):
-        self.srate = srate
-        self.set_israte(self.srate)
 
     def get_clock(self):
         return self.clock
@@ -483,38 +438,19 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.clock = clock
         self.set_variable_static_text_0_0_0_0(self.clock)
 
-    def get_fftsize(self):
-        return self.fftsize
+    def get_dcg(self):
+        return self.dcg
 
-    def set_fftsize(self, fftsize):
-        self.fftsize = fftsize
-        self.set_fftrate(int(self.samp_rate/self.fftsize))
+    def set_dcg(self, dcg):
+        self.dcg = dcg
+        self.set_dc_gain(int(self.dcg))
 
-    def get_maxg(self):
-        return self.maxg
+    def get_decln(self):
+        return self.decln
 
-    def set_maxg(self, maxg):
-        self.maxg = maxg
-
-    def get_subdev(self):
-        return self.subdev
-
-    def set_subdev(self, subdev):
-        self.subdev = subdev
-        self.set_variable_static_text_0_0(self.subdev)
-
-    def get_spa(self):
-        return self.spa
-
-    def set_spa(self, spa):
-        self.spa = spa
-        self.set_spavg(int(self.spa))
-
-    def get_rxant(self):
-        return self.rxant
-
-    def set_rxant(self, rxant):
-        self.rxant = rxant
+    def set_decln(self, decln):
+        self.decln = decln
+        self.set_idecln(self.decln)
 
     def get_devid(self):
         return self.devid
@@ -523,14 +459,74 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.devid = devid
         self.set_variable_static_text_0_0_0(self.devid)
 
+    def get_fftsize(self):
+        return self.fftsize
+
+    def set_fftsize(self, fftsize):
+        self.fftsize = fftsize
+        self.set_fftrate(int(self.samp_rate/self.fftsize))
+
+    def get_frequency(self):
+        return self.frequency
+
+    def set_frequency(self, frequency):
+        self.frequency = frequency
+        self.set_freq(self.frequency)
+
+    def get_maxg(self):
+        return self.maxg
+
+    def set_maxg(self, maxg):
+        self.maxg = maxg
+
+    def get_rfgain(self):
+        return self.rfgain
+
+    def set_rfgain(self, rfgain):
+        self.rfgain = rfgain
+
+    def get_rxant(self):
+        return self.rxant
+
+    def set_rxant(self, rxant):
+        self.rxant = rxant
+
+    def get_spa(self):
+        return self.spa
+
+    def set_spa(self, spa):
+        self.spa = spa
+        self.set_spavg(int(self.spa))
+
+    def get_srate(self):
+        return self.srate
+
+    def set_srate(self, srate):
+        self.srate = srate
+        self.set_israte(self.srate)
+
+    def get_subdev(self):
+        return self.subdev
+
+    def set_subdev(self, subdev):
+        self.subdev = subdev
+        self.set_variable_static_text_0_0(self.subdev)
+
+    def get_tpint(self):
+        return self.tpint
+
+    def set_tpint(self, tpint):
+        self.tpint = tpint
+        self.set_integ(self.tpint)
+
     def get_israte(self):
         return self.israte
 
     def set_israte(self, israte):
         self.israte = israte
+        self._israte_chooser.set_value(self.israte)
         self.set_samp_rate(int(self.israte))
         self.set_variable_static_text_0(self.israte)
-        self._israte_chooser.set_value(self.israte)
         self.wxgui_fftsink2_0.set_sample_rate(self.israte)
 
     def get_samp_rate(self):
@@ -538,20 +534,19 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.set_taps(firdes.low_pass(1.0, self.samp_rate,self.filter_band, 1000))
         self.set_fftrate(int(self.samp_rate/self.fftsize))
+        self.set_taps(firdes.low_pass(1.0, self.samp_rate,self.filter_band, 1000))
         self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
-        self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
         self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+        self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
 
     def get_prefix(self):
         return self.prefix
 
     def set_prefix(self, prefix):
         self.prefix = prefix
-        self.set_recfile_tpr(self.prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+        self.set_recfile_tpr(self.prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.blocks_file_sink_1.open(self.prefix+"iq_raw" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
 
     def get_filter_band(self):
@@ -559,9 +554,9 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
 
     def set_filter_band(self, filter_band):
         self.filter_band = filter_band
-        self.set_taps(firdes.low_pass(1.0, self.samp_rate,self.filter_band, 1000))
         self._filter_band_slider.set_value(self.filter_band)
         self._filter_band_text_box.set_value(self.filter_band)
+        self.set_taps(firdes.low_pass(1.0, self.samp_rate,self.filter_band, 1000))
 
     def get_variable_static_text_0_0_0_0(self):
         return self.variable_static_text_0_0_0_0
@@ -673,7 +668,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.gain = gain
         self._gain_slider.set_value(self.gain)
         self._gain_text_box.set_value(self.gain)
-        self.uhd_usrp_source_0.set_gain(self.gain, 0)
 
     def get_freq(self):
         return self.freq
@@ -682,7 +676,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.freq = freq
         self._freq_text_box.set_value(self.freq)
         self.wxgui_fftsink2_0.set_baseband_freq(self.freq)
-        self.uhd_usrp_source_0.set_center_freq(self.freq, 0)
 
     def get_file_rate(self):
         return self.file_rate
@@ -704,8 +697,8 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
 
     def set_det_rate(self, det_rate):
         self.det_rate = det_rate
-        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
         self.blocks_keep_one_in_n_1.set_n(int(self.det_rate/self.file_rate))
+        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
 
     def get_dc_gain(self):
         return self.dc_gain
@@ -739,44 +732,36 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self._add_filter_chooser.set_value(self.add_filter)
         self.blks2_selector_0.set_input_index(int(self.add_filter))
 
+
 if __name__ == '__main__':
-    import ctypes
-    import sys
-    if sys.platform.startswith('linux'):
-        try:
-            x11 = ctypes.cdll.LoadLibrary('libX11.so')
-            x11.XInitThreads()
-        except:
-            print "Warning: failed to XInitThreads()"
     parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
-    parser.add_option("", "--tpint", dest="tpint", type="eng_float", default=eng_notation.num_to_str(2.0),
-        help="Set Integration Time [default=%default]")
-    parser.add_option("", "--dcg", dest="dcg", type="eng_float", default=eng_notation.num_to_str(1),
-        help="Set DC (post-detector) gain [default=%default]")
-    parser.add_option("", "--rfgain", dest="rfgain", type="eng_float", default=eng_notation.num_to_str(0.0),
-        help="Set Gain of RF Front-End [default=%default]")
-    parser.add_option("", "--frequency", dest="frequency", type="eng_float", default=eng_notation.num_to_str(1.406e9),
-        help="Set Center Frequency [default=%default]")
-    parser.add_option("", "--decln", dest="decln", type="eng_float", default=eng_notation.num_to_str(-28.0),
-        help="Set Declination [default=%default]")
-    parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(10.0e6),
-        help="Set Sample Rate [default=%default]")
     parser.add_option("", "--clock", dest="clock", type="eng_float", default=eng_notation.num_to_str(100.0e6),
         help="Set Clock rate [default=%default]")
-    parser.add_option("", "--fftsize", dest="fftsize", type="intx", default=8192,
-        help="Set fftsize [default=%default]")
-    parser.add_option("", "--maxg", dest="maxg", type="intx", default=50,
-        help="Set maxg [default=%default]")
-    parser.add_option("", "--subdev", dest="subdev", type="string", default="A:0",
-        help="Set USRP Subdevice ID [default=%default]")
-    parser.add_option("", "--spa", dest="spa", type="eng_float", default=eng_notation.num_to_str(1),
-        help="Set Spectral Averaging Constant [default=%default]")
-    parser.add_option("", "--rxant", dest="rxant", type="string", default="",
-        help="Set RX Antenna selection [default=%default]")
+    parser.add_option("", "--dcg", dest="dcg", type="eng_float", default=eng_notation.num_to_str(1),
+        help="Set DC (post-detector) gain [default=%default]")
+    parser.add_option("", "--decln", dest="decln", type="eng_float", default=eng_notation.num_to_str(-28.0),
+        help="Set Declination [default=%default]")
     parser.add_option("", "--devid", dest="devid", type="string", default="addr=192.168.10.2",
         help="Set USRP Device ID [default=%default]")
+    parser.add_option("", "--fftsize", dest="fftsize", type="intx", default=8192,
+        help="Set fftsize [default=%default]")
+    parser.add_option("", "--frequency", dest="frequency", type="eng_float", default=eng_notation.num_to_str(1.406e9),
+        help="Set Center Frequency [default=%default]")
+    parser.add_option("", "--maxg", dest="maxg", type="intx", default=50,
+        help="Set maxg [default=%default]")
+    parser.add_option("", "--rfgain", dest="rfgain", type="eng_float", default=eng_notation.num_to_str(0.0),
+        help="Set Gain of RF Front-End [default=%default]")
+    parser.add_option("", "--rxant", dest="rxant", type="string", default="",
+        help="Set RX Antenna selection [default=%default]")
+    parser.add_option("", "--spa", dest="spa", type="eng_float", default=eng_notation.num_to_str(1),
+        help="Set Spectral Averaging Constant [default=%default]")
+    parser.add_option("", "--srate", dest="srate", type="eng_float", default=eng_notation.num_to_str(10.0e6),
+        help="Set Sample Rate [default=%default]")
+    parser.add_option("", "--subdev", dest="subdev", type="string", default="A:0",
+        help="Set USRP Subdevice ID [default=%default]")
+    parser.add_option("", "--tpint", dest="tpint", type="eng_float", default=eng_notation.num_to_str(2.0),
+        help="Set Integration Time [default=%default]")
     (options, args) = parser.parse_args()
-    tb = N200_TPR_filter(tpint=options.tpint, dcg=options.dcg, rfgain=options.rfgain, frequency=options.frequency, decln=options.decln, srate=options.srate, clock=options.clock, fftsize=options.fftsize, maxg=options.maxg, subdev=options.subdev, spa=options.spa, rxant=options.rxant, devid=options.devid)
+    tb = N200_TPR_filter(clock=options.clock, dcg=options.dcg, decln=options.decln, devid=options.devid, fftsize=options.fftsize, frequency=options.frequency, maxg=options.maxg, rfgain=options.rfgain, rxant=options.rxant, spa=options.spa, srate=options.srate, subdev=options.subdev, tpint=options.tpint)
     tb.Start(True)
     tb.Wait()
-
