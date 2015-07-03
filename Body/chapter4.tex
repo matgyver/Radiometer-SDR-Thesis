@@ -285,7 +285,40 @@ Our Software Defined Radio software is now altered to include a band-reject filt
 \label{GRC_Filter_DSN}
 \end{figure}  
 
-Once we have the taps we can now apply the filter to our system.  The band-reject filter will of course affect our performance as we will lose some bandwidth to the filter.  However, as we will shortly show we are still able to function as a total power radiometer while filtering this signal.  
+Once the taps have been calculated it is now applied to the filter in the system.  The band-reject filter will of course affect our performance as we will lose some bandwidth to the filter.  However, as shown it is still possible to function as a total power radiometer while filtering this signal.  
+
+\subsection{Impact of filter on radiometer performance}
+There is a trade-off when using filters to remove the offending signal.  The larger the filter is that is used, the more information that is lost in the signal.  Equation \ref{NEAT_filter} shows how the filter impacts the $NE\Delta T$ for the system.  Figure shows that as the bandwidth of the filter goes up, the $NE\Delta T$ also increases which results in the radiometer to be not as sensitive and may not be able to detect a fine enough change in the noise temperature.
+
+\begin{equation} \label{NEAT_filter}
+NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{(\beta - \beta_{filter}) * \tau}}
+\end{equation}
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp5/neatvsbw_plot.pdf}
+
+\isucaption{Graph showing the impact of the filter to the $NE\Delta T$ performance of the radiometer}
+\label{neatvsbw}
+\end{figure}
+
+Another impact that the filter has is how much power we expect to see at the radiometer.  We will refer to equation \ref{final_power} that shows the power received as a function of the bandwidth, gain, system noise temperature and measured noise temperature.  This equation is now re-written in \ref{eq:power_filter} to show that the bandwidth decreases as our filter bandwidth increases.
+
+\begin{equation} \label{eq:power_filter}
+P=k*(\beta - \beta_{filter})*G*(T_{A}+T_{N})
+\end{equation}
+
+A simple test was conducted that looked at what the theoretical power measured based on equation \ref{eq:power_filter} and what was measured with our SDR radiometer configuration.  Figure \ref{powervsbw} shows the results of this test.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp5/combined_plot.pdf}
+
+\isucaption{Graph showing both theoretical and experimental data on the impact to the total power as a function of the bandwidth of the filter}
+\label{powervsbw}
+\end{figure}
+
+As expected as the system increases the bandwidth of the filter, the total bandwidth seen is decreased and this results in a decrease in the total power that we might expect at the radiometer.  This means that at a certain point we may not be able to obtain the power information we need.
 
 \subsection{Test Results}
 We begin by looking at the what happens to our total power readings with no filter applied.  As we stated in the Lab Setup portion, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
