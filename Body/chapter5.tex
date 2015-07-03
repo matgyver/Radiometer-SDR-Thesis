@@ -30,29 +30,31 @@ This equation gives us the radiometer sensitivity based on the input, which is b
 \subsection{Accuracy and Stability}
 Stability and accuracy are additional problems that need to be considered when looking at the radiometer system.  To begin we can once again look at the power received equation that we discussed in Chapter 2 and is equation \ref{eq:final_power}.
 
-As we look at this equation, we can see that if k, B, G, and $T_{N}$ are constant, then stability can be assured.  k is a known constant and we can also assume that our bandwidth, B, will also remain constant, or at least while we are taking our measurements.  Gain and the noise temperature however can vary.  
+As we look at this equation, we can see that if k, B, G, and $T_{N}$ are constant, then stability can be assured.  k is a known constant and we can also assume that our bandwidth, $\beta$, will also remain constant.  Gain and the noise temperature however will vary.  
 
-Gain is usually our largest factor that can change on a radiometer and even with a software defined radio this is still a large source of variation.  This is due to the analog nature of the amplifiers that affect a large portion of the gain in our system.  Various things can affect our gain, but the two largest factors is the physical temperature of the amplifier and the voltage that feeds the amplifier.  Voltage can be controlled to a degree.  High accuracy voltage regulators can help control fluctuations in voltages that can in turn affect the gain.  A factor however that is harder to control is temperature.  It can be seen in equation \ref{eq:rad_stability} that temperature change due to gain fluctuations us directly related to the changes in gain and the overall gain of the system. It is because of this that the current ISU radiometer has gone to great strides to control the temperature of the amplifiers to maintain a constant temperature.
+Gain is usually our largest factor that can change on a radiometer and even with a software defined radio this is still a large source of variation.  This is due to the analog nature of the amplifiers that affect a large portion of the gain in our system.  Various things can affect our gain but the two largest factors is the physical temperature of the amplifier and the voltage that feeds the amplifier.  Voltage can be controlled to a degree.  High accuracy voltage regulators can help control fluctuations in voltages that can in turn affect the gain.  A factor however that is harder to control is temperature.  It can be seen in equation \ref{eq:rad_stability} that temperature change due to gain fluctuations us directly related to the changes in gain and the overall gain of the system. It is because of this that the current ISU radiometer has gone to great strides to control the temperature of the amplifiers to maintain a constant temperature.
 
 \begin{equation} \label{eq:rad_stability}
 \Delta T_G=T_{sys} \left(\frac{\Delta G}{G}\right)
 \end{equation}
 
-To verify stability of the radiometer, we look to see how much change the radiometer records over a long period of time.  To test this a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for one hour.  The readings were then looked at to study the trend of the data.  The data is graphed in figure \ref{Stability}.
+To verify stability of the radiometer, we look to see how much change the radiometer records over a relative long period of time.  To test this a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for fifteen minutes.  The readings were then looked at to study the trend of the data.  The data is graphed in figure \ref{Stability}.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp2/sdr_calibrated_zoom.pdf}
-\isucaption{Graph of the raw total power readings over a period of one hour.  A linear and quadratic line was fitted to the data.}
+\isucaption{Graph of the calibrated total power over a period of fifteen minutes.}
 \label{Stability}
 \end{figure}
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp2/calib_vstime_stddev.pdf}
-\isucaption{Graph of the raw total power readings over a period of one hour.  A linear and quadratic line was fitted to the data.}
-\label{Stability}
+\isucaption{Graph of the calibrated total power with the standard deviation plotted.}
+\label{Stability_calib}
 \end{figure}
 
-As it can be seen in figure \ref{Stability}, the amount of change over a period of one hour is quite small.  A change in rQ of .0003 is observed with a standard deviation of $7.6 x 10^-6$.  This equates to roughly a change of .6 kelvin and is well within our desired change of less than 1 kelvin for our radiometer.
+As it can be seen in figure \ref{Stability}, the amount of change over a period of one hour is quite small.  The standard deviation for this sample is 0.09 kelvin.  The $NE\Delta T$ calculated using 10 MHz for the bandwidth, an integration time of 2 seconds and with our sample at 77 Kelvin is calculated to be 0.10 Kelvin with a system temperature of 350 Kelvin.  Therefore our system is behaving as we expect it to for this stability test.
+
+Figure \ref{Stability_calib} shows a graph of the total readings but with the standard deviation now plotted.  This shows that the system is stable and is operating as expected within our expected $NE\Delta T$.
 
 \section{Required Performance Requirements}
 
