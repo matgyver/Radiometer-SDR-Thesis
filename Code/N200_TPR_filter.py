@@ -4,7 +4,7 @@
 # Title: Total Power Radiometer - N200 with Filter
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR with a bandpass filter
-# Generated: Sun Jun 14 19:03:12 2015
+# Generated: Tue Jul 14 20:08:13 2015
 ##################################################
 
 if __name__ == '__main__':
