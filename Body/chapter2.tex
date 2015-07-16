@@ -8,7 +8,7 @@
 %4) Related area 3
 %5) Within each related area, point out in what why your work is different from the existing work.
 
-\chapter{Related Works}
+\chapter{RELATED WORKS}
 
 \section{Introduction}
 Software defined radios have been used in a number of applications, although most of these applications are with RF communications and not usually for remote sensing.  While as far as the author has determined, this is the first application of using an off the shelf software defined radio for a radiometer in remote sensing for soil moisture measurements, there has been similar applications done using software defined radios are equipment that is similar to a software defined radio.  This chapter will look at related works that involve applications in radio astronomy, related applications to RFI mitigation and radiometers that have similar hardware to our software defined radiometer.
@@ -26,6 +26,8 @@ The SBRAC uses a similar radio and setup that is covered in this thesis.  We bot
 \subsection{Grand Valley State University}
 Another example of a software defined radio used as a radiometer is from students at the University of Illinois and Grand Valley State University that built a software defined radio to listen to emissions from Jupiter[\cite{Behnke}].  This software defined radio was built using an Analog Devices AD9460 and a Xilinx Spartan-3E-500 FPGA to build the SDR itself.  A RF front end was also built to filter and amplify the signal coming into the SDR.  Finally, this group also used GNURadio to interface to and talk to the SDR and used both Python and wxGUI to build a working interface.  The students reported that the SDR radiometer worked well and was able to do so at a low price point.
 
+The Grand Valley State University radiometer used GNURadio to talk and interface to the SDR which is the same as the radiometer used in this thesis.  However in this case the radiometer was built by the students using the Spartan-3E-500 FPGA and an Analog Devices analog to digital converter.  The goal of this thesis however, is to use off the shelf components to make it more accessible to users.  
+
 \section{RFI Mitigation}
 Radio Frequency Interference (RFI) is a common problem with a nearly all radiometers.  This problem is often exasperated with satellite radiometers since those radiometers see a large area on the ground.  Previous missions such as the Soil Moisture Ocean Salinity (SMOS) satellite has numerous issues with RFI that skews the data that they collect.  There have been a number of methods to either work around the RFI or attempt to filter it using mechanical filters.  University of Michigan has done a number of experiments in detection and mitigation of RFI with the use of mechanical filters [\cite{DeRooRFI}].  And a number of papers have been published on the detection of RFI in radiometers [\citep{DeRoo}][\cite{Forte}].
 
@@ -42,7 +44,8 @@ Iowa State University owns a 1.4 GHz, dual polarization, correlating radiometer 
 One reason why these devices were used differently from a SDR was due to cost.  Most radiometer operations happen at 1.4 GHz or above.  A/D converters at these higher frequencies become more expensive and harder to obtain.  In recent years however, these costs have come down.
 
 The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing and squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
-%---------------------------------------------------------
+%----------------------------------------------------------
+% End of Chapter 2.  Anything below this is extra information
 
 % The following is information pulled out some time ago.  If after the Re-org this is still not inserted, this will get deleted.
 
