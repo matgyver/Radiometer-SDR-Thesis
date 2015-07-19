@@ -16,26 +16,45 @@
 %3) Contributions:  2-3 sentences summarizing your contributions (for your thesis you should be able to identify 2 - 3 contributions)
 %4) Summary of the organization for the remainder of your thesis
 
-\section{Introduction}
-The goal of this thesis is to explore the use of a software defined radio that can function as well as or better than current radiometers.  In addition, we aimed to develop a radiometer that is more flexible than most radiometers and still maintain the accuracy and stability of a traditional radiometers if not exceed these specifications.  A secondary goal was to use off the shelf components that are generally more accessible and often less expensive.  This allows radiometers to be more accessible to a wider scope of researchers in this field.  And finally a tertiary goal was to ensure that the system as a whole is easy to use.  This ties to our secondary goal of making radiometers more accessible to a wider range of researchers and research topics.
+This thesis explores using software defined radio (SDR) technology to develop a radiometer that is on par with a traditional radiometer.  In addition to demonstrating a SDR-based radiometer can achieve similar performance, in terms of sensitivity and stability, to a traditional radiometer, it is shown that the inherent flexibility of a SDR allows implementing functionality beyond what a traditional radiometer typically provides.  Furthermore, by reducing cost and increasing flexibility, SDR technology may become an attractive path for broadening the accessibility of radiometry to the general research community.
 
-This thesis looks to explore the following questions: (1) Can we use an off the shelf SDR along with GNURadio to recreate a radiometer in software that is easy to use and cost effective?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer? The results of this research and experimentation are the subject of this thesis.
+%This thesis looks to explore the following questions: (1) Can we use an off the shelf SDR along with GNURadio to recreate a radiometer in software that is easy to use and cost effective?  (2) If so, what performance can we get from the system?  (3) What benefits do we gain (if any) from using a SDR from a more traditional radiometer? The results of this research and experimentation are the subject of this thesis.
 
-\section{Motivation}
-Remote sensing allows us to collect information about the world that is around us.  This information can give us valuable information such as vegetation health, soil moisture, ocean salinity, and astronomy.  
+\textbf{Motivation}
+Remote sensing refers to activities of recording, observing and perceiving objects or events that are remote.  Since the object is remote, we are not able to physically interact with it such as being able to touch it.  Because of that some methods of collecting information, such as placing sensors or probes on the object is not possible.  Therefore, remote sensing allows us to gather information of remote objects and these objects may be only a few meters from us or light years from us.  Some examples of information we can collect through remote sensing includes vegetation health, soil moisture, ocean salinity, and even information about the celestial bodies inside and outside our solar system[\cite{weng2012}].  
 
-Radiometers are radio receivers that simply listen to and record the amount of power received.  However, the power received is not a coherent signal, instead it is the amount of noise the radiometer sees.  Radiometers, at the basic level, listen to noise that is generated naturally from a source.  These sources can vary and the applications vary as well.  Some examples of radiometer applications have been in evaluating soil moisture content, ocean salinity levels, and celestial objects[\cite{ulaby2014}].
+Remote sensing can be accomplished in a variety of ways and the list below is the basic types of radiometry that is used today.
+
+\begin{enumerate}
+\item Visible light or photography and photogrammetry
+\item Thermal or far infrared 
+\item Lidar (Laser distance measurement)
+\item Radio Frequency 
+\end{enumerate}
+
+Each method above has their place in remote sensing and has pros and cons in terms of their effectiveness of remote sensing.  This is why often we see remote sensing using a combination of the methods above to paint a complete picture for some objects that we may be observing.  However, for this thesis we will focus on using Radio Frequency for remote sensing platform.
+
+Remote sensing using Radio Frequency (RF) can be further broken down to two methods; active or passive systems.  An active system is one in which a radio frequency signal or pulse is generated and transmitted to the object of interest.  The reflection of this RF signal, or in some cases lack of reflection, is able to give us information of the object.  A passive system is one in which no RF signal or pulse is generated.  Instead, this type of radiometer simply listens to the RF energy that is naturally generated by the object or may be reflected energy from another source, such as the sun. of interest.  These sources can vary and the applications vary as well.  Some examples of radiometer applications have been in evaluating soil moisture content, ocean salinity levels, and celestial objects[\cite{ulaby2014}].
 
 Using radiometers for remote sensing has several advantages as we are able to look beyond certain obstacles that would otherwise be blocked in other remote sensing methods such as photography.  Radiometers have been used in the past for primarily astronomy in scanning for celestial objects that may be hidden from visual telescopes.  More recently radiometers have now been focusing on Earth and helping scientists to better understand the water cycle on Earth by monitoring our ocean salinity and soil moisture.  
 
-\section{Problem Statement}
-Radiometers have proven to be an excellent tool in remote sensing and have been used in a variety of research applications.  While radiometers have been around for quite some time, the equipment and method of implementing a radiometer has not changed much over the last fifty years.  However, radiometers have not seen much widespread use.  This largely due to the fact that there are very few commercially built radiometers, most radiometers are built to fit a specific purpose or research area.  This is in part due to that different tasks may require changes to the radiometer hardware.  This results in radiometers that are often expensive and require a certain amount of upkeep.  
+\textbf{Problem Statement}
+While radiometers have proven to be an excellent tool for remote sensing and has been used in research applications for over fifty years, it has not been found in broad spread use.  This is due to the fact that many traditional radiometers have the following hurdles that often make it difficult for more widespread use.
 
-If though, a radiometer can be built with commercial off the shelf components and also be flexible to adapt to different research or experimental needs, then that type of radiometer will be more desirable and will reduce costs by using available COTS solutions.  
+\begin{enumerate}
+\item Expensive
+\item Requires advanced knowledge to implement and use
+\item Typically built and designed for a custom application
+\end{enumerate}
 
-The solution to this problem, as outlined in this thesis, is to create a software defined radiometer that digitizes the incoming radio frequency information as soon as possible and then process this information in software instead of using hardware.  In addition, we will use existing hardware and tools that are commercial available and will be lower in cost or free to the user.  
+Item one and three typically drive each other.  Since most radiometers are custom built and there are very few radiometers that are commercially available, this drives the cost of these radiometers up which relates to the overall expense of a radiometer.  For item two, most radiometers are not designed with the user interface in mind.  This often results in radiometers that are excellent tools for remote sensing but are often difficult to use.
+%While radiometers have proven to be an excellent tool for remote sensing and have been used in a variety of research applications, their implementation a radiometer has not changed much over the last fifty years.  However, radiometers have not seen much widespread use.  This largely due to the fact that there are very few commercially built radiometers, most radiometers are built to fit a specific purpose or research area.  This is in part due to that different tasks may require changes to the radiometer hardware.  This results in radiometers that are often expensive and require a certain amount of upkeep.  
 
-\section{Contributions}
+If though, a radiometer can be built with commercial off the shelf components and also be flexible to adapt to different research or experimental needs, then that type of radiometer will be more desirable and will reduce costs by using available COTS solutions.  In addition, but using readily available software to create a an easy to use user interface will reduce the amount of advanced knowledge required to run the radiometer.
+
+The solution to this problem, as outlined in this thesis, is to create a software defined radiometer that digitizes the incoming radio frequency information as soon as possible and then process this information in software instead of using hardware.  In addition, we will use existing hardware and tools that are commercial available and will be lower in cost or free to the user.  Finally, by using an open source and easy to use software a better user interface is created to the user to easily control the radiometer.
+
+\textbf{Contributions}
 Contributions from the work performed for this thesis include a development of a software defined radiometer that is capable of performing as a radiometer and meets or exceeds the performance of a traditional radiometer.  This includes source code written in the open source software defined radio framework known as GNURadio.  Additional contributions include analysis tools used to analyze data obtained from the software defined radiometer.  Finally contributions were made in using a different technique to mitigate interference that impacts the radiometer readings.  This is accomplished differently from other methods because unlike other radiometers we have both amplitude and frequency information to identify and mitigate this interference.
 
 \section{Thesis Organization}
