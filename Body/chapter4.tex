@@ -78,6 +78,16 @@ This software meet the criteria of allowing a simple to use interface to be buil
 \section{Software Defined Radiometer Theory of Operation}
 
 \section{Mapping analog radiometer functions to a software defined radiometer}
+
+In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  As discussed in chapter three, the three components identified that are key to a radiometer is listed below.
+
+\begin{enumerate}
+\item Power detection
+\item Integration
+\item Bandwidth limitation or filtering
+\end{enumerate}
+
+The following sections will now examine how these items are mapped from their analog component to the software or digital component.
 \subsection{Power detection}
 Power detection is a key ability that allows a radiometer to function.  At its core a radiometer is a power detector.  Therefore, the implementation of power detection is a crucial function of a software defined radio radiometer.
 
