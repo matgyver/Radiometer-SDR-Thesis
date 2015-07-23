@@ -10,8 +10,32 @@
 
 \chapter{RELATED WORKS}\label{ch:relatedworks}
 
-\section{Introduction}
-Software defined radios have been used in a number of applications, although most of these applications are with RF communications and not usually for remote sensing.  While as far as the author has determined, this is the first application of using an off the shelf software defined radio for a radiometer in remote sensing for soil moisture measurements, there has been similar applications done using software defined radios are equipment that is similar to a software defined radio.  This chapter will look at related works that involve applications in radio astronomy, related applications to RFI mitigation and radiometers that have similar hardware to our software defined radiometer.
+Three areas  related to the work in this thesis are:
+
+\begin{enumerate}
+\item Digital radiometers
+\item Software defined radio based radiometers
+\item Radio frequency interference mitigation
+\end{enumerate} 
+
+Digital radiometers are radiometers that digitize at least some part of the information, usually the analog voltage from the square law detector, so it can be processed by a computer.  This is similar to a software defined radiometer however, a software defined radiometer digitizes the signal immediately after the amplification stage.  Software defined radio based radiometers is close to the work in this thesis, but do not use commercial off the shelf components or readily available software such as GNURadio to develop the radiometer in software.  Radio frequency interference mitigation discusses some past and current methods to mitigate RFI in radiometers.  The work in this thesis will cover a different method for RFI due to both frequency and amplitude information being perserved when the signal is digitized.
+
+%Software defined radios have been used in a number of applications, although most of these applications are with RF communications and not usually for remote sensing.  While as far as the author has determined, this is the first application of using an off the shelf software defined radio for a radiometer in remote sensing for soil moisture measurements, there has been similar applications done using software defined radios are equipment that is similar to a software defined radio.  This chapter will look at related works that involve applications in radio astronomy, related applications to RFI mitigation and radiometers that have similar hardware to our software defined radiometer.
+
+\section{Digital Radiometers}
+
+
+
+A digital radiometer is not a new concept.  Early radiometers often digitize the analog voltage information from the square-law detector and then send that information to a computer for storage or analysis[\cite{Ruf}].  
+
+As a pre-cursor to a software defined radio, some radiometers also digitize the incoming RF signal, but under-sample this information.  Since only power is the only information desired for these radiometers, this was acceptable.  However, these radiometers did often use the same components you might find in a software defined radio such as an A/D converter and a FPGA for basic signal processing.  These components however were used in different ways.
+
+\subsection{Direct Digital Sampled Radiometer}  
+Iowa State University owns a 1.4 GHz, dual polarization, correlating radiometer that is in use by Dr. Brian Hornbuckle and his research team.  This radiometer was built at the University of Michigan and put into service at ISU in 2006.  The ISU radiometer is unique in that it is one of the few direct sampling radiometers in use\cite{Erbas}.  This radiometer takes the RF signal, amplifies and filters the signal, and then sends it directly to an analog to digital converter.  At the time the ISU radiometer was built an A/D that is able to sample accurately at 1.4 GHz was expensive and hard to come.  However, the ISU radiometer does not sample at 2.8 GHz or above, instead it samples at 1.4 GHz.  The ISU radiometer is able to do this because it is only interested in power information.  This means that we are not interested in recreating the entire signal and therefore we can under-sample the signal.  The A/D data is then sent to a Field Programmable Gate Array (FPGA) which then processes the data.  The ISU radiometer is also a correlating radiometer which means that it looks at both the vertical polarization (V-Pol) and the horizontal polarization (H-Pol) and then correlates this information[\cite{Fischman2001}]. 
+
+One reason why these devices were used differently from a SDR was due to cost.  Most radiometer operations happen at 1.4 GHz or above.  A/D converters at these higher frequencies become more expensive and harder to obtain.  In recent years however, these costs have come down.
+
+The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing and squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
 
 \section{Radio Astronomy Examples}
 Radiometers used in radio astronomy is nothing new and has been used for some time now[\cite{Ohm}]. There are similarities between radio astronomy and remote sensing of the ground.  Both are using a radiometer to listen to a source of interest.  With radio astronomy the basic principle is that a hot source such as a star will produce more noise than the cooler background of space.  In remote sensing we are looking at the overall change of the source to determine its characteristics.  Both cases are measuring the total power of the noise and based on that information we can determine some properties of the source we are looking at.
@@ -33,17 +57,7 @@ Radio Frequency Interference (RFI) is a common problem with a nearly all radiome
 
 In all of these cases the radiometers used do not retain frequency information and thus must use other methods to detect and try to mitigate the signal.  In this thesis we cover a way to mitigate RFI and are able to do so using software to define a filter to notch out the offending signal.  Detection in a software defined radio radiometer is easier as we have both power and frequency information to design the filter.
 
-\section{Other Digital Radiometers}
-A digital radiometer is not a new concept.  Early radiometers often digitize the analog voltage information from the square-law detector and then send that information to a computer for storage or analysis[\cite{Ruf}].  
 
-As a pre-cursor to a software defined radio, some radiometers also digitize the incoming RF signal, but under-sample this information.  Since only power is the only information desired for these radiometers, this was acceptable.  However, these radiometers did often use the same components you might find in a software defined radio such as an A/D converter and a FPGA for basic signal processing.  These components however were used in different ways.
-
-\subsection{Direct Digital Sampled Radiometer}  
-Iowa State University owns a 1.4 GHz, dual polarization, correlating radiometer that is in use by Dr. Brian Hornbuckle and his research team.  This radiometer was built at the University of Michigan and put into service at ISU in 2006.  The ISU radiometer is unique in that it is one of the few direct sampling radiometers in use\cite{Erbas}.  This radiometer takes the RF signal, amplifies and filters the signal, and then sends it directly to an analog to digital converter.  At the time the ISU radiometer was built an A/D that is able to sample accurately at 1.4 GHz was expensive and hard to come.  However, the ISU radiometer does not sample at 2.8 GHz or above, instead it samples at 1.4 GHz.  The ISU radiometer is able to do this because it is only interested in power information.  This means that we are not interested in recreating the entire signal and therefore we can under-sample the signal.  The A/D data is then sent to a Field Programmable Gate Array (FPGA) which then processes the data.  The ISU radiometer is also a correlating radiometer which means that it looks at both the vertical polarization (V-Pol) and the horizontal polarization (H-Pol) and then correlates this information[\cite{Fischman2001}]. 
-
-One reason why these devices were used differently from a SDR was due to cost.  Most radiometer operations happen at 1.4 GHz or above.  A/D converters at these higher frequencies become more expensive and harder to obtain.  In recent years however, these costs have come down.
-
-The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing and squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
 %----------------------------------------------------------
 % End of Chapter 2.  Anything below this is extra information
 
