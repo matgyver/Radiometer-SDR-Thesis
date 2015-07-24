@@ -10,21 +10,19 @@
 
 \chapter{RELATED WORKS}\label{ch:relatedworks}
 
-Three areas  related to the work in this thesis are:
+Three areas closely related to the work in this thesis are:
 
 \begin{enumerate}
-\item Digital radiometers
-\item Software defined radio based radiometers
-\item Radio frequency interference mitigation
+\item Digital radiometers,
+\item Software defined radio based radiometers,
+\item Radio frequency interference mitigation.
 \end{enumerate} 
 
-Digital radiometers are radiometers that digitize at least some part of the information, usually the analog voltage from the square law detector, so it can be processed by a computer.  This is similar to a software defined radiometer however, a software defined radiometer digitizes the signal immediately after the amplification stage.  Software defined radio based radiometers is close to the work in this thesis, but do not use commercial off the shelf components or readily available software such as GNURadio to develop the radiometer in software.  Radio frequency interference mitigation discusses some past and current methods to mitigate RFI in radiometers.  The work in this thesis will cover a different method for RFI due to both frequency and amplitude information being perserved when the signal is digitized.
+Digital radiometers digitize some part of the signal, usually the analog voltage from the square law detector, so it can be processed by a computer.  This is similar to a software defined radio radiometer except a software defined radio radiometer digitizes the complete radio frequency (RF) signal.  The software defined radio based radiometers discussed is close to the work in this thesis, but do not use commercial off the shelf components or readily available software such as GNURadio to develop the radiometer in software.  The radio frequency interference mitigation discussed uses radiometers or digital radiometers that do not collect the entire signal information and therefore use different methods to detect and mitigate the offending signal.  The work in this thesis will cover a different method for RFI due to both frequency and amplitude information being preserved when the signal is digitized.
 
 %Software defined radios have been used in a number of applications, although most of these applications are with RF communications and not usually for remote sensing.  While as far as the author has determined, this is the first application of using an off the shelf software defined radio for a radiometer in remote sensing for soil moisture measurements, there has been similar applications done using software defined radios are equipment that is similar to a software defined radio.  This chapter will look at related works that involve applications in radio astronomy, related applications to RFI mitigation and radiometers that have similar hardware to our software defined radiometer.
 
 \section{Digital Radiometers}
-
-
 
 A digital radiometer is not a new concept.  Early radiometers often digitize the analog voltage information from the square-law detector and then send that information to a computer for storage or analysis[\cite{Ruf}].  
 
@@ -37,18 +35,18 @@ One reason why these devices were used differently from a SDR was due to cost.  
 
 The major difference between other digital radiometers and what is discussed in this thesis is that we retain both phase and magnitude information and instead mimics a traditional radiometer in software by summing and squaring the I and Q values and then running this information through a low-pass IIR filter.  By retaining this information, we can perform a more in-dept analysis of the signal coming into the radiometer which allows for greater agility in the system.
 
-\section{Radio Astronomy Examples}
+\section{Software Defined Radio Based Radiometers}
+
+
 Radiometers used in radio astronomy is nothing new and has been used for some time now[\cite{Ohm}]. There are similarities between radio astronomy and remote sensing of the ground.  Both are using a radiometer to listen to a source of interest.  With radio astronomy the basic principle is that a hot source such as a star will produce more noise than the cooler background of space.  In remote sensing we are looking at the overall change of the source to determine its characteristics.  Both cases are measuring the total power of the noise and based on that information we can determine some properties of the source we are looking at.
 
 For our software defined radiometer however, we are looking at the ground and we are using the radiometer for soil moisture instead of measuring stars and other points of interest in the sky.  While the fundamentals is the same for either radiometer some adjustments need to be made because a radiometer that is looking at the sky often sees a cooler brightness temperature whereas a radiometer looking at the ground sees a much warmer brightness temperature.  This is due to the albedo of the Earth having a much warmer noise temperature then what you find with radio astronomy[\cite{Tiuri}].
 
-\subsection{Shirleys Bay Radio Astronomy Consortium}
-The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is using the USRP software defined radio in conjunction with GNURadio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz [\cite{Leech2007}].  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.  Marcus Leech continue to contribute to the GNURadio community and continues to provide support for these functions as well[\cite{Leech}].
+\emph{Shirleys Bay Radio Astronomy Consortium.}  The Shirleys Bay Radio Astronomy Consortium (SBRAC) located in Smiths Falls, Ontario is using the USRP software defined radio in conjunction with GNURadio.  SBRAC has successfully used this configuration to obtain radio astronomy data by looking at the hydrogen line at 1420.4058 MHz [\cite{Leech2007}].  The person in charge of this facility, Marcus Leech, contributed software to the GNURadio specifically for radio astronomy applications.  It was this software branch that was used as the base for the GNURadio program that was used in this thesis.  Marcus Leech continue to contribute to the GNURadio community and continues to provide support for these functions as well[\cite{Leech}].
 
-The SBRAC uses a similar radio and setup that is covered in this thesis.  We both use a SDR that has been developed by the Ettus Research group, however we use a N200 model while the SBRAC use a USRP model.  The difference between these models is largely due to the amount of bandwidth they can handle, where the N200 is able to handle larger bandwidths and uses a Gigabit Ethernet connection to transmit this data compared to the USRP which uses USB 2.0.  Both this thesis and the SBRAC use GNURadio.  While parts of the GNURadio program was derived from the work from Marcus Leech, additional features were added such as filtering an offending signal, offending signal detection and built in noise generator.  Additional work was done on refining some elements of the GUI interface including adding a waterfall display which is covered in more detail in this thesis.
+While parts of the GNURadio program was derived from the work from Marcus Leech, additional features were added such as filtering an offending signal, offending signal detection and built in noise generator.  Additional work was done on refining some elements of the GUI interface including adding a waterfall display which is covered in more detail in this thesis.
 
-\subsection{Grand Valley State University}
-Another example of a software defined radio used as a radiometer is from students at the University of Illinois and Grand Valley State University that built a software defined radio to listen to emissions from Jupiter[\cite{Behnke}].  This software defined radio was built using an Analog Devices AD9460 and a Xilinx Spartan-3E-500 FPGA to build the SDR itself.  A RF front end was also built to filter and amplify the signal coming into the SDR.  Finally, this group also used GNURadio to interface to and talk to the SDR and used both Python and wxGUI to build a working interface.  The students reported that the SDR radiometer worked well and was able to do so at a low price point.
+\emph{Grand Valley State University.}  Another example of a software defined radio used as a radiometer is from the University of Illinois and Grand Valley State University built to listen to emissions from Jupiter[\cite{Behnke}].  This software defined radio was built using an Analog Devices AD9460 and a Xilinx Spartan-3E-500 FPGA to build the SDR itself.  A RF front end was also built to filter and amplify the signal coming into the SDR.  Finally, this group also used GNURadio to interface to and talk to the SDR and used both Python and wxGUI to build a working interface.  The students reported that the SDR radiometer worked well and was able to do so at a low price point.
 
 The Grand Valley State University radiometer used GNURadio to talk and interface to the SDR which is the same as the radiometer used in this thesis.  However in this case the radiometer was built by the students using the Spartan-3E-500 FPGA and an Analog Devices analog to digital converter.  The goal of this thesis however, is to use off the shelf components to make it more accessible to users.  
 
