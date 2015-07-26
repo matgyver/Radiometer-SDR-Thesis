@@ -1,8 +1,151 @@
 %Chapter 6 will look at the results from the experiments and how the performance of the new software defined radiometer measured up.
 
-\chapter{RESULTS AND ANALYSIS}\label{ch:results}
+%Chapter 6: Results and Analysis
 
-\section{Introduction}
+%Intro paragraph.
+%Experiment 1
+%	Data collected.
+%	Analysis of data: Interpret the data, what was learned from the data
+%Experiment 2
+%	Data collected.
+%	Analysis of data: Interpret the data, what was learned from the data
+%Experiment X
+%	Data collected.
+%	Analysis of data: Interpret the data, what was learned from the data
+%Price/Weight/Quality analysis (Traditional Radiometer vs. Software Defined Radiometer)
+%Summary paragraph, the summary paragraph the summarized the analysis of the results.
+
+\chapter{RESULTS AND ANALYSIS}\label{ch:results}
+This chapter will display the results obtained from the experiments outlined in Chapter \ref{ch:exp_design}.  We will then give an analysis of the data included data interpretation and the information learned from each experiment.  Next we will do an analysis of a traditional radiometer vs our software defined radiometer in terms of price, weight, and quality.  Finally we will summarize our results and analysis from this chapter.
+
+\section{Experiment I - Software Defined Radiometer Verification and Calibration} \label{Exp1_results}
+As outlined in Chapter \ref{ch:exp_design}, Section \ref{Exp1}, this experiment is to verify the operation of a software defined radiometer.  This is done by performing experiments that are similar to verification and calibration methods used on a traditional radiometer.  By comparing these results to a square-law detector, receiving the same signal, we can verify the operation of the software defined radiometer.
+
+\subsection{Data Collected}
+
+The first data we will look at with be with the software defined radio.  The SDR records the total power measurements to a binary file that either Matlab or Python can read.  In our results, we used iPython Notebook to read and generate the graphs used in this thesis.  We will begin by looking at the raw total power readings which we will call raw Q values or rQ values.  These are the uncalibrated total power readings from the software defined radio.  
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/rqvstime_annotate.pdf}
+
+\isucaption{Graph of the un-calibrated rQ values of Experiment 1}
+\label{SDR_rQ}
+\end{figure}
+
+Figure \ref{SDR_rQ} shows the total power reading versus time and is also marked when the matched load was submerged in Ice Water, LN2, or a hot water bath.  Since we know what the temperatures are for the ice water and LN2, we can now calibrate these readings to a noise temperature reading.  This is done by reading in a calibration file we have stored in csv format and performing linear algebra to solve the slope of the line.  This was done in our iPython Notebook using the following code.
+\lstset{language=Python}
+\begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
+a = numpy.array([[rQ_values[0],1.0],[rQ_values[1],1.0]],numpy.float32)
+b = numpy.array([temp_values[0],temp_values[1]])
+z = numpy.linalg.solve(a,b)
+\end{lstlisting}
+
+Now that we have our calibration points, we can now re-graph this data but now calibrated as a reference noise temperature. Figure \ref{SDR_Calibrated} shows a calibrated graph of the data in relation to noise temperature.  In addition, we have colorized this graph to show warmer to cooler temps.  This is helpful as we often refer to these as noise temperatures.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/sdr_calibrated_color.pdf}
+
+\isucaption{Graph of the calibrated noise temperature of Experiment 1}
+\label{SDR_Calibrated}
+\end{figure}
+
+Now that we have looked at the software defined radio data, we want to look at the square-law detector with the end result of comparing the two.  The square-law detector gives us power information as a voltage, so once again we will need to calibrate this to the known temperature references.  However, before that we need to do one other step with the data.  Unlike the software defined radio, there is no filter or integrator to help smooth out the data, so the square-law data is very noisy.  Our first step will be to filter the data.  Figure \ref{X2_Raw} shows our raw data that we get from the square-law detector.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/noisy_voltage.pdf}
+
+\isucaption{Raw and noisy graph from the square-law detector used in Experiment 1}
+\label{X2_Raw}
+\end{figure}
+
+Once again we can use Python to process this information and specifically we can use SciPy which includes several useful signal processing modules.  For our use, we will use a low pass filter to clean up the signal.  The following code allows us to do just that.
+
+\begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
+from scipy import signal
+N=100
+Fc=2000
+Fs=1600
+h=scipy.signal.firwin(numtaps=N, cutoff=40, nyq=Fs/2)
+x2_filt=scipy.signal.lfilter(h,1.0,x2_voltage)
+\end{lstlisting}
+
+Figure \ref{X2_filter} now shows our data that has been filtered by the low pass filter.  This is similar to the low pass filter that is also used by the software defined radio.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/x2_filter.pdf}
+
+\isucaption{Filtered data from the square-law detector used in Experiment 1}
+\label{X2_filter}
+\end{figure}
+
+Using the same technique as earlier, we can now calibrate the raw voltages from the square-law detector to the noise temperature.  Like the software defined radio data, we can calibrate the voltages from the square-law detector to the physical temperature that our matched load is placed in.  Figure \ref{X2_Calibrated} shows the data from the square-law detector calibrated to our known temperature points.  This now allows us to directly compare the square-law detector to the software defined radio data since we have a common reference point in which to compare the data.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/x2_calibrated.pdf}
+
+\isucaption{Calibrated data from the square-law detector used in Experiment 1}
+\label{X2_Calibrated}
+\end{figure}
+
+We now want to compare both the Software Defined Radio and the square-law to make sure that they match up.  Since both the SDR and the square-law are now calibrated to a noise temperature, we can easily graph both of the data and compare to see how well they match up.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/x2_SDR_Calibrated.pdf}
+
+\isucaption{Figure showing both the SDR and square-law noise temperature data in Experiment 1}
+\label{X2_SDR_Both}
+\end{figure}
+
+We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up very nicely.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
+\subsection{Application with Soil Moisture Readings}
+A common application of radiometers is in the measurement of soil moisture.  All items naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature, but the amount that reaches the antenna varies by the amount of moisture in the soil.  If we can calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  At this time, we will simply look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
+
+Using the Software Defined Radio, we can set up two methods to visually look at the noise temperature and thus the soil moisture percentage.  Since we do not have an antenna hooked up, we will simulate this by using two reference temperatures.  In this case the ice water bath and the LN2 that we just used and was shown earlier.  
+
+A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.  This is the same program we have used but with the waterfall display now added.  The data for the waterfall is pulled directly from our source block or in our case the N200 software defined radio.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/LN2_waterfall.png}
+
+\isucaption{Screenshot of the waterfall display used in Experiment 1}
+\label{LN2_waterfall}
+\end{figure}
+
+Let's take a look at two screen shots of the waterfall.  We will put them side by side so we can better compare the display when the thermal load is in the ice water bath and when the load is in LN2.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/waterfall_side.pdf}
+
+\isucaption{Side by side comparison of the waterfall display for Experiment 1}
+\label{side_waterfall}
+\end{figure}
+
+In figure \ref{side_waterfall} we can see that the ice water screen shot appears warmer than the right side screen shot which appears cooler.  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
+
+If we assume that our LN2 is dry soil and that our ice water bath is wet soil, we can now interpolate the data to this scale and show the information we obtained in Experiment one as both a noise temperature and soil moisture.  Figure \ref{SDR_soil} shows the same data we looked at earlier but we have now added a scale to show soil moisture as a percentage.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/sdr_soilmoisture.pdf}
+\isucaption{Plot of the noise temperature of Experiment 1 with soil moisture percentage}
+\label{SDR_soil}
+\end{figure}
+
+While this demonstrates that we can collate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
+
+\section{Data Analysis}
+
+
+
+
 
 %Move this section once the stability section is established
 To verify stability of the radiometer, we look to see how much change the radiometer records over a relatively long period of time.  To test this a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for fifteen minutes.  The readings were then looked at to study the trend of the data.  The data is graphed in figure \ref{Stability}.
@@ -40,7 +183,6 @@ Most of the graphs generated in this thesis was generated using iPython notebook
 \isucaption{A screenshot showing the iPython notebook code and related graphs generated for parsing GNURadio data}
 \label{matlab_display}
 \end{figure}
-
 
 \section{Benefits to Software Defined Radio Radiometer}
 A study was conducted on what benefits a software defined radio radiometer would have over a more traditional radiometer.  This was focused on looking at three main areas; cost, weight and size, and the value a SDR radiometer can add over traditional radiometers.
@@ -120,3 +262,14 @@ In contrast, a square-law detector usually has a very large bandwidth, as much a
 
 %----------------------------------------------------------
 % End of Chapter 6.  Anything below this is extra information
+
+%The data collected was then graphed using Excel.  The graph shown in \ref{adl5902_linear} shows that the ADL5902 has a linear output and matches the expected value based on the input.  
+
+%\begin{figure}[h!tb] \centering
+%\includegraphics[width=\textwidth]{Images/Linearsquarelaw}
+%\isucaption{Graph showing the linearity of the ADL5902}
+%\label{adl5902_linear}
+%\end{figure}
+
+%Once it was confirmed the ADL5902 does in fact have a linear response, we then looked at ways to work with the ADL5902.  The graph above was generated using Analog Devices program that talked to the Blackfin processor on the daughter-board.  However, the information for talking to the Blackfin is proprietary.  Therefore, the daughter-board was removed for future tests and instead we used the USB-6009 data acquisition board to read the raw analog voltages from the ADL5902.  This information was then stored later for additional analysis.  
+

@@ -3,55 +3,40 @@
 
 %Chapter 5 discusses the Experimental setup and experiments used and how I evaluated the performance of the radiometer.
 
-\chapter{EVALUATION AND EXPERIMENTAL DESIGN}\label{ch:exp_design}
-Testing and verification ensures that the new components that we have added to the system are working as intended and has not caused a negative impact on the overall system performance.  To do this, several tests were conducted and verification was obtained by using a well known method of detecting power in a radiometer, a square-law detector.  
+\chapter{EVALUATION SETUP AND EXPERIMENTAL DESIGN}\label{ch:exp_design}
+The experiments outlined in this chapter is to demonstrate and verify that a software defined radiometer is able to perform as well or better than a traditional radiometer.  In addition, it will be demonstrated that a software defined radiometer can add additional functionality not typically found in most radiometers. 
 
-Testing began with the square-law detector as this was one of the first components that was obtained.  Next, testing was done with the software defined radio as a whole.  Finally, a cold bath test was done with both the software defined radio and with the square law detector as a system to verify both functionality and to compare the results from both devices.  
+Experiment one verifies the operation of a software defined radiometer by comparing typical operations to a square-law detector, a typical device used in radiometry and calibration of the radiometer.  Experiment two verifies the expected sensitivity and stability of a software defined radiometer.  Experiment three will demonstrate a software defined radiometer mitigating an interfering signal and compare the results to a traditional radiometer with no interfering signal mitigation.  Finally, Experiment four will examine the affect filtering and bandwidth of the signal affects performance.  
 
-Additional testing was also performed to test functions that may be added that are not found on a typical radiometer.  This test involved injecting a signal and having the software defined radio remove the offending signal.  A comparison was then performed to show the difference between the SDR radiometer which is able to remove the offending signal and the square-law detector which is not able to remove it unless additional hardware filters are placed in front of it.
+\section{Experiment I - Software Defined Radiometer Verification and Calibration}\label{Exp1}
+%Experiment 1
+%Why is this experiment being run?
+%What type of data will you collect?
+%What is the experimental setup?
 
-In addition to these tests, a few real world tests were also done in the Spring of 2012 and the Spring of 2014.  These tests were conducted by Dr. Brian Hornbuckle's E E 518 class as part of their lab requirement for the test.  These test results can be found in Appendix 2.
+In this experiment we will verify the operation of a software defined radiometer.  This experiment will verify that a software defined radiometer is able to perform as expected and will compare our results to a square-law detector which is commonly used in traditional radiometers.  
+To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the software defined radio.  This signal is split using a power divider so that the information will be the same to both devices with the except for the 3 dB plus insertion loss the power divider adds.  This allows us to verify the software defined radio with a proven system.  
 
-\section{Square-law Detector}
-To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the software defined radio.  This signal is split using a power divider so that the information will be the same to both devices with the except for the 3 dB plus insertion loss the power divider adds.  This allows us to verify the software defined radio with a proven system.  Square-law detectors have traditionally been used in radiometers and have been proven to work in radiometer applications.  They are also a very simple device which means there is little that can go wrong with using them.
+\subsection{Data Collection}
 
-\subsection{Analog Devices ADL5902}
+Once the experimental data was obtained the next step is to analyze the data and format the data so that it is easy to read and comprehend.  The total power readings and the raw I/Q data generated from GNURadio is stored as a binary file stored in little-endian format.  Total power data is stored as a float values and I/Q data is stored as complex values.  Data from the square-law detector is stored as a comma delimited ASCII file.
 
-The square-law detector that we obtained is the Analog Devices ADL5902.  The ADL5902 is a true rms responding power detector that has a square law detector, a variable gain amplifier, and an output driver. It also has a temperature sensor and will compensate for temperature variations.  The output driver allows for the small signal from the square law detector to be amplified to a level that most analog to digital devices can detect.  It should be noted that this is not an amplifier for the incoming RF signal, just to amplify the small signal from the diode.  This driver however does have low noise and has a noise output of approximately $25nV/ \sqrt{Hz}$ at 100 kHz.  The ADL5902 operates from 50 MHz to 9 GHz and in most cases can detect down to $-60$ dBm.  This works well in our application since the radiometer operates at 1.4 GHz and after the amplification stage we usually see between $-40$ to $-30$ dBm of power.  
+In order to analyze the data, a method was developed to acquire the data and store it for later use.  For the N200 software defined radio, this is done by the GNURadio program.  Both the complete signal and the power information is stored to a file for later analysis in a binary little-endian format.  Total power data is stored as a float values and I/Q data is stored as complex values.  
+
+The square-law detector however, outputs information as an analog voltage that is linearly proportional to the RF power measured.  This required a system that can capture the analog signal from the ADL5902 and then send the data to be stored.  The National Instruments USB-6009 data acquisition unit was selected as it met the requirements for an easy to use yet high enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample up to 48 ksps with a resolution of 14-bits which is more than adequate for the experiments.  To use the USB-6009 a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved the information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  The USB-6009 then connects to a host computer through the USB interface.  This made obtaining the data and using device straightforward to use.
+
+\emph{GNURadio Testing.  }Before testing the program with the N200, testing was done with the built in noise generator in GNURadio.  This was used to test its ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
 
 {\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/adl5902.jpg}
-\isucaption{An image of the ADL5902 square-law detector used in these experiments}
-\label{ADL5902}
+\includegraphics[width=\textwidth]{Images/noisesrc_radiometer.png}
+\isucaption{A screenshot of the GNURadio program using a noise generator block.}
+\label{noise_test}
 \end{figure}
 }
 
-The specifications of the ADL5902 can be seen in Table~\ref{ADL5902_data} shown below.
+After this was done additional tweaks were made to both the GUI interface and to the program that performs the calculations for the total power radiometer.  The essential components were moved to a custom block which helped to clean up the block diagram.  
 
-\begin{table}[h!tb] \centering
-\isucaption{ADL5902 Specifications}
-\label{ADL5902_data}
-% Use: \begin{tabular{|lcc|} to put table in a box
-\begin{tabular}{lcc} \hline
-\textbf{Parameter @ 900 MHz} & \textbf{Value} & \textbf{Units} \\ \hline
-Frequency Range & 50 to 9000 & MHz \\
-Dynamic Range & 61 & dB \\
-Minimum Input Level, $\pm 1.0$ dB & 60 & dB \\ 
-Maximum Input Level, $\pm 1.0$ dB & 1 & db \\
-Logarithmic Slope & 53.7 & mV/dB \\ 
-Output Voltage Range & 0.03 to 4.8 & V \\ \hline
-\end{tabular}
-\end{table}
-
-The ADL5902 outputs an analog signal that falls between 0.03 volts and 4.8 volts.  It outputs a change of 53.7 millivolt per dB detected by the ADL5902.  
-
-\subsection{Data acquisition and storage}
-
-In order to analyze the data, a method was developed to acquire the data and store it for later use.  For the N200 software defined radio, this is done automatically by the GNURadio program.  Both the complete signal and the power information is stored to a file for later analysis.  The square-law detector however outputs information as an analog voltage that is linearly proportional to the RF power measured.  This required a system that can capture the analog signal from the ADL5902 and then send the data to be stored.  The National Instruments USB-6009 data acquisition unit was selected as met the requirements for a easy to use yet had enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample up to 48 ksps with a resolution of 14-bits which is more than adequate for the experiments.  To use the USB-6009 a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved the information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  The USB-6009 then connects to a host computer through the USB interface.  This made obtaining the data and using device straightforward to use.
-
-\subsubsection{Labview Acquisition program}
-
-The Labview program was created to talk to the USB-6009 and then store the data.  In addition, it is able to display in real time the current readings coming from the USB-6009.  This was beneficial during testing of the program but is also good information to have while running an experiment.  
+\emph{Labview Acquisition program.}  The Labview program was created to talk to the USB-6009 and then store the data.  In addition, it is able to display in real time the current readings coming from the USB-6009.  This was beneficial during testing of the program but is also good information to have while running an experiment.  
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/labviewGUI.png}
@@ -73,179 +58,54 @@ While the USB-6009 allows up to 48,000 samples per second, we don't need such a 
 
 This program allowed for the data from the square law detector to be easily recorded.  Using Labview also allows us to customize the interface more to our liking and other features such as adding calibration information can also be added as well.  
 
-\subsection{Tests on the ADL5902}
-To test the ADL5902 a signal generator was used that had a controlled output.  The specific signal generator that was used was an older model that allowed us to change the output in 10 dBm increments.  The signal generator was also configured for 1.4 GHz as that is the frequency the ISU RF front end is configured to listen at.  Ideally a noise generator would have been desirable, however a noise generator with adjustable power output could not be located on campus.  
+\subsection{Experimental setup} \label{exp1_setup}
+For this experiment, the following hardware was used:
 
-The ADL5902 is available from Analog Devices in an evaluation board.  This board pairs the ADL5902 with a AD7466 12-bit analog to an analog to digital converter.  This board can then be mated with Analog Devices BlackFin processor which acts as a USB gateway for the AD7466 data.  A test program written in LabView is also provided as well.
+\begin{enumerate}
+\item N200 Software Defined Radio with DBSRX2 Daughter-board
+\item ADL5902 Square-law detector
+\item National Instruments USB-6009 Data Acquisition Unit
+\item ZN2PD-20-S+ Power Divider
+\item 50-ohm matched load
+\item Rigol DP832 Power Supply
+\item ISU Radiometer RF Front End
+\end{enumerate}
 
-The test program provided by Analog Devices allows us to query the ADL5902 and record the raw ADC value.  This program also allows us to enter in the frequency used during testing, the temperature during the test, and allowed for calibration of the ADL5902.  All of the data is then stored into an Excel spreadsheet which can be accessed later.
+The ISU Radiometer, as shown in figure \ref{ISURF} was used as it has the necessary Low Noise Amplifiers (LNAs) to provide the needed amplification.  The only item powered for these experiments was the LNAs, all other components are passive or were deactivated.  The ISU Radiometer uses the following hardware:
 
-For this test we used the signal generator set to 1.4 GHz and started at $-60$ dBm for the output signal.  This was selected as this is the lowest the square law detector can detect.  The output power was then incremented on the signal generator in 10 dBm steps.  There was no change to any other parameter.  This was done up to 0 dBm.  Any higher and there was risk of damage to the ADL5902.  This test was then repeated several times and was done with the signal generator stepping up from $-60$ dBm to 0 dBm and from 0 dBm to $-60$ dBm.  
-
-The data collected was then graphed using Excel.  The graph shown in~\ref{adl5902_linear}
-Shows that the ADL5902 has a linear output and matches the expected value based on the input.  
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Images/Linearsquarelaw}
-
-\isucaption{Graph showing the linearity of the ADL5902}
-\label{adl5902_linear}
-\end{figure}
-
-Once it was confirmed the ADL5902 does in fact have a linear response, we then looked at ways to work with the ADL5902.  The graph above was generated using Analog Devices program that talked to the Blackfin processor on the daughter-board.  However, the information for talking to the Blackfin is proprietary.  Therefore, the daughter-board was removed for future tests and instead we used the USB-6009 data acquisition board to read the raw analog voltages from the ADL5902.  This information was then stored later for additional analysis.  
-
-\section{Software Defined Radio Experiments}
-Once it was confirmed that the square-law detector was working within the specifications that were given, testing then moved to the software defined radio.  Once the Python program was established for replicating a total power radiometer in software, this was then loaded into GNURadio and used to control the N200 SDR.  
-
-Before testing the program with the N200, testing was done with the built in noise generator in GNURadio.  This was used to test its ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
+\begin{enumerate}
+\item 4 x Integrated Microwave Bandpass filters (1400 - 1425 MHz)
+\item 2 x Miteq AMF-3F-01400147-30-10P LNA
+\item 1 x Miteq AMF-2F-01400147-04-10P LNA
+\end{enumerate}
 
 {\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/noisesrc_radiometer.png}
-\isucaption{A screenshot of the GNURadio program using a noise generator block.}
-\label{noise_test}
+\includegraphics[width=\textwidth]{Images/ISU_RF.jpg}
+\isucaption{The ISU radiometer's LNAs and bandpass filters used in most experiments.  Source: Matthew E. Nelson}
+\label{ISURF}
 \end{figure}
 }
 
-After this was done additional tweaks were made to both the GUI interface and to the program that performs the calculations for the total power radiometer.  The essential components were moved to a custom block which helped to clean up the block diagram.  Details on how this works was discussed in chapter three.
+Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our antenna or source.  This matched load is then submerged in temperature baths.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  The ISU radiometer provides the amplification needed for our experiments and finally we divide that signal between the ADL5902 square-law detector and the N200 Software defined radio.  The N200 is then connected to a personal computer running XUbuntu Linux and GNURadio.  The ADL5902 is attached to the USB-6009 DAQ that reads the analog 
 
-Three experiments were conducted to verify the operation of the software defined radio.  One experiment that tested stability will be discussed in chapter 5.  The other two experiments will be discussed in detail here.  These two experiments verified that the software defined radio behaved in similarly to the square-law detector and also demonstrated an additional function that the square-law detector was not able to do.
-
-\section{Experiment 1 - Calibration and Normal Radiometer Operation}
-
-To fully test both the total power radiometer in the software defined radio and the square-law detector, a cold water bath experiment was established to verify that both the square-law detector and SDR was able to measure real world changes in the noise.  In addition, this would also give us a calibration line to calibrate the radiometer.
-
-\subsection{Laboratory Setup}
-For this experiment the ISU radiometer was setup in the Make to Innovate lab located in Howe Hall at Iowa State University.  This lab was picked as it has an electronics area and has test equipment needed for certain experiments as well as the needed power supplies to power the equipment.  To measure the change in noise, a 50 ohm matched load was attached to the input of the LNAs and this output was then feed to a power divider which divides the signal between the software defined radio and the square-law detector.  This does add a 3.1 dB loss to both devices, however this was acceptable for these experiments.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Images/exp1_setup.jpg}
-
-\isucaption{An image of the typical lab setup used to test the software defined radiometer}
-\label{LabSetup}
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/Exp_1_Setup.png}
+\isucaption{Block diagram of Experiment 1 setup.  Source: Matthew E. Nelson}
+\label{Exp1_Block}
 \end{figure}
+}
 
 The 50 ohm load was then submersed into a hot or cold bath.  These baths were temperature controlled first by using Liquid Nitrogen (LN2) which is known to boil at 77 Kelvin and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these could easily be monitored and maintained.  The load was submersed in each bath for a minimum of 2 minutes to allow for it to reach the same temperature as the bath.  The noise measured was then recorded using GNURadio with the N200 SDR and with the USB-6009 to record the square-law data.  In addition to the total power measurements, the raw I-Q data was also recorded.  This allowed us to replay the experiment through GNURadio for further study.
-\subsection{Test Results}
 
-The first data we will look at with be with the software defined radio.  The SDR records the total power measurements to a binary file that either Matlab or Python can read.  In our results, we used iPython Notebook to read and generate the graphs used in this thesis.  We will begin by looking at the raw total power readings which we will call raw Q values or rQ values.  These are the uncalibrated total power readings from the software defined radio.  
+%\subsection{Laboratory Setup}
+%For this experiment the ISU radiometer was setup in the Make to Innovate lab located in Howe Hall at Iowa State University.  This lab was picked as it has an electronics area and has test equipment needed for certain experiments as well as the needed power supplies to power the equipment.  To measure the change in noise, a 50 ohm matched load was attached to the input of the LNAs and this output was then feed to a power divider which divides the signal between the software defined radio and the square-law detector.  This does add a 3.1 dB loss to both devices, however this was acceptable for these experiments.
 
-\begin{figure}[h!tb] \centering
+%\begin{figure}[h!tb] \centering
+%\includegraphics[width=\textwidth]{Images/exp1_setup.jpg}
+%\isucaption{An image of the typical lab setup used to test the software defined radiometer}
+%\label{LabSetup}
+%\end{figure}
 
-\includegraphics[width=\textwidth]{Experiments/Exp1/rqvstime_annotate.pdf}
-
-\isucaption{Graph of the un-calibrated rQ values of Experiment 1}
-\label{SDR_rQ}
-\end{figure}
-
-Figure \ref{SDR_rQ} shows the total power reading versus time and is also marked when the matched load was submerged in Ice Water, LN2, or a hot water bath.  Since we know what the temperatures are for the ice water and LN2, we can now calibrate these readings to a noise temperature reading.  This is done by reading in a calibration file we have stored in csv format and performing linear algebra to solve the slope of the line.  This was done in our iPython Notebook using the following code.
-\lstset{language=Python}
-\begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
-a = numpy.array([[rQ_values[0],1.0],[rQ_values[1],1.0]],numpy.float32)
-b = numpy.array([temp_values[0],temp_values[1]])
-z = numpy.linalg.solve(a,b)
-\end{lstlisting}
-
-Now that we have our calibration points, we can now re-graph this data but now calibrated as a reference noise temperature. Figure \ref{SDR_Calibrated} shows a calibrated graph of the data in relation to noise temperature.  In addition, we have colorized this graph to show warmer to cooler temps.  This is helpful as we often refer to these as noise temperatures.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/sdr_calibrated_color.pdf}
-
-\isucaption{Graph of the calibrated noise temperature of Experiment 1}
-\label{SDR_Calibrated}
-\end{figure}
-
-Now that we have looked at the software defined radio data, we want to look at the square-law detector with the end result of comparing the two.  The square-law detector gives us power information as a voltage, so once again we will need to calibrate this to the known temperature references.  However, before that we need to do one other step with the data.  Unlike the software defined radio, there is no filter or integrator to help smooth out the data, so the square-law data is very noisy.  Our first step will be to filter the data.  Figure \ref{X2_Raw} shows our raw data that we get from the square-law detector.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/noisy_voltage.pdf}
-
-\isucaption{Raw and noisy graph from the square-law detector used in Experiment 1}
-\label{X2_Raw}
-\end{figure}
-
-Once again we can use Python to process this information and specifically we can use SciPy which includes several useful signal processing modules.  For our use, we will use a low pass filter to clean up the signal.  The following code allows us to do just that.
-
-\begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
-from scipy import signal
-N=100
-Fc=2000
-Fs=1600
-h=scipy.signal.firwin(numtaps=N, cutoff=40, nyq=Fs/2)
-x2_filt=scipy.signal.lfilter(h,1.0,x2_voltage)
-\end{lstlisting}
-
-Figure \ref{X2_filter} now shows our data that has been filtered by the low pass filter.  This is similar to the low pass filter that is also used by the software defined radio.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/x2_filter.pdf}
-
-\isucaption{Filtered data from the square-law detector used in Experiment 1}
-\label{X2_filter}
-\end{figure}
-
-Using the same technique as earlier, we can now calibrate the raw voltages from the square-law detector to the noise temperature.  Like the software defined radio data, we can calibrate the voltages from the square-law detector to the physical temperature that our matched load is placed in.  Figure \ref{X2_Calibrated} shows the data from the square-law detector calibrated to our known temperature points.  This now allows us to directly compare the square-law detector to the software defined radio data since we have a common reference point in which to compare the data.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/x2_calibrated.pdf}
-
-\isucaption{Calibrated data from the square-law detector used in Experiment 1}
-\label{X2_Calibrated}
-\end{figure}
-
-We now want to compare both the Software Defined Radio and the square-law to make sure that they match up.  Since both the SDR and the square-law are now calibrated to a noise temperature, we can easily graph both of the data and compare to see how well they match up.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/x2_SDR_Calibrated.pdf}
-
-\isucaption{Figure showing both the SDR and square-law noise temperature data in Experiment 1}
-\label{X2_SDR_Both}
-\end{figure}
-
-We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up very nicely.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
-\subsection{Application with Soil Moisture Readings}
-A common application of radiometers is in the measurement of soil moisture.  All items naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature, but the amount that reaches the antenna varies by the amount of moisture in the soil.  If we can calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  At this time, we will simply look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
-
-Using the Software Defined Radio, we can set up two methods to visually look at the noise temperature and thus the soil moisture percentage.  Since we do not have an antenna hooked up, we will simulate this by using two reference temperatures.  In this case the ice water bath and the LN2 that we just used and was shown earlier.  
-
-A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.  This is the same program we have used but with the waterfall display now added.  The data for the waterfall is pulled directly from our source block or in our case the N200 software defined radio.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/LN2_waterfall.png}
-
-\isucaption{Screenshot of the waterfall display used in Experiment 1}
-\label{LN2_waterfall}
-\end{figure}
-
-Let's take a look at two screen shots of the waterfall.  We will put them side by side so we can better compare the display when the thermal load is in the ice water bath and when the load is in LN2.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/waterfall_side.pdf}
-
-\isucaption{Side by side comparison of the waterfall display for Experiment 1}
-\label{side_waterfall}
-\end{figure}
-
-In figure \ref{side_waterfall} we can see that the ice water screen shot appears warmer than the right side screen shot which appears cooler.  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
-
-If we assume that our LN2 is dry soil and that our ice water bath is wet soil, we can now interpolate the data to this scale and show the information we obtained in Experiment one as both a noise temperature and soil moisture.  Figure \ref{SDR_soil} shows the same data we looked at earlier but we have now added a scale to show soil moisture as a percentage.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/sdr_soilmoisture.pdf}
-\isucaption{Plot of the noise temperature of Experiment 1 with soil moisture percentage}
-\label{SDR_soil}
-\end{figure}
-
-While this demonstrates that we can collate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
 
 \section{Experiment 2 - Interfering Signal Mitigation}
 The addition of an unwanted signal can be a determinant to the radiometer and has an adverse effect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices.  This problem becomes even a greater issue with radiometers used in orbiting spacecrafts as they are able to see large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.
@@ -387,3 +247,40 @@ Figure \ref{filter_on} now shows both the software defined radio and the square-
 
 %----------------------------------------------------------
 % End of Chapter 5.  Anything below this is extra information
+
+%To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the software defined radio.  This signal is split using a power divider so that the information will be the same to both devices with the except for the 3 dB plus insertion loss the power divider adds.  This allows us to verify the software defined radio with a proven system. 
+
+%To test the ADL5902 a signal generator was used that had a controlled output.  The specific signal generator that was used was an older model that allowed us to change the output in 10 dBm increments.  The signal generator was also configured for 1.4 GHz as that is the frequency the ISU RF front end is configured to listen at.  Ideally a noise generator would have been desirable, however a noise generator with adjustable power output could not be located on campus.  
+
+%The ADL5902 is available from Analog Devices in an evaluation board.  This board pairs the ADL5902 with a AD7466 12-bit analog to an analog to digital converter.  This board can then be mated with Analog Devices BlackFin processor which acts as a USB gateway for the AD7466 data.  A test program written in LabView is also provided as well.
+
+%The test program provided by Analog Devices allows us to query the ADL5902 and record the raw ADC value.  This program also allows us to enter in the frequency used during testing, the temperature during the test, and allowed for calibration of the ADL5902.  All of the data is then stored into an Excel spreadsheet which can be accessed later.
+
+%For this test we used the signal generator set to 1.4 GHz and started at $-60$ dBm for the output signal.  This was selected as this is the lowest the square law detector can detect.  The output power was then incremented on the signal generator in 10 dBm steps.  There was no change to any other parameter.  This was done up to 0 dBm.  Any higher and there was risk of damage to the ADL5902.  This test was then repeated several times and was done with the signal generator stepping up from $-60$ dBm to 0 dBm and from 0 dBm to $-60$ dBm.  
+
+%The square-law detector that we obtained is the Analog Devices ADL5902.  The ADL5902 is a true rms responding power detector that has a square law detector, a variable gain amplifier, and an output driver. It also has a temperature sensor and will compensate for temperature variations.  The output driver allows for the small signal from the square law detector to be amplified to a level that most analog to digital devices can detect.  It should be noted that this is not an amplifier for the incoming RF signal, just to amplify the small signal from the diode.  This driver however does have low noise and has a noise output of approximately $25nV/ \sqrt{Hz}$ at 100 kHz.  The ADL5902 operates from 50 MHz to 9 GHz and in most cases can detect down to $-60$ dBm.  This works well in our application since the radiometer operates at 1.4 GHz and after the amplification stage we usually see between $-40$ to $-30$ dBm of power.  
+
+%{\begin{figure}[h!tb] \centering
+%\includegraphics[width=\textwidth]{Images/adl5902.jpg}
+%\isucaption{An image of the ADL5902 square-law detector used in these experiments}
+%\label{ADL5902}
+%\end{figure}
+%}
+
+%The specifications of the ADL5902 can be seen in Table~\ref{ADL5902_data} shown below.
+
+%\begin{table}[h!tb] \centering
+%\isucaption{ADL5902 Specifications}
+%\label{ADL5902_data}
+%\begin{tabular}{lcc} \hline
+%\textbf{Parameter @ 900 MHz} & \textbf{Value} & \textbf{Units} \\ \hline
+%Frequency Range & 50 to 9000 & MHz \\
+%Dynamic Range & 61 & dB \\
+%Minimum Input Level, $\pm 1.0$ dB & 60 & dB \\ 
+%Maximum Input Level, $\pm 1.0$ dB & 1 & db \\
+%Logarithmic Slope & 53.7 & mV/dB \\ 
+%Output Voltage Range & 0.03 to 4.8 & V \\ \hline
+%\end{tabular}
+%\end{table}
+
+%The ADL5902 outputs an analog signal that falls between 0.03 volts and 4.8 volts.  It outputs a change of 53.7 millivolt per dB detected by the ADL5902. 
