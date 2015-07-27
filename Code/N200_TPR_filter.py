@@ -4,7 +4,7 @@
 # Title: Total Power Radiometer - N200 with Filter
 # Author: Matthew E Nelson
 # Description: Total power radiometer connecting to a N200 SDR with a bandpass filter
-# Generated: Tue Jul 14 20:08:13 2015
+# Generated: Mon Jul 27 11:21:54 2015
 ##################################################
 
 if __name__ == '__main__':
@@ -17,6 +17,7 @@ if __name__ == '__main__':
         except:
             print "Warning: failed to XInitThreads()"
 
+execfile("/Users/matthewnelson/.grc_gnuradio/TPR.py")
 from datetime import datetime
 from gnuradio import analog
 from gnuradio import blocks
@@ -311,7 +312,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	converter=forms.float_converter(),
         )
         self.Main.GetPage(0).GridAdd(self._variable_static_text_0_static_text, 2, 0, 1, 1)
-        self.single_pole_iir_filter_xx_0 = filter.single_pole_iir_filter_ff(1.0/((samp_rate*integ)/2.0), 1)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
         	sample_rate=samp_rate,
         	fft_size=fftsize,
@@ -378,7 +378,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.fft_filter_xxx_0.declare_sample_delay(0)
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vff((calib_1, ))
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((dc_gain, ))
-        self.blocks_keep_one_in_n_4 = blocks.keep_one_in_n(gr.sizeof_float*1, samp_rate/det_rate)
         self.blocks_keep_one_in_n_3 = blocks.keep_one_in_n(gr.sizeof_float*fftsize, fftrate)
         self.blocks_keep_one_in_n_1 = blocks.keep_one_in_n(gr.sizeof_float*1, int(det_rate/file_rate))
         self.blocks_file_sink_5 = blocks.file_sink(gr.sizeof_float*fftsize, spec_data_fifo, False)
@@ -389,7 +388,6 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.blocks_file_sink_1.set_unbuffered(False)
         self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*1, recfile_kelvin, False)
         self.blocks_file_sink_0.set_unbuffered(True)
-        self.blocks_complex_to_mag_squared_1 = blocks.complex_to_mag_squared(1)
         self.blocks_add_const_vxx_1 = blocks.add_const_vff((calib_2, ))
         self.blks2_valve_2 = grc_blks2.valve(item_size=gr.sizeof_gr_complex*1, open=bool(rec_button_iq))
         self.blks2_valve_1 = grc_blks2.valve(item_size=gr.sizeof_float*1, open=bool(0))
@@ -402,14 +400,20 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         	output_index=0,
         )
         self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, .5, 0)
+        self.TPR_0 = TPR(
+            integ=integ,
+            samp_rate=samp_rate,
+            det_rate=det_rate,
+        )
 
         ##################################################
         # Connections
         ##################################################
+        self.connect((self.TPR_0, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.analog_noise_source_x_0, 0), (self.blks2_selector_0, 0))    
         self.connect((self.analog_noise_source_x_0, 0), (self.fft_filter_xxx_0, 0))    
+        self.connect((self.blks2_selector_0, 0), (self.TPR_0, 0))    
         self.connect((self.blks2_selector_0, 0), (self.blks2_valve_2, 0))    
-        self.connect((self.blks2_selector_0, 0), (self.blocks_complex_to_mag_squared_1, 0))    
         self.connect((self.blks2_selector_0, 0), (self.logpwrfft_x_0, 0))    
         self.connect((self.blks2_selector_0, 0), (self.wxgui_fftsink2_0, 0))    
         self.connect((self.blks2_valve_0, 0), (self.blocks_file_sink_4, 0))    
@@ -417,18 +421,15 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.connect((self.blks2_valve_2, 0), (self.blocks_file_sink_1, 0))    
         self.connect((self.blocks_add_const_vxx_1, 0), (self.blks2_valve_1, 0))    
         self.connect((self.blocks_add_const_vxx_1, 0), (self.wxgui_numbersink2_0, 0))    
-        self.connect((self.blocks_complex_to_mag_squared_1, 0), (self.single_pole_iir_filter_xx_0, 0))    
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.blks2_valve_0, 0))    
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_multiply_const_vxx_1, 0))    
         self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_file_sink_5, 0))    
-        self.connect((self.blocks_keep_one_in_n_4, 0), (self.blocks_multiply_const_vxx_0, 0))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_1, 0))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_numbersink2_0_0, 0))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.wxgui_scopesink2_2, 0))    
         self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_add_const_vxx_1, 0))    
         self.connect((self.fft_filter_xxx_0, 0), (self.blks2_selector_0, 1))    
         self.connect((self.logpwrfft_x_0, 0), (self.blocks_keep_one_in_n_3, 0))    
-        self.connect((self.single_pole_iir_filter_xx_0, 0), (self.blocks_keep_one_in_n_4, 0))    
 
 
     def get_clock(self):
@@ -536,9 +537,8 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.samp_rate = samp_rate
         self.set_fftrate(int(self.samp_rate/self.fftsize))
         self.set_taps(firdes.low_pass(1.0, self.samp_rate,self.filter_band, 1000))
-        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
+        self.TPR_0.set_samp_rate(self.samp_rate)
         self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
-        self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
 
     def get_prefix(self):
         return self.prefix
@@ -652,7 +652,7 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
         self.integ = integ
         self._integ_slider.set_value(self.integ)
         self._integ_text_box.set_value(self.integ)
-        self.single_pole_iir_filter_xx_0.set_taps(1.0/((self.samp_rate*self.integ)/2.0))
+        self.TPR_0.set_integ(self.integ)
 
     def get_idecln(self):
         return self.idecln
@@ -697,8 +697,8 @@ class N200_TPR_filter(grc_wxgui.top_block_gui):
 
     def set_det_rate(self, det_rate):
         self.det_rate = det_rate
+        self.TPR_0.set_det_rate(self.det_rate)
         self.blocks_keep_one_in_n_1.set_n(int(self.det_rate/self.file_rate))
-        self.blocks_keep_one_in_n_4.set_n(self.samp_rate/self.det_rate)
 
     def get_dc_gain(self):
         return self.dc_gain
