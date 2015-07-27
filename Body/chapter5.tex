@@ -19,22 +19,13 @@ To verify the results of the information that the software defined radio is obta
 
 \subsection{Data Collection}
 
-Once the experimental data was obtained the next step is to analyze the data and format the data so that it is easy to read and comprehend.  The total power readings and the raw I/Q data generated from GNURadio is stored as a binary file stored in little-endian format.  Total power data is stored as a float values and I/Q data is stored as complex values.  Data from the square-law detector is stored as a comma delimited ASCII file.
+Two sets of data is produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisitions device that is attached to the square-law detector.  Data from each one is stored to a local computer running the appropriate software.
 
-In order to analyze the data, a method was developed to acquire the data and store it for later use.  For the N200 software defined radio, this is done by the GNURadio program.  Both the complete signal and the power information is stored to a file for later analysis in a binary little-endian format.  Total power data is stored as a float values and I/Q data is stored as complex values.  
+\emph{Software Defined Radio Data.  }The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP or a file.  In our case we will use a file sink to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows for the user to turn on and off recording of the data.  A block diagram of the file blocks is in figure \ref
 
-The square-law detector however, outputs information as an analog voltage that is linearly proportional to the RF power measured.  This required a system that can capture the analog signal from the ADL5902 and then send the data to be stored.  The National Instruments USB-6009 data acquisition unit was selected as it met the requirements for an easy to use yet high enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample up to 48 ksps with a resolution of 14-bits which is more than adequate for the experiments.  To use the USB-6009 a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved the information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  The USB-6009 then connects to a host computer through the USB interface.  This made obtaining the data and using device straightforward to use.
+There are two types of files that the SDR generates.  The first type of file is the complete I and Q data points recorded from the SDR.  This file is stored as a little-indian format and as complex values.  Due to the sampling rate, it is not uncommon for this file to grow to be quite large, usually several gigabytes of data for a 10-15 minute run.  However, this file can then be feed back through GNURadio later to be played back if needed and it contains the information needed to completely recreate the signal.
 
-\emph{GNURadio Testing.  }Before testing the program with the N200, testing was done with the built in noise generator in GNURadio.  This was used to test its ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
-
-{\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/noisesrc_radiometer.png}
-\isucaption{A screenshot of the GNURadio program using a noise generator block.}
-\label{noise_test}
-\end{figure}
-}
-
-After this was done additional tweaks were made to both the GUI interface and to the program that performs the calculations for the total power radiometer.  The essential components were moved to a custom block which helped to clean up the block diagram.  
+The second file type is the total power values generated from the total power block in GNURadio.  A block diagram of this block can be found in Appendix \ref{appendix1} in figure \ref{TPR_GRC} and the source code for this can also be found in Appendix \ref{appendix1}.  This file is also a little-endian format however this file only has float values.  This file is also much smaller than the file that contains the I and Q data points.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
 
 \emph{Labview Acquisition program.}  The Labview program was created to talk to the USB-6009 and then store the data.  In addition, it is able to display in real time the current readings coming from the USB-6009.  This was beneficial during testing of the program but is also good information to have while running an experiment.  
 
@@ -57,6 +48,20 @@ While the USB-6009 allows up to 48,000 samples per second, we don't need such a 
 }
 
 This program allowed for the data from the square law detector to be easily recorded.  Using Labview also allows us to customize the interface more to our liking and other features such as adding calibration information can also be added as well.  
+
+The square-law detector however, outputs information as an analog voltage that is linearly proportional to the RF power measured.  This required a system that can capture the analog signal from the ADL5902 and then send the data to be stored.  The National Instruments USB-6009 data acquisition unit was selected as it met the requirements for an easy to use yet high enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample up to 48 ksps with a resolution of 14-bits which is more than adequate for the experiments.  To use the USB-6009 a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved the information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  The USB-6009 then connects to a host computer through the USB interface.  This made obtaining the data and using device straightforward to use.
+
+\emph{GNURadio Testing.  }Before testing the program with the N200, testing was done with the built in noise generator in GNURadio.  This was used to test its ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
+
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/noisesrc_radiometer.png}
+\isucaption{A screenshot of the GNURadio program using a noise generator block.}
+\label{noise_test}
+\end{figure}
+}
+
+After this was done additional tweaks were made to both the GUI interface and to the program that performs the calculations for the total power radiometer.  The essential components were moved to a custom block which helped to clean up the block diagram.  
+
 
 \subsection{Experimental setup} \label{exp1_setup}
 For this experiment, the following hardware was used:
