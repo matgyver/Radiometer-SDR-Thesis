@@ -21,7 +21,8 @@ To verify the results of the information that the software defined radio is obta
 
 Two sets of data is produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisitions device that is attached to the square-law detector.  Data from each one is stored to a local computer running the appropriate software.
 
-\emph{Software Defined Radio Data.  }The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP or a file.  In our case we will use a file sink to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows for the user to turn on and off recording of the data.  A block diagram of the file blocks is in figure \ref
+\emph{Software Defined Radio Data.  }The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP or a file.  In our case we will use a file sink to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows for the user to turn on and off recording of the data.  A block diagram of the file blocks is in figure
+
 
 There are two types of files that the SDR generates.  The first type of file is the complete I and Q data points recorded from the SDR.  This file is stored as a little-indian format and as complex values.  Due to the sampling rate, it is not uncommon for this file to grow to be quite large, usually several gigabytes of data for a 10-15 minute run.  However, this file can then be feed back through GNURadio later to be played back if needed and it contains the information needed to completely recreate the signal.
 
