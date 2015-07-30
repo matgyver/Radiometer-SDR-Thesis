@@ -17,7 +17,7 @@ Experiment one verifies the operation of a software defined radiometer by compar
 In this experiment we will verify the operation of a software defined radiometer.  This experiment will verify that a software defined radiometer is able to perform as expected and will compare our results to a square-law detector which is commonly used in traditional radiometers.  
 To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the software defined radio.  This signal is split using a power divider so that the information will be the same to both devices with the except for the 3 dB plus insertion loss the power divider adds.  This allows us to verify the software defined radio with a proven system.  
 
-\subsection{Data Collection}
+\subsection{Data Collection}\label{exp1_data}
 
 Two sets of data is produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisitions device that is attached to the square-law detector.  Data from each one is stored to a local computer running the appropriate software.
 
@@ -113,35 +113,23 @@ The 50 ohm load was then submersed into a hot or cold bath.  These baths were te
 %\label{LabSetup}
 %\end{figure}
 
-\section{Experiment 2 - Verification of sensitivity and stability}\label{Exp2}
+\section{Experiment II - Verification of sensitivity and stability}\label{Exp2}
+
+In this experiment we will verify the sensitivity and stability of a software defined radiometer.  This experiment will verify that a software defined radiometer is able to meet the expected sensitivity and stability within an acceptable range.    
+
+\subsection{Data Collection}
+The data collected for this experiment was the total power measurements made from the software defined radiometer.  These measurements uses the same method as outlined in section \ref{exp1_data}.
+
+\subsection{Experimental setup} \label{exp2_setup}
 
 
-\section{Experiment 3 - Interfering Signal Mitigation}\label{Exp3}
+\section{Experiment III - Interfering Signal Mitigation}\label{Exp3}
+
+In this experiment we will generate an interfering signal and then mitigate the signal using a software defined filter.  A square-law detector will be hooked up in parallel to measure the same signal but will have no mitigation methods for the signal.  We will then compare the two signals to verify that the software defined radiometer can mitigate an interfering signal and still make total power measurements.
+
 The addition of an unwanted signal can be a determinant to the radiometer and has an adverse effect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices.  This problem becomes even a greater issue with radiometers used in orbiting spacecrafts as they are able to see large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.
 
 RFI detection and mitigation is not a new topic in radiometry and there have been other methods in both the detection and mitigation of these signals[\cite{Forte}][\cite{McIntyre_RFI}][\cite{DeRoo}][\cite{Ellingson}].
-
-Experiment three is used to show additional benefits of using a software defined radio compared to a more traditional radiometer by being able to filter out these unwanted signals.  One benefit of using a SDR is that key components such as filters are created in software instead of using hardware.  This means that filters can be created on the fly and can be adjusted simply by updating the software.  
-
-For this experiment we will use both the Software Defined Radio running GNURadio with the radiometer firmware and a square-law detector that is connected to a data acquisition unit.  The experiment uses a 50 ohm matched load that is attached to the radiometer.  This matched load is then submerged into two different baths, a Liquid Nitrogen at ~ 77 K and an Ice bath at ~ 273.15 K which is identical to experiment one.  The difference with this experiment is that an offending signal is generated and then inserted into the RF signal chain.  It is amplified by the LNAs and then split to both the SDR and the square-law detector.  Another SDR, the HackRF One is used to act as a signal generator and generates the offending signal.  This allows for flexibility in both the amplitude and frequency of the generated signal.
-
-\subsection{Laboratory Setup}
-We will use a similar setup to experiment one with the addition of a signal source that we will inject into the RF chain.  Our signal source will be another software defined radio, the HackRF One shown in figure \ref{HackRF}.  This SDR is a cheaper SDR and thus has lower specifications than the Ettus Research N200.  However, for the task of a signal source, it will suit our needs.  Except for this additional SDR as our interfering signal source, the setup is exactly as experiment one using the same LNAs and other hardware.
-
-The ISU RF front end was once again used to amplify the signal.  One difference however is that a power combiner, which is the same as a power divider, was used to hook up to a signal generator.  The signal generator then provided the offending signal.  By using the signal generator we can control how much power and what frequency the offending signal is at.  In this case we are performing this in a controlled setup and would know ahead of time where the offending signal is.  In the future the SDR defined could identify the offending signal and then filter it out.
-
-Like the other tests, a power divider is used to split the signal after the ISU RF front end which was then feed to a square-law detector and then the N200 SDR.  The square-law detector was then hooked up to a National Instruments USB-6009 DAQ which is then feed into the LabView program to be processed and recorded.  The N200 continued to use the GNURadio program that was created to record the total power coming out.  However, it has been modified with a band reject filter to filter the offending signal.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Images/Hack_RF.jpg}
-\isucaption{Image of the HackRF used to generate the offending signal}
-\label{HackRF}
-\end{figure} 
-
-For this experiment, the HackRF will generate a sinusoidal wave at a fixed frequency.  We will then change the amplitude of this signal a few times during the experiment.  This allows us to verify that the signal is still present in the total power measurements in both the software defined radio and the square-law detector.  Since the square-law detector does retain any frequency information, this was the only method to verify the operation of the signal generator with the square-law detector.   
-
-\subsection{Software Defined Radio Configuration}
 
 This test was designed to test a problem that a software defined radio would be to cope with while a square law detector would not be able to cope with it.  This test injected a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  In this test, the square law detector, since it is a wide band device, would not be able to accurately measure the change in the total power of the signal.  However, the SDR is able to create a digital filter to filter out the offending signal.  Since this is done in software, the SDR is able to adapt to change much faster than an analog radiometer.
 
@@ -156,7 +144,30 @@ Our Software Defined Radio software is now altered to include a band-reject filt
 
 Now that the taps have been calculated it is now applied to the filter in the system.  The band-reject filter will of course affect our performance as we will lose some bandwidth to the filter.  However, as shown it is still possible to function as a total power radiometer while filtering this signal.  
 
+\subsection{Data Collection}
+
+The data collected for this experiment includes both the total power measurements and the square-law data.  Section \ref{exp1_data} explains in detail the setup and configuration of the equipment used to collect this data.
+
+\subsection{Experimental setup} \label{exp3_setup}
+
+The experimental setup for this experiment is similar to the setup outline in section \ref{Exp1}.  In addition to the setup outline in that section, another software defined radio was added and injected into the RF signal chain.  This software defined radio is then configured to operate like a signal generator and generates the offending signal.  
+
+Our signal generator is the HackRF One shown in figure \ref{HackRF}.  This SDR is a cheaper SDR and thus has lower specifications than the Ettus Research N200 used as the software defined radiometer.  However, for the task of a signal source, it will suit our needs.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Images/Hack_RF.jpg}
+\isucaption{Image of the HackRF used to generate the offending signal}
+\label{HackRF}
+\end{figure} 
+
+For this experiment, the HackRF will generate a sinusoidal wave at a fixed frequency.  We will then change the amplitude of this signal a few times during the experiment.  This allows us to verify that the signal is still present in the total power measurements in both the software defined radio and the square-law detector.  Since the square-law detector does retain any frequency information, this was the only method to verify the operation of the signal generator with the square-law detector.   
+
 \section{Experiment 4 - Performance impact of interfering signal mitigation}\label{Exp4}
+
+\subsection{Data Collection}
+
+\subsection{Experimental setup} \label{exp4_setup}
 %\subsection{Impact of filter on radiometer performance}
 There is a trade-off when using filters to remove the offending signal.  The larger the filter is that is used, the more information that is lost in the signal.  Equation \ref{NEAT_filter} shows how the filter impacts the $NE\Delta T$ for the system.  Figure \ref{NEAT_filter} shows that as the bandwidth of the filter goes up, the $NE\Delta T$ also increases which results in the radiometer to be not as sensitive and may not be able to detect a fine enough change in the noise temperature.  Figure \ref{NEAT_filter} also shows that if we put a limit on what we expect our sensitivity to be, then that limits how much we can filter out.  In the case shown in \ref{NEAT_filter}, we placed a limit of .2 Kelvin as the maximum $NE\Delta T$ we wished to have.  This meant that we can only filter up to 5 MHz before we exceed this value.
 
