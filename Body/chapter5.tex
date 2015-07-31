@@ -121,6 +121,7 @@ In this experiment we will verify the sensitivity and stability of a software de
 The data collected for this experiment was the total power measurements made from the software defined radiometer.  These measurements uses the same method as outlined in section \ref{exp1_data}.
 
 \subsection{Experimental setup} \label{exp2_setup}
+The experimental setup used for experiment two is the same experiment as outlined in section \ref{exp1_setup}.  
 
 
 \section{Experiment III - Interfering Signal Mitigation}\label{Exp3}
@@ -169,7 +170,6 @@ The data collected for this experiment is the total power reading measurements o
 
 \subsection{Experimental setup} \label{exp4_setup}
 
-
 There is a trade-off when using filters to remove the offending signal.  The larger the filter is that is used, the more information that is lost in the signal.  Equation \ref{NEAT_filter} shows how the filter impacts the $NE\Delta T$ for the system.  Figure \ref{NEAT_filter} shows that as the bandwidth of the filter goes up, the $NE\Delta T$ also increases which results in the radiometer to be not as sensitive and may not be able to detect a fine enough change in the noise temperature.  Figure \ref{NEAT_filter} also shows that if we put a limit on what we expect our sensitivity to be, then that limits how much we can filter out.  In the case shown in \ref{NEAT_filter}, we placed a limit of .2 Kelvin as the maximum $NE\Delta T$ we wished to have.  This meant that we can only filter up to 5 MHz before we exceed this value.
 
 \begin{equation} \label{NEAT_filter}
@@ -205,67 +205,6 @@ As expected as the system increases the bandwidth of the filter, the total bandw
 Filtering has other impacts to the signal that needs to be addressed.  Filtering a signal does have a cost associated with it in terms of the computational cost.  This depends on how tightly we need to have the filter and the sampling rate at which we are running the software defined radio.  In an ideal world we would have filters that have very steep frequency response rates.  However, this is computationally very expensive and so we often compromise by having less steep frequency response due to computational limits.  
 
 Another factor with filters that does not directly impact the system but does need to be discussed is delays.  In the experiments in this thesis the graphs were compensated for delays due to the filters used.  A FIR filter that is used to filter out the offending signal has a very predictable delay and is computed in equations.  Another type of filter that is used is the IIR filter used in the power detection stage of the total power radiometer software.  An IIR filter however does not have a linear delay time and is instead based on the filter and the frequency it is filtering.  There are tools however that can be used to calculate this delay and this allows for us to properly compensate any delay with filtered signal.  This is important for doing comparison graphs with the square-law detector which does not use as many filters and does so at different frequencies.  
-
-\subsection{Test Results}
-We begin by looking at the what happens to our total power readings with no filter applied.  As we stated in the Lab Setup portion, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp4/sdr_raw_unfiltered.pdf}
-
-\isucaption{Graph showing the unfiltered total power measurements on the software defined radio}
-\label{sdr_unfilt_raw}
-\end{figure}
-
-We can see that there are pulses that occur in the graph in figure \ref{sdr_unfilt_raw} and that changes in the amplitude of the offending signal affect our total power readings.  These same pulses can also be seen in the square-law detector data as well which can be seen in figure \ref{x2_unfilt}.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp4/x2_voltage.pdf}
-
-\isucaption{Graph showing the raw total power read from the square-law detector with an interfering signal.}
-\label{x2_unfilt}
-\end{figure}
-
-We can clearly see in both the software defined radio and the square-law detector that there is an interfering signal.  If we now look at the spectrum view on the software defined radio, we can see the signal in questions which is at 1.405 GHz.  Figure \ref{spectrum_interfering} shows us what the software defined radio sees which is a spike at 1.405 GHz.  The square-law detector of course has no frequency information, so our only method to detect an interfering signal is by looking at the total power readings.  In our case there is elevated readings and we can see the spikes in the square-law data.  However, we do not know where in the spectrum the signal is at.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Images/spectrum_interference.png}
-
-\isucaption{Image showing the spectrum view from the software defined radio}
-\label{spectrum_interfering}
-\end{figure}
-
-Since we know where the offending signal is, we can now design our filter to filter out this signal.  In our GNURadio program we can specify both the frequency and the bandwidth our band-reject filter that we desire.  Ideally we want to keep the bandwidth of the filter as tight as possible to the offending signal but we also want to make sure our filter is effective in removing the signal.  Figure \ref{spectrum_filter} shows the spectrum display from the software defined radio with the filter now turned on and filtering the offending signal.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Images/spectrum_filter.png}
-
-\isucaption{Image showing the software defined radio with the filter on and filtering the offending signal}
-\label{spectrum_filter}
-\end{figure}
-
-Since we have now removed the offending signal, we will want to re-run our experiment and once again compare the difference between the software defined radio and the square law detector. We can begin by looking at the software defined radio total power readings.  In figure \ref{sdr_calib_filter} we can see a calibrated graph of the noise temperature seen by the software defined radio.  This graph is very similar to the graphs we expect from our total power radiometer.  However, we want to compare this to our square-law detector as well.  
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp4/calib_filtered.pdf}
-
-\isucaption{Graph showing the calibrated total power readings with the filter removing the offending signal}
-\label{sdr_calib_filter}
-\end{figure}
-
-Figure \ref{filter_on} now shows both the software defined radio and the square-law detector calibrated total power readings.  In this graph you can see that the software defined radio is able to make normal readings where the square-law detector still shows the changes in amplitude which would make both calibration and obtaining useful data difficult.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp4/calib_filtered_both.pdf}
-
-\isucaption{Image of the offending signal being filtered out by the SDR.  It can be seen that the signal is no longer visible.}
-\label{filter_on}
-\end{figure}
 
 %----------------------------------------------------------
 % End of Chapter 5.  Anything below this is extra information
