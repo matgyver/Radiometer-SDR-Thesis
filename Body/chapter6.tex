@@ -188,7 +188,7 @@ The standard deviation is calculated to be 0.09 Kelvin by using the standard dev
 \begin{table}[h!tb] \centering
 \isucaption{Experimental parameters for experiment one.}
 \label{exp2_param}
-% Use: \begin{tabular{|lc|} to put table in a box
+% Use: \begin{tabular{|lcc|} to put table in a box
 \begin{tabular}{ccc} \hline
 \textbf{Bandwidth ($\beta$)} & \textbf{Integration Time ($\tau$)} & \textbf{$T_{A}+T_{sys}$}\\ \hline
 10 MHz & 2 sec & 437 K \\ \hline
@@ -249,16 +249,25 @@ Figure \ref{Stability_calib} now shows the stability plot with both the actual $
 
 \subsection{Data Collected}
 
-The data collected for experiment three is the total power values from the software defined radiometer and also the voltage data from the square-law detector.  These values are calibrated using the data points provided in table   .
+The data collected for experiment three is the total power values from the software defined radiometer and also the voltage data from the square-law detector.  These values are calibrated using the data points provided in table \ref{exp3_datapoints}.
+
+\begin{table}[h!tb] \centering
+\isucaption{Total Power calibration data points}
+\label{exp3_datapoints}
+% Use: \begin{tabular{|lcc|} to put table in a box
+\begin{tabular}{lcc} \hline
+\textbf{rQ Value} & \textbf{$X^2$ Voltage (V)} & \textbf{Temperature (K)} \\ \hline
+.0361 & 2.1234 & 77 \\
+.0623 & 2.1872 & 271.65 \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Data Analysis}
 
-We begin by looking at the what happens to our total power readings with no filter applied.  As we stated in the Lab Setup portion, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
+We begin by looking at the what happens to our total power readings with no filter applied.  As we stated in Chapter \ref{ch:exp_design}, section \ref{exp3_setup}, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
 
 \begin{figure}[h!tb] \centering
-
 \includegraphics[width=\textwidth]{Experiments/Exp4/sdr_raw_unfiltered.pdf}
-
 \isucaption{Graph showing the unfiltered total power measurements on the software defined radio}
 \label{sdr_unfilt_raw}
 \end{figure}
@@ -266,9 +275,7 @@ We begin by looking at the what happens to our total power readings with no filt
 We can see that there are pulses that occur in the graph in figure \ref{sdr_unfilt_raw} and that changes in the amplitude of the offending signal affect our total power readings.  These same pulses can also be seen in the square-law detector data as well which can be seen in figure \ref{x2_unfilt}.
 
 \begin{figure}[h!tb] \centering
-
 \includegraphics[width=\textwidth]{Experiments/Exp4/x2_voltage.pdf}
-
 \isucaption{Graph showing the raw total power read from the square-law detector with an interfering signal.}
 \label{x2_unfilt}
 \end{figure}
@@ -276,9 +283,7 @@ We can see that there are pulses that occur in the graph in figure \ref{sdr_unfi
 We can clearly see in both the software defined radio and the square-law detector that there is an interfering signal.  If we now look at the spectrum view on the software defined radio, we can see the signal in questions which is at 1.405 GHz.  Figure \ref{spectrum_interfering} shows us what the software defined radio sees which is a spike at 1.405 GHz.  The square-law detector of course has no frequency information, so our only method to detect an interfering signal is by looking at the total power readings.  In our case there is elevated readings and we can see the spikes in the square-law data.  However, we do not know where in the spectrum the signal is at.
 
 \begin{figure}[h!tb] \centering
-
 \includegraphics[width=\textwidth]{Images/spectrum_interference.png}
-
 \isucaption{Image showing the spectrum view from the software defined radio}
 \label{spectrum_interfering}
 \end{figure}
@@ -286,9 +291,7 @@ We can clearly see in both the software defined radio and the square-law detecto
 Since we know where the offending signal is, we can now design our filter to filter out this signal.  In our GNURadio program we can specify both the frequency and the bandwidth our band-reject filter that we desire.  Ideally we want to keep the bandwidth of the filter as tight as possible to the offending signal but we also want to make sure our filter is effective in removing the signal.  Figure \ref{spectrum_filter} shows the spectrum display from the software defined radio with the filter now turned on and filtering the offending signal.
 
 \begin{figure}[h!tb] \centering
-
 \includegraphics[width=\textwidth]{Images/spectrum_filter.png}
-
 \isucaption{Image showing the software defined radio with the filter on and filtering the offending signal}
 \label{spectrum_filter}
 \end{figure}
@@ -296,9 +299,7 @@ Since we know where the offending signal is, we can now design our filter to fil
 Since we have now removed the offending signal, we will want to re-run our experiment and once again compare the difference between the software defined radio and the square law detector. We can begin by looking at the software defined radio total power readings.  In figure \ref{sdr_calib_filter} we can see a calibrated graph of the noise temperature seen by the software defined radio.  This graph is very similar to the graphs we expect from our total power radiometer.  However, we want to compare this to our square-law detector as well.  
 
 \begin{figure}[h!tb] \centering
-
 \includegraphics[width=\textwidth]{Experiments/Exp4/calib_filtered.pdf}
-
 \isucaption{Graph showing the calibrated total power readings with the filter removing the offending signal}
 \label{sdr_calib_filter}
 \end{figure}
@@ -306,21 +307,97 @@ Since we have now removed the offending signal, we will want to re-run our exper
 Figure \ref{filter_on} now shows both the software defined radio and the square-law detector calibrated total power readings.  In this graph you can see that the software defined radio is able to make normal readings where the square-law detector still shows the changes in amplitude which would make both calibration and obtaining useful data difficult.
 
 \begin{figure}[h!tb] \centering
-
 \includegraphics[width=\textwidth]{Experiments/Exp4/calib_filtered_both.pdf}
-
 \isucaption{Image of the offending signal being filtered out by the SDR.  It can be seen that the signal is no longer visible.}
 \label{filter_on}
 \end{figure}
 
+\emph{Filter delay.}  It should be noted that when doing data analysis with this data, that there will be some delay due to two factors.  First, there is a delay in the software defined radiometer due to the integrator that is used.  This creates a time delay as the integrator accumulates information and then settles.  We use fairly large integration times, usually in seconds so this can add a significant delay.  Second we do have a smaller delay in the decimation and low power filter also used in the software defined radiometer.  These are Finite Impulse Response (FIR) filters and thus have a delay given in equation \ref{FIR_delay}, where $N$ is the number of taps generated and $F_{s}$ is our sampling frequency, in our case 10 MHz.
+
+\begin{equation}\label{FIR_delay}
+\frac{(N - 1)}{(2*F_{s})}
+\end{equation}
+
+The taps value is generated by Python using the filter design program.  For this experiment, the taps generated was 18,181.  Taking that and our sampling rate into account, our FIR filter only delays the signal by 9 milliseconds.  
+
+A final note on lining up the square-law detector information and the software defined radiometer data.  Both systems have a record function and must be started manually by the user.  They also run on separate computers.  Therefore, there is a human error that also gets introduced to the system as well.  This is usually no more than 1 or 2 seconds.  But in this experiment it was noted that there was a slightly longer delay between the two of about 4 seconds.  
+
 \section{Experiment IV - Performance impact of interfering signal mitigation} \label{Exp4_results}
+For experiment four, we will look at the performance of a software defined radiometer when a filter is used and what impact that has.  Recall the following equation for $NE\Delta T$ from equation \ref{NEAT_SDR}.  Our sensitivity is based on the amount of noise we have from both the antenna or $T_{A}$ plus the addition of our system noise which is $T_{sys}$.  Finally our bandwidth of the signal, $\beta$ and our integration time, $\tau$, are the final factors that determine our $NE\Delta T$.
+
+Our integration time is controllable, and can be set using the GUI panel for the software defined radio.  In a typical radiometer, we often do not have any control of the bandwidth.  It is often set by the mechanical bandwidth filters that are placed in front of the LNAs and the detection circuit to detect the noise power.  In a software defined radio radio we do have more control on bandwidth as we can change our sampling rate which in turns controls our bandwidth.  However, there is a limit as larger sampling rates require more data and processing bandwidth to process.  
+
+In addition, recall from experiment 3 in section \ref{Exp3_results} where we filtered out an offending signal.  While this allows us to filter out the offending signal and resume total power measurements, it comes at a cost of reducing the overall bandwidth available for power detection.  In this experiment we look at this and derived the following equation \ref{NEAT_FILTER}
+
+\begin{equation}\label{NEAT_FILTER}
+NE\Delta T=\frac{T_{A}+T_{sys}}{\sqrt{(\beta - \beta_{filter})  \tau}}
+\end{equation}
+
+This equation now takes into account the subtraction of the filter.  The width of the band reject filter used then affects our $NE\Delta T$ and thus our performance of the radiometer.  
 
 \subsection{Data Collected}
+The data collected for this experiment is the data points collected in table \ref{exp4_data_power} and table \ref{exp4_datapoints}.  The remaining data is data generated from the equations outlined in this section.
+
+\begin{table}[h!tb] \centering
+\isucaption{Measured sensitivity and Bandwidth of Filter}
+\label{exp4_data_power}
+% Use: \begin{tabular{|lc|} to put table in a box
+\begin{tabular}{lc} \hline
+\textbf{rQ Value} & \textbf{Temperature (K)} \\ \hline
+.139 & .125 \\
+.141 & .250 \\
+.143 & .500 \\
+.147 & 1 \\
+.153 & 2 \\
+.166 & 3 \\
+.181 & 4 \\
+.195 & 5 \\
+.234 & 6 \\
+.252 & 7 \\
+.318 & 8 \\
+.450 & 9 \\
+1.45 & 10 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[h!tb] \centering
+\isucaption{Measured Total Power and Bandwidth of Signal}
+\label{exp4_datapoints}
+% Use: \begin{tabular{|lc|} to put table in a box
+\begin{tabular}{lc} \hline
+\textbf{rQ Value} & \textbf{Bandwidth (MHz)} \\ \hline
+.003 & .125 \\
+.006 & .250 \\
+.012 & .500 \\
+.025 & 1 \\
+.050 & 2 \\
+.071 & 3 \\
+.101 & 4 \\
+.125 & 5 \\
+.140 & 6 \\
+.170 & 7 \\
+.200 & 8 \\
+.230 & 9 \\
+.250 & 10 \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Data Analysis}
 
-%---------------------------------------------------------------
 
+\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Experiments/Exp5/neatvsbw_plot.pdf}
+\isucaption{Graph of the calculated $NE\Delta T$, the proposed limit for the sensitivity of the radiometer and the measured standard deviation compared to the bandwidth filter size.}
+\label{neat_bw}
+\end{figure}
+
+\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Experiments/Exp5/rqvsbw.pdf}
+\isucaption{Graph of the total power measured versus the bandwidth of the measured signal.}
+\label{power_bw}
+\end{figure}
+
+%---------------------------------------------------------------
 
 \section{Benefits to Software Defined Radio Radiometer}
 A study was conducted on what benefits a software defined radio radiometer would have over a more traditional radiometer.  This was focused on looking at three main areas; cost, weight and size, and the value a SDR radiometer can add over traditional radiometers.
