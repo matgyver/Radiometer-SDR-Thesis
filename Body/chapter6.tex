@@ -21,13 +21,13 @@ This chapter will display the results obtained from the experiments outlined in 
 \section{Experiment I - Software Defined Radiometer Verification and Calibration} \label{Exp1_results}
 As outlined in Chapter \ref{ch:exp_design}, Section \ref{Exp1}, this experiment is to verify the operation of a software defined radiometer.  This is done by performing experiments that are similar to verification and calibration methods used on a traditional radiometer.  By comparing these results to a square-law detector, receiving the same signal, we can verify the operation of the software defined radiometer.
 
-\subsection{Data Collected}
+\subsection{Data Collected}\label{Exp1_data}
 
-The data collected for experiment one is the total power measurements collected from the software defined radiometer and the voltage measurements, which represent the total power measurements, from the square-law detector.  This data was then calibrated by manually recording the rQ values and voltage values when the matched load is submerged into either an ice water bath or liquid nitrogen (LN2) bath.  Table shows the values collected during the experiment.  These data points were then used to generate the data analysis in the proceeding section.
+The data collected for experiment one is the total power measurements collected from the software defined radiometer and the voltage measurements, which represent the total power measurements, from the square-law detector.  This data was then calibrated by manually recording the rQ values and voltage values when the matched load is submerged into either an ice water bath or liquid nitrogen (LN2) bath.  Table \ref{exp1_datapoints} shows the values collected during the experiment.  These data points were then used to generate the data analysis in the proceeding section.
 
 \begin{table}[h!tb] \centering
 \isucaption{Total Power calibration data points}
-\label{rad_performance}
+\label{exp1_datapoints}
 % Use: \begin{tabular{|lcc|} to put table in a box
 \begin{tabular}{lcc} \hline
 \textbf{rQ Value} & \textbf{$X^2$ Voltage (V)} & \textbf{Temperature (K)} \\ \hline
@@ -36,8 +36,7 @@ The data collected for experiment one is the total power measurements collected 
 \end{tabular}
 \end{table}
 
-
-\section{Data Analysis}\label{Exp1_analysis}
+\subsection{Data Analysis}\label{Exp1_analysis}
 
 In our results, we used iPython Notebook to read and generate the graphs used in this thesis.  This tool uses Python along with HTML and Markdown code to generate a virtual notebook for each experiment.  Figure \ref{matlab_display} shows a screen shot of a iPython notebook used in this thesis
 
@@ -164,12 +163,67 @@ If we assume that our LN2 is dry soil and that our ice water bath is wet soil, w
 
 While this demonstrates that we can collate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
 
-\section{Experiment II - Verification of sensitivity and stability} \label{Exp1_results}
+\section{Experiment II - Verification of sensitivity and stability} \label{Exp2_results}
 
 \subsection{Data Collected}
+For the sensitivity portion of this experiment, the same data collected from section \ref{Exp1_data} is used.  The data collected for the stability is the total power data collected from the software defined radiometer. For calibration the data points shown in table \ref{exp2_datapoints} was collected and used to calibrate the total power measurements.
 
+\begin{table}[h!tb] \centering
+\isucaption{Total Power calibration data points for the stability experiment}
+\label{exp2_datapoints}
+% Use: \begin{tabular{|lc|} to put table in a box
+\begin{tabular}{lc} \hline
+\textbf{rQ Value} & \textbf{Temperature (K)} \\ \hline
+.1132 & 77 \\
+.1770 & 271.65 \\ \hline
+\end{tabular}
+\end{table}
+ 
 \subsection{Data Analysis}
-To verify stability of the radiometer, we look to see how much change the radiometer records over a relatively long period of time.  To test this a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for fifteen minutes.  The readings were then looked at to study the trend of the data.  The data is graphed in figure \ref{Stability}.
+
+\emph{Sensitivity.}  Sensitivity for a radiometer is the $NE\Delta T$ that was covered in chapter \ref{ch:background} and specifically can be found in equation \ref{NEAT_EQ}.  This $NE\Delta T$ is also the standard deviation of the data that we collect from the software defined radiometer.  
+
+The standard deviation is calculated to be 0.09 Kelvin by using the standard deviation function found in NumPy.  We can compare this to what we expected the $NE\Delta T$ to be which uses equation \ref{NEAT_EQ}.  To calculate the $NE\Delta T$, we need to know the integration time, the bandwidth, the total system and antenna noise.  This information is found in table \ref{exp2_param}.
+
+\begin{table}[h!tb] \centering
+\isucaption{Experimental parameters for experiment one.}
+\label{exp2_param}
+% Use: \begin{tabular{|lc|} to put table in a box
+\begin{tabular}{ccc} \hline
+\textbf{Bandwidth ($\beta$)} & \textbf{Integration Time ($\tau$)} & \textbf{$T_{A}+T_{sys}$}\\ \hline
+10 MHz & 2 sec & 437 K \\ \hline
+\end{tabular}
+\end{table}
+
+Python was then used to calculate the $NE\Delta T$ using the data from table \ref{exp2_param}.  The python code listed below is used to calculate the expected $NE\Delta T$.
+
+\begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
+tau = 2
+BSDR = 10e6
+Tsys = 350
+TA = 77
+NEAT_SDR = (TA+Tsys)/sqrt(BSDR*tau)
+\end{lstlisting}
+
+This gives us the result of 0.1 Kelvin for the expected $NE\Delta T$.  We can now look at the data collected from experiment one.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data.  To determine our sensitivity, we will zoom in on data that was collected while the matched load was submerged in LN2.  Figure \ref{Sensitivity} shows this graph.  
+
+\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Experiments/Exp1/SDR_Zoom.pdf}
+\isucaption{Graph of the calibrated total power from experiment one while submerged in LN2.}
+\label{Sensitivity}
+\end{figure}
+
+Using Python we can determine the standard deviation of this range of data.  Using Python, we find that the standard deviation for this section of data is .23 Kelvin.  We can now plot both the expected sensitivity and the actual sensitivity which is shown in figure \ref{sensitivity_exp_real}.
+
+\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Experiments/Exp1/std_dev_errbar.pdf}
+\isucaption{Graph of the calibrated total power with expected and actual sensitivity.}
+\label{sensitivity_exp_real}
+\end{figure}
+
+While .23 Kelvin is higher than the calculated sensitivity, it is still quite acceptable.  As discussed in chapter \ref{ch:implementation} and shown in table \ref{rad_performance}, our target $NE\Delta T$ is one Kelvin or less.  Therefore our actual performance of .23 Kelvin still meets our requirements for a radiometer.
+
+\emph{Stability.}  To verify stability of the radiometer, we look to see how much change the radiometer records over a relatively long period of time.  To test this a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for fifteen minutes.  The readings were then looked at to study the trend of the data.  The data is graphed in figure \ref{Stability}.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp2/sdr_calibrated_zoom.pdf}
@@ -177,22 +231,28 @@ To verify stability of the radiometer, we look to see how much change the radiom
 \label{Stability}
 \end{figure}
 
+Once again we can look at the standard deviation to see how much of a change occurs over this time period.  
+
+Figure \ref{Stability_calib} now shows the stability plot with both the actual $NE\Delta T$ which is the standard deviation of the graph, and the calculated $NE\Delta T$.
+
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp2/calib_vstime_stddev.pdf}
 \isucaption{Graph of the calibrated total power with the standard deviation plotted.}
 \label{Stability_calib}
 \end{figure}
 
-As it can be seen in figure \ref{Stability}, the amount of change over a period of one hour is quite small.  The standard deviation for this sample is 0.09 kelvin.  The $NE\Delta T$ calculated using 10 MHz for the bandwidth, an integration time of 2 seconds and with our sample at 77 Kelvin is calculated to be 0.10 Kelvin with a system temperature of 350 Kelvin.  Therefore, our system is behaving as we expect it to for this stability test.
+%As it can be seen in figure \ref{Stability}, the amount of change over a period of one hour is quite small.  The standard deviation for this sample is 0.09 kelvin.  The $NE\Delta T$ calculated using 10 MHz for the bandwidth, an integration time of 2 seconds and with our sample at 77 Kelvin is calculated to be 0.10 Kelvin with a system temperature of 350 Kelvin.  Therefore, our system is behaving as we expect it to for this stability test.
 
-Figure \ref{Stability_calib} shows a graph of the total readings but with the standard deviation now plotted.  This shows that the system is stable and is operating as expected within our expected $NE\Delta T$.
+%Figure \ref{Stability_calib} shows a graph of the total readings but with the standard deviation now plotted.  This shows that the system is stable and is operating as expected within our expected $NE\Delta T$.
 
-\section{Experiment III - Interfering Signal Mitigation} \label{Exp1_results}
+\section{Experiment III - Interfering Signal Mitigation} \label{Exp3_results}
 
 \subsection{Data Collected}
 
+The data collected for experiment three is the total power values from the software defined radiometer and also the voltage data from the square-law detector.  These values are calibrated using the data points provided in table   .
+
 \subsection{Data Analysis}
-\subsection{Test Results}
+
 We begin by looking at the what happens to our total power readings with no filter applied.  As we stated in the Lab Setup portion, the frequency of the offending signal will not change, but the amplitude will.  This will mean that we should see clear indications of the total power changing as the amplitude of the offending signal changes.  
 
 \begin{figure}[h!tb] \centering
@@ -253,7 +313,7 @@ Figure \ref{filter_on} now shows both the software defined radio and the square-
 \label{filter_on}
 \end{figure}
 
-\section{Experiment IV - Performance impact of interfering signal mitigation} \label{Exp1_results}
+\section{Experiment IV - Performance impact of interfering signal mitigation} \label{Exp4_results}
 
 \subsection{Data Collected}
 
