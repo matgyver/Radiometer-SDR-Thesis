@@ -32,13 +32,13 @@ These requirements mainly drive the hardware requirements needed for the softwar
 
 %The current RF front end to the radiometer is designed for a 20 MHz wide signal.  This requirement was one of the main driving points for selecting the N200 SDR as it can support up to 50 MHz in bandwidth between the N200 and the host computer.  This is accomplished by using a 1 Gbps Ethernet connection between the N200 and the host computer.
 
-\subsection{Software Requirements}
+%\subsection{Software Requirements}
 
-The driving force for the software requirement was to have a system that was easy to use yet powerful enough to handle the amount of data that is required.  One reason for the development of this platform is to make radiometers more accessible to other researchers and other programs such as education and even amateur radiometer work.  Therefore, ease of use was taken into consideration when selecting the hardware and the associated software used with it.
+\emph{Software Requirements.}  The driving force for the software requirement was to have a system that was easy to use yet powerful enough to handle the amount of data that is required.  One reason for the development of this platform is to make radiometers more accessible to other researchers and other programs such as education and even amateur radiometer work.  Therefore, ease of use was taken into consideration when selecting the hardware and the associated software used with it.
 
 The data flow model for the hardware selected uses the FPGA to perform low level signal processing on the signal and moves high level processing to the host computer.  This allows for less processing requirements on the physical hardware but requires a host computer that is able to process the incoming information.  It also requires a software package that is able to process this information efficiently. 
 
-Because a requirement is an easy to use system GNURadio was selected as it includes GNURadio Companion (GRC). GRC is a supplemental program which uses a graphical interface for creating the radio environment.  It also includes options to create a user interface during the operation of the N200 as well.  This allowed us to rapidly create both the critical radio components needed for the radiometer and also a control interface.
+Because a requirement is an easy to use system GNURadio was selected as it includes GNURadio Companion (GRC). GRC is a supplemental program which uses a graphical interface for creating the radio environment.  GNURadio and GRC is discussed in greater detail in Chapter \ref{ch:background}, section \ref{software_platform}. 
 
 This software meet the criteria of allowing a simple to use interface to be built and used in the control and data recording of the information required.  It also uses a simple interface for making changes to the program.  These changes can be both in the GUI and also to how the program processes the information.
 
@@ -61,7 +61,7 @@ The RF front end plays a critical role in the radiometer as the LNAs used in the
 %\end{figure}
 %}
 
-A typical RF front end uses a 3 stage Low Noise Amplifier (LNA) to amplifier the noise while keeping the noise contributed to the system as low as possible.  As with any radiometer, the first LNA is the most critical as it contributes the most to the overall system noise temperature.  For this reason a LNA that did not have a large gain but had a low noise figure is chosen. The second and third LNA has higher gain values at the cost of a higher noise figure, although not by much.  However, since they are further down the chain, they do not contribute as much to the total system noise.  
+A typical RF front end uses a two to four stage Low Noise Amplifier (LNA) to amplifier the noise while keeping the noise contributed to the system as low as possible.  As with any radiometer, the first LNA is the most critical as it contributes the most to the overall system noise temperature.  For this reason a LNA that did not have a large gain but had a low noise figure is chosen. The second and third LNA has higher gain values at the cost of a higher noise figure, although not by much.  However, since they are further down the chain, they do not contribute as much to the total system noise.  
 
 \begin{equation}\label{noise_factor}
 F=F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +\frac{F_n-1}{G_1 G_2 G_3 \cdots G_{n-1}}
@@ -71,7 +71,7 @@ Equation \ref{noise_factor} shows us how the noise factor and gain of the amplif
 
 \section{Mapping Traditional Radiometer Functions to a Software Defined Radio Radiometer}
 
-In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  As discussed in chapter three, the three components identified that are key to a radiometer is listed below.
+In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  As discussed in chapter \ref{ch:background}, the three components identified that are key to a radiometer is listed below.
 
 \begin{enumerate}
 \item Power detection
@@ -107,48 +107,19 @@ Like the analog square-law detector, this signal will fluctuate rapidly and to i
 
 \section{Integration}
 
-Another step that we typically do in a traditional radiometer is to integrate the signal over time.  This gives us an average of the signal and smooths out the output.  This also helps to improve the sensitivity of the radiometer by equation \ref{NEAT_EQ}.
+Another step that we typically do in a traditional radiometer is to integrate the signal over time.  This gives us an average of the signal and smooths out the output.  This also helps to improve the sensitivity of the radiometer by equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on an analog integrator.  We now want to see how we can replicate this analog component to the digital domain using a Finite Impulse Response filter.
 
-In a traditional radiometer, we can integrate by using a simple integrator circuit, which consists of an op-amp, resistor and capacitor.  This circuit configuration is also equivalent to a low pass filter circuit as well, and the two are interchangeable.  We can then look at how we filter in the digital domain, and this is down with an infinite impulse response filter or IIR.  We can use this digital filter to then integrate the signal for our total power radiometer.
-
-To begin, we will examine how a RC filter is analogous to an integrator where the R and C values determine our time constant and our integration time for the filter[\cite{Aitken}].  We know a RC filter is analogous to an integrator by looking at equation \ref{eq:rc_int}.  A SDR however operates in the digital domain at discrete intervals.  One type of filter that can be used is the Infinite Impulse Response (IIR) filter. 
-
-\begin{equation}\label{eq:rc_int}
-\frac{1}{RC}\int{V_idt}
-\end{equation}
-
-
-To begin with, we look at what an analog RC filter looks like. 
-
-{\begin{figure}[h!tb] 
-\centering
-\includegraphics[width=10cm]{Images/rc-circuit.png}
-\isucaption{A simple RC circuit}
-\label{rc_circuit1}
-\end{figure}
-}
-
-This circuit can be represented by equation \ref{eq:rc_circuit_eq}.
-
-\begin{equation}\label{eq:rc_circuit_eq}
-\frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
-\end{equation}
-
-A Finite Impulse Response (FIR) filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter.
+A Finite Impulse Response (FIR) filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter and simply says that the nth output is a weighted average of the most recent P inputs. 
 
 \begin{equation}\label{FIR_Eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}
-\end{equation}
+\end{equation} 
 
-This simply says that the nth output is a weighted average of the most recent P inputs.  
-
-An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except that we add a summation term which feeds back the previous output.
+An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except that we add a summation term which feeds back the previous output.  Equation \ref{IIR_eq} shows that a FIR filter is a IIR filter, except that $Q=0$[\cite{Cross}]. 
 
 \begin{equation}\label{IIR_eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
 \end{equation}
-
-Equation \ref{IIR_eq} shows that a FIR filter is a IIR filter, except that $Q=0$[\cite{Cross}].  
 
 To get a better understanding on how the digital IIR filter relates to the RC filter analog, we can look at the Fourier Transform and the relationship of the input to the output in the frequency domain.
 
@@ -188,12 +159,6 @@ y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
 
 It can be seen that an IIR filter can have the same frequency response as we expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
 
-For the cutoff frequency of a RC circuit, we know that it has the relationship shown in equation \ref{RC_relationship}.
-
-\begin{equation}\label{RC_relationship}
-f_c=\frac{\sqrt{3}}{2\pi RC}\rightarrow RC=\frac{\sqrt{3}}{2\pi f_c}
-\end{equation}
-
 The $RC$ term gives us our time constant of the circuit and can be used to calculate out our coefficients.  We are not concerned about the actual values of R and C with our IIR filter, instead we just need the product of R and C.  
 
 In GNURadio most of the work is done for us.  We can simply enter in our desired cutoff frequency and GNURadio will calculate our IIR filter coefficients.  However, this shows that an IIR filter works much like an analog RC low pass filter.
@@ -227,11 +192,7 @@ Through this interface we are able to control several key aspects of not only th
 
 The controls that have been added for controlling the radiometer can have a large impact on the performance of the radiometer.  There is a reason why these controls were added to the GUI for the radiometer and that is they play key roles in how the radiometer performs.  
 
-For any radiometer noise temperature is a large consideration and is critical to the design of the radiometer.  One method to determine how well a radiometer is to look at the sensitivity of the radiometer.  We can do this by looking at the smallest change in temperature the radiometer can see.  We will call this the Noise Equivalent $\Delta T$ or $NE\Delta T$ of the radiometer.  The equation for this is shown below.
-
-\begin{equation}
-NE\Delta T=\frac{T_{A}+T_{sys}}{\sqrt{\beta * \tau}}
-\end{equation}
+For any radiometer noise temperature is a large consideration and is critical to the design of the radiometer.  One method to determine how well a radiometer is to look at the sensitivity of the radiometer.  We can do this by looking at the smallest change in temperature the radiometer can see.  We will call this the Noise Equivalent $\Delta T$ or $NE\Delta T$ of the radiometer and is equation \ref{NEAT_EQ} covered in chapter \ref{ch:background}.
 
 $\beta$ can be changed by changing the sample rate of the SDR.  The sample rate effectively controls the bandwidth in which the SDR is operating at.  This also gives us a band-pass filter as well, since the SDR will not respond to frequencies outside of this bandwidth.  
 
