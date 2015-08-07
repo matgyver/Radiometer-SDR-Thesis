@@ -52,7 +52,7 @@ The first data we will look at with be with the software defined radio.  The SDR
 \begin{figure}[h!tb] \centering
 
 \includegraphics[width=\textwidth]{Experiments/Exp1/rqvstime_annotate.pdf}
-\isucaption{Graph of the uncalibrated rQ values of Experiment 1}
+\isucaption{Graph of the uncalibrated rQ values of Experiment I}
 \label{SDR_rQ}
 \end{figure}
 
@@ -71,7 +71,7 @@ Now that we have our calibration points, we can now re-graph this data but now c
 
 \includegraphics[width=\textwidth]{Experiments/Exp1/sdr_calibrated_color.pdf}
 
-\isucaption{Graph of the calibrated noise temperature of Experiment 1}
+\isucaption{Graph of the calibrated noise temperature of Experiment I}
 \label{SDR_Calibrated}
 \end{figure}
 
@@ -79,7 +79,7 @@ Now that we have looked at the software defined radio data, we want to look at t
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp1/noisy_voltage.pdf}
-\isucaption{Raw and noisy graph from the square-law detector used in Experiment 1}
+\isucaption{Raw and noisy graph from the square-law detector used in Experiment I}
 \label{X2_Raw}
 \end{figure}
 
@@ -98,7 +98,7 @@ Figure \ref{X2_filter} now shows our data that has been filtered by the low pass
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp1/x2_filter.pdf}
-\isucaption{Filtered data from the square-law detector used in Experiment 1}
+\isucaption{Filtered data from the square-law detector used in Experiment I}
 \label{X2_filter}
 \end{figure}
 
@@ -106,7 +106,7 @@ Using the same technique as earlier, we can now calibrate the raw voltages from 
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp1/x2_calibrated.pdf}
-\isucaption{Calibrated data from the square-law detector used in Experiment 1}
+\isucaption{Calibrated data from the square-law detector used in Experiment I}
 \label{X2_Calibrated}
 \end{figure}
 
@@ -115,7 +115,7 @@ We now want to compare both the Software Defined Radio and the square-law to mak
 \begin{figure}[h!tb] \centering
 
 \includegraphics[width=\textwidth]{Experiments/Exp1/x2_SDR_Calibrated.pdf}
-\isucaption{Figure showing both the SDR and square-law noise temperature data in Experiment 1}
+\isucaption{Figure showing both the SDR and square-law noise temperature data in Experiment I}
 \label{X2_SDR_Both}
 \end{figure}
 
@@ -136,7 +136,7 @@ A unique visual aid we can use with GNURadio is a waterfall display.  This displ
 
 \includegraphics[width=\textwidth]{Experiments/Exp1/LN2_waterfall.png}
 
-\isucaption{Screenshot of the waterfall display used in Experiment 1}
+\isucaption{Screenshot of the waterfall display used in Experiment I}
 \label{LN2_waterfall}
 \end{figure}
 
@@ -161,7 +161,7 @@ If we assume that our LN2 is dry soil and that our ice water bath is wet soil, w
 \label{SDR_soil}
 \end{figure}
 
-While this demonstrates that we can collate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
+While this demonstrates that we can calibrate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
 
 \section{Experiment II - Verification of sensitivity and stability} \label{Exp2_results}
 
@@ -378,7 +378,7 @@ For experiment four, we will look at the performance of a software defined radio
 
 Our integration time is controllable, and can be set using the GUI panel for the software defined radio.  In a typical radiometer, we often do not have any control of the bandwidth.  It is often set by the mechanical bandwidth filters that are in place and the detection circuit to detect the noise power.  In a software defined radio radio we do have more control on bandwidth as we can change our sampling rate which in turns controls our bandwidth.  There is a limit as larger sampling rates require more data and processing bandwidth to process.  
 
-Recall from experiment 3 in section \ref{Exp3_results} where we filtered out an offending signal.  While this allows us to filter out the offending signal and resume total power measurements, it comes at a cost of reducing the overall bandwidth available for power detection.  In this experiment we look at this and derived the following equation \ref{NEAT_FILTER}.
+Recall from experiment III in section \ref{Exp3_results} where we filtered out an offending signal.  While this allows us to filter out the offending signal and resume total power measurements, it comes at a cost of reducing the overall bandwidth available for power detection.  In this experiment we look at this and derived the following equation \ref{NEAT_FILTER}.
 
 \begin{equation}\label{NEAT_FILTER}
 NE\Delta T=\frac{T_{A}+T_{sys}}{\sqrt{(\beta - \beta_{filter})  \tau}}
@@ -414,7 +414,7 @@ The total power is calculated from equation \ref{eq:final_power} and is based on
 P_{out}=k (\beta - \beta_{filter})G(T_{A}+T_{N})
 \end{equation}
 
-To compare this theoretical power to the actual power measured, we collected the rQ values by once again creating set filter sizes and then measuring the rQ value.  These values can be found in table \ref{exp4_datapoints} and are added to figure \ref{power_bw} as the dots indicated on the graph.  This also shows a very good correlation between the expected total power received and the measured total power recieved for experiment four.
+To compare this theoretical power to the actual power measured, we collected the rQ values by once again creating set filter sizes and then measuring the rQ value.  These values can be found in table \ref{exp4_datapoints} and are added to figure \ref{power_bw} as the dots indicated on the graph.  This also shows a very good correlation between the expected total power received and the measured total power received for experiment four.
 
 %---------------------------------------------------------------
 

@@ -322,13 +322,20 @@ An easy to use interface was another driving requirement for our implementation 
 
 %GNURadio was selected as it is an open source software platform.  GNURadio is licensed under the GPL license and has a strong community that continually updates the software.  It is also well supported by third parties such as Ettus Research Group, National Instruments and other SDR developers.  In addition, GNURadio has a strong set of tools that can be used to develop programs that run under GNURadio.  Tools such as the GNURadio Companion (GRC) allows for an easy to use GUI to develop code for GNURadio.  GNURadio is also written in Python, which allows for easy modification and access to additional tools that can be used with GNURadio.  
 
-{\begin{figure}[h!tb] 
-\centering
-\includegraphics[width=17cm]{Images/N200_radiometer_grc.png}
-\isucaption{Screenshot of the GNURadio Companion editor and the N200 Radiometer block diagram used in the author's experiments}
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/noisesrc_radiometer.png}
+\isucaption{A screenshot of the GNURadio Companion editor program.  Source:  GNURadio}
 \label{N200_GRC}
 \end{figure}
 }
+
+%{\begin{figure}[h!tb] 
+%\centering
+%\includegraphics[width=17cm]{Images/N200_radiometer_grc.png}
+%\isucaption{Screenshot of the GNURadio Companion editor and the N200 Radiometer block diagram used in the author's experiments}
+%\label{N200_GRC}
+%\end{figure}
+%}
 
 GNUradio Companion works by having the common functions, such as signal sources, signal processing and signal sinks, as blocks that can picked and placed on the screen.  Once placed, the blocks can be wired up, much like LabView, and the flow of data can be controlled in this fashion.  While GNURadio Companion provides most of the essential blocks used in most applications additional blocks can by added if needed.  This is because GNURadio is built using Python and the blocks in GNUradio Companion are simply blocks of Python code.  To compile a GNURadio Companion flow diagram, you simply run the sheet, which then generates the Python code that is then executed.  
 
