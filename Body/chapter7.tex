@@ -27,7 +27,7 @@ A very traditional method is a Dicke radiometer.  A Dicke radiometer switches be
 
 %Another method uses multiple temperature points that can be referenced at any time.  By using two known temperature references, we can quickly calibrate the radiometer[\cite{Hach}].  
  
-\emph{Correlation.}  Another method to improve stability and sensitivity is to correlate the information with another input which can be another antenna looking at the same source or can be two polarization from the same antenna[\cite{Clapp}][\cite{Aitken}].  This results in two receiver systems looking at the same source and you have two signals, $S_1$ and $S_2$.  Since we are looking at the same source, both signals will be correlated in time, and when multiplied they will provide an output proportional to the strength of the source signal.  The noise introduced by each receiver will then have a lower correlation due to the random nature of the noise.  This results in a radiometer with a greater sensitivity due to the reduction of the noise even though two receivers are used [\cite{Fujimoto}].
+\emph{Correlation.}  Another method to improve stability and sensitivity is to correlate the information with another input which can be another antenna looking at the same source or can be two polarization from the same antenna[\cite{Clapp}].  This results in two receiver systems looking at the same source and you have two signals, $S_1$ and $S_2$.  Since we are looking at the same source, both signals will be correlated in time, and when multiplied they will provide an output proportional to the strength of the source signal.  The noise introduced by each receiver will then have a lower correlation due to the random nature of the noise.  This results in a radiometer with a greater sensitivity due to the reduction of the noise even though two receivers are used [\cite{Fujimoto}].
 
 The N200 software defined radio was chosen as it is capable of having two different daughter-cards plugged in.  Therefore, it is possible to have both sources enter the software defined radio and once digitized we can sum the magnitudes of the two incoming sources.  This is quite easy to do and is shown in figure \ref{correlating_sdr}.
 
@@ -40,6 +40,8 @@ The N200 software defined radio was chosen as it is capable of having two differ
 }
 
 Although figure \ref{correlating_sdr} shows a correlating software defined radio radiometer, it has not been tested.  In theory, this should correlate the signal and improve the sensitivity of the radiometer, however further testing is needed.
+
+Correlation allows for unique ways for applications in radiometers including also performing beam steering [\cite{villarino02}]
 
 \subsection{Further testing}
 The improvements and additional features outlined in Section \ref{Futurework} will require additional testing and verification.  While it has been shown that a software defined radiometer operates identically to a traditional radiometer, further testing is needed to verify different operating modes of a software defined radiometer.
