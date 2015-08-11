@@ -2,7 +2,7 @@
 % that contains an adv. example table and figure.
 \chapter{SOFTWARE DEFINED RADIOMETER IMPLEMENTATION}\label{ch:implementation}
 
-Implementation of a software defined radiometer requires that we understand the requirements of both a traditional radiometer and a digital radiometer.  Next we will map the traditional radiometer components discussed in chapter \ref{ch:background} to their digital counterparts.  Finally we will give an overview of the software defined radiometer implemented in this work.
+Implementation of a software defined radiometer requires that we understand the requirements of both a traditional radiometer and a digital radiometer which we will examine in this chapter.  Next we will map the traditional radiometer components discussed in chapter \ref{ch:background} to their digital counterparts.  Finally we will give an overview of the software defined radiometer implemented in this thesis.
 
 %One of the principal goals with this research was to implement a fully functioning total power radiometer within software.  The N200 provides us the link between the RF signal captured by the antenna and converts that to a format that can now be used by the to manipulate the signal.  Once the signal has been passed to the computer, GNURadio will implement the correct algorithms to detect the power within the signal, filter and output the information.  
 
@@ -52,7 +52,7 @@ A software defined radiometer behaves analogous to a traditional radiometer by m
 
 %This includes applications such as radio astronomy that includes applications in Earth Science such as soil moisture and ocean salinity[\cite{Ruf}].  A software defined radio radiometer can also allow for new application development that can expand the remote sensing field.  Since we have moved the majority of the hardware to software this allows us to further shrink the size and weight of the radiometer.  This allows for other radiometer applications such as Unmanned Aerial Vehicles (UAVs) for scanning soil moisture and ocean salinity remotely[\cite{McIntyre}].  
 
-\section{Mapping Traditional Radiometer Functions to a Software Defined Radio Radiometer}
+\subsection{Mapping Traditional Radiometer Functions to a Software Defined Radio Radiometer}
 
 In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  The three components discussed is power detection, integration.  
 
@@ -139,6 +139,8 @@ It can be seen that an IIR filter can have the same frequency response as we exp
 The $RC$ term gives us our time constant of the circuit and can be used to calculate out our coefficients.  We are not concerned about the actual values of R and C with our IIR filter, instead we just need the product of R and C.  
 
 In GNURadio most of the work is done for us.  We can simply enter in our desired cutoff frequency and GNURadio will calculate our IIR filter coefficients.  However, this shows that an IIR filter works much like an analog RC low pass filter.
+
+\subsection{Bandwidth and filtering}
 
 \section{System overview}
 
