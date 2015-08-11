@@ -36,9 +36,9 @@ These requirements drive the hardware requirements needed for the software defin
 
 %\subsection{Software Requirements}
 
-\emph{Software Requirements.}  The driving force for the software requirement was to have a system that was easy to use yet powerful enough to handle the amount of data that is required.  One reason for the development of this platform is to make radiometers more accessible to other researchers and other programs such as education and even amateur radiometer work.  Therefore, ease of use was taken into consideration when selecting the hardware and the associated software used with it.
+\emph{Software Requirements.}  A major requirement for the software is a system that is easy to use, yet powerful enough to handle the amount of data that is required.  Another requirement for the development of this platform is to make radiometers more accessible to other researchers and educational programs.  Therefore, ease of use was taken into consideration when selecting the software platform used with this software defined radiometer.
 
-The data flow model for the hardware selected uses the FPGA to perform low level signal processing on the signal and moves high level processing to the host computer.  This allows for less processing requirements on the physical hardware but requires a host computer that is able to process the incoming information.  It also requires a software package that is able to process this information efficiently. 
+%The data flow model for the hardware selected uses the FPGA to perform low level signal processing on the signal and moves high level processing to the host computer.  This allows for less processing requirements on the physical hardware but requires a host computer that is able to process the incoming information.  It also requires a software package that is able to process this information efficiently. 
 
 Because a requirement is an easy to use system GNURadio was selected as it includes GNURadio Companion (GRC). GRC is a supplemental program which uses a graphical interface for creating the radio environment.  GNURadio and GRC is discussed in greater detail in Chapter \ref{ch:background}, section \ref{software_platform}. 
 
@@ -46,40 +46,15 @@ This software meet the criteria of allowing a simple to use interface to be buil
 
 \section{Theory of Operation of a Software Defined Radio Radiometer}
 
-A Software defined radio consist of both hardware and software that allow it to perform the operations of a radio or communication channel.  A software defined radio used for radiometer applications is identical to a software defined radio used for, as an example, a 802.11b radio with one major difference.  Since we need to amplify the signal more than what most communication applications require; we do require more powerful or additional LNAs to boost this signal.  In addition, since the first LNA plays a major role in the overall system noise and this system noise does affect performance of the radiometer, the selection of this LNA is important.  However, all other components are the same components used in other applications.
+%A Software defined radio consist of both hardware and software that allow it to perform the operations of a radio or communication channel.  A software defined radio used for radiometer applications is identical to a software defined radio used for, as an example, a 802.11b radio with one major difference.  Since we need to amplify the signal more than what most communication applications require; we do require more powerful or additional LNAs to boost this signal.  In addition, since the first LNA plays a major role in the overall system noise and this system noise does affect performance of the radiometer, the selection of this LNA is important.  However, all other components are the same components used in other applications.
 
-A software defined radio radiometer behaves analogous to a more traditional radiometer and thus the application is the same as a traditional radiometer.  This includes applications such as radio astronomy that includes applications in Earth Science such as soil moisture and ocean salinity[\cite{Ruf}].  A software defined radio radiometer can also allow for new application development that can expand the remote sensing field.  Since we have moved the majority of the hardware to software this allows us to further shrink the size and weight of the radiometer.  This allows for other radiometer applications such as Unmanned Aerial Vehicles (UAVs) for scanning soil moisture and ocean salinity remotely[\cite{McIntyre}].  
+A software defined radiometer behaves analogous to a traditional radiometer by mimicking the analog components of a traditional radiometer in software.  We will now look at the mapping of the analog components in a traditional radiometer to their digital equivalent.
 
-We will now introduce the three major components that make up a software defined radio radiometer. 
-
-\subsection{RF Front End}
-The RF front end plays a critical role in the radiometer as the LNAs used in the front end has a large impact on the system noise generated by the radiometer itself.  A traditional radiometer utilizes both amplification through the LNAs and also includes filtering to the desired bandwidth.  A SDR radiometer does not require the filters as we are able to create these in software, however the amplification stages need to remain.  
-
-%{\begin{figure}[h!tb] 
-%\centering
-%\includegraphics[width=0.8\linewidth]{Images/RF_Front_end.png}
-%\isucaption{The ADISIMRF program used to verify the design of the RF Front End}
-%\label{ISU_Rad}
-%\end{figure}
-%}
-
-A typical RF front end uses a two to four stage Low Noise Amplifier (LNA) to amplifier the noise while keeping the noise contributed to the system as low as possible.  As with any radiometer, the first LNA is the most critical as it contributes the most to the overall system noise temperature.  For this reason a LNA that did not have a large gain but had a low noise figure is chosen. The second and third LNA has higher gain values at the cost of a higher noise figure, although not by much.  However, since they are further down the chain, they do not contribute as much to the total system noise.  
-
-\begin{equation}\label{noise_factor}
-F=F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +\frac{F_n-1}{G_1 G_2 G_3 \cdots G_{n-1}}
-\end{equation}
-
-Equation \ref{noise_factor} shows us how the noise factor and gain of the amplifiers affect each other.  It can be shown that the first amplifier or first noise figure in the system contributes the most to the overall system noise figure.  Additional components contribute, but at a much lower contribution.
+%This includes applications such as radio astronomy that includes applications in Earth Science such as soil moisture and ocean salinity[\cite{Ruf}].  A software defined radio radiometer can also allow for new application development that can expand the remote sensing field.  Since we have moved the majority of the hardware to software this allows us to further shrink the size and weight of the radiometer.  This allows for other radiometer applications such as Unmanned Aerial Vehicles (UAVs) for scanning soil moisture and ocean salinity remotely[\cite{McIntyre}].  
 
 \section{Mapping Traditional Radiometer Functions to a Software Defined Radio Radiometer}
 
-In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  As discussed in chapter \ref{ch:background}, the three components identified that are key to a radiometer is listed below.
-
-\begin{enumerate}
-\item Power detection
-\item Integration
-\item Bandwidth limitation or filtering
-\end{enumerate}
+In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  The three components discussed is power detection, integration.  
 
 The following sections will now examine how these items are mapped from their analog component to the software or digital component.
 
@@ -107,7 +82,7 @@ Therefore, like the analog square-law detector we are taking peak voltage values
 
 Like the analog square-law detector, this signal will fluctuate rapidly and to improve the sensitivity of the radiometer we wish to integrate this signal.  We now want to look at how we can replicate a RC filter or integrator in the software defined radio.
 
-\section{Integration}
+\subsection{Integration}
 
 Another step that we typically do in a traditional radiometer is to integrate the signal over time.  This gives us an average of the signal and smooths out the output.  This also helps to improve the sensitivity of the radiometer by equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on an analog integrator.  We now want to see how we can replicate this analog component to the digital domain using a Finite Impulse Response filter.
 
