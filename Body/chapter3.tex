@@ -190,14 +190,6 @@ A software defined radio (SDR) is defined as a device that will digitize a recei
 
 A SDR allows us to extract certain hardware functions, such as filtering, into the digital domain and is then defined by software.  Since software is now processing the signal, we can rapidly change what functions we execute on the signal by changing the software.  This gives SDRs a high amount of flexibility as components that are normally done in hardware can now be done in software and can be changed by simply uploading new software or firmware to the system.  This also gives us a benefit in cost as certain components are no longer needed and changes done in software do not require additional hardware to be added, deleted or changed.
 
-{\begin{figure}[h!tb] 
-\centering
-\includegraphics[width=\textwidth]{Images/SDR_Ideal_block.pdf}
-\isucaption{An ideal software defined radiometer}
-\label{ideal_sdr}
-\end{figure}
-}
-
 A more realistic software defined radio is shown in figure \ref{prac_sdr}.  There are two items added to this software defined radio.  Amplification of the signal or gain is added to improve the sensitivity of the SDR.  A mixer is often used to down-convert high frequency RF signal to a lower frequency signal in order to use a less expensive analog to digital converter.  If however, the original frequency is already within the range of the analog to digital converter, the mixer may be omitted.  
 
 %An ideal software defined receiver simply has an antenna connected to an analog to digital converter which sends information to a processing unit such as a Field Programmable Gate Array (FPGA) or computer.  For a transmitter, we reverse it and use a digital to analog converter to produce the correct waveform which is then transmitted by the antenna.  In reality, SDRs require some additional hardware to make a viable working transceiver.  Amplification is still required to amplify the incoming signal and to amplify the signal going to the antenna.  Some SDRs also use a mixing stage to move a high frequency signal to a lower frequency signal.  This allows for less expensive analog to digital and digital to analog converters to be used.  
@@ -266,7 +258,15 @@ The N200 utilizes a flexible architecture through the use of daughter-boards for
 \end{figure}
 }
 
-The DBSRX2 has all of the RF hardware needed to process our RF signal.  This includes a programmable gain amplifier, a direct-conversion converter, a mixer and finally a low pass filter.  First the signal is amplified through a Programmable Gain Amplifier (PGA).  This PGA is accessible from the software and can be configured by the software.  Next the signal goes into a direct-conversion integrated circuit that directly converts the RF signal to analog I and Q values.  The integrated circuit, a Maxim MAX2112 device, also includes a Low Noise Amplifier (LNA), mixer and Low Pass Filter (LPF).  This amplifies the signal, mixes into baseband and then applies a low pass filter.  
+The DBSRX2 has all of the RF hardware needed to process our RF signal.  This includes a programmable gain amplifier, a direct-conversion converter, a mixer and finally a band pass filter that can be seen in figure \ref{dbsrx2_block}.  First the signal is amplified through a Programmable Gain Amplifier (PGA).  This PGA is accessible from the software and can be configured by the software.  Next the signal goes into a direct-conversion integrated circuit, a Maxim 2112.  This integrated circuit directly converts the RF signal to analog I and Q values and uses an integrated mixer and bandpass filter.
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=\textwidth]{Images/DBSRX2_block.pdf}
+\isucaption{Block diagram of the DBSRX2 daughter board.}
+\label{dbsrx2_block}
+\end{figure}
+}
 
 %{\begin{figure}[h!tb] 
 %\centering
@@ -276,7 +276,7 @@ The DBSRX2 has all of the RF hardware needed to process our RF signal.  This inc
 %\end{figure}
 %}
 
-These analog I and Q values are then sent to the the analog to digital converter to be digitized.  The IQ values are differential signals to minimize noise possible interference.  Once digitized, the digital I and Q values are sent to the FPGA to be processed and then sent to the computer for signal processing.
+These analog I and Q values are then sent to the the analog to digital converter to be digitized.  The IQ values are differential signals to minimize interference due to noise.  Once digitized, the digital I and Q values are sent to the FPGA to be processed and then sent to the computer for signal processing.
 
 %Since we are using the DBSRX2 after the LNAs that are already in use, the noise temperature added by the DBSRX2 will be small.  The DBSRX2 adds approximately 1.05 dB to the overall noise factor of the system.
 
