@@ -10,7 +10,7 @@ Implementation of a software defined radiometer requires that we understand the 
 
 \section{Requirements}\label{requirements}
 
-To help quantify the required performance of a radiometer, information was provided by Dr. Brian Hornbuckle and was also derived from existing radiometers.  The requirements given are outlined in table \ref{rad_performance}.
+To help quantify the requirements of a software defined radiometer, we first looked at the required performance of a traditional radiometer.  This information was provided by Dr. Brian Hornbuckle and was derived from existing radiometer requirements.  The requirements that was used is outlined in table \ref{rad_performance}.
 
 \begin{table}[h!tb] \centering
 \isucaption{Required Radiometer performance}
@@ -24,7 +24,7 @@ $NE\Delta T$ & 1 & Kelvin \\ \hline
 \end{tabular}
 \end{table}
 
-These requirements drive the hardware requirements needed for the software defined radio radiometer.  Chapter \ref{ch:background} Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
+These requirements drive the hardware requirements needed for the software defined radio radiometer.  This includes the selection of the N200 SDR and the DBSRX2 daughter board.  Chapter \ref{ch:background} Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
 
 %\subsection{Hardware Requirements}
 
@@ -36,13 +36,13 @@ These requirements drive the hardware requirements needed for the software defin
 
 %\subsection{Software Requirements}
 
-\emph{Software Requirements.}  A major requirement for the software is a system that is easy to use, yet powerful enough to handle the amount of data that is required.  Another requirement for the development of this platform is to make radiometers more accessible to other researchers and educational programs.  Therefore, ease of use was taken into consideration when selecting the software platform used with this software defined radiometer.
+\emph{Software Requirements.}  A requirement for the software is a system that is easy to use, yet powerful enough to handle the amount of data that is required.  This requirement is there to make radiometers more accessible to other researchers and educational programs.  Therefore, ease of use was taken into consideration when selecting the software platform used with this software defined radiometer.
 
 %The data flow model for the hardware selected uses the FPGA to perform low level signal processing on the signal and moves high level processing to the host computer.  This allows for less processing requirements on the physical hardware but requires a host computer that is able to process the incoming information.  It also requires a software package that is able to process this information efficiently. 
 
-Because a requirement is an easy to use system GNURadio was selected as it includes GNURadio Companion (GRC). GRC is a supplemental program which uses a graphical interface for creating the radio environment.  GNURadio and GRC is discussed in greater detail in Chapter \ref{ch:background}, section \ref{software_platform}. 
+Since an easy to use system was a requirement in the selection of the software.  GNURadio was selected as it includes GNURadio Companion (GRC), a supplemental program which uses a graphical interface for creating the radio environment.  GNURadio and GRC is discussed in greater detail in Chapter \ref{ch:background}, section \ref{software_platform}. 
 
-This software meet the criteria of allowing a simple to use interface to be built and used in the control and data recording of the information required.  It also uses a simple interface for making changes to the program.  These changes can be both in the GUI and also to how the program processes the information.
+This software met the criteria of allowing a simple to use interface to be built and used in the control and data recording of the information required.  It uses a simple interface for making changes to the program in both the GUI and how the program processes the information.
 
 \section{Theory of Operation of a Software Defined Radio Radiometer}
 
@@ -54,15 +54,15 @@ A software defined radiometer behaves analogous to a traditional radiometer by m
 
 \subsection{Mapping Traditional Radiometer Functions to a Software Defined Radio Radiometer}
 
-In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  The three components discussed is power detection, integration.  
+In order to recreate a radiometer in software we need to identify the key components of a radiometer and then recreate those components in software.  The three components discussed is power detection, integration, and filtering.  
 
 The following sections will now examine how these items are mapped from their analog component to the software or digital component.
 
 \subsection{Power detection}
 
-Power detection is a key ability that allows a radiometer to function.  At its core a radiometer is a power detector.  Therefore, the implementation of power detection is a crucial function of a software defined radio radiometer.
+Power detection is a key ability that allows a radiometer to function.  Therefore, the implementation of power detection is a crucial function of a software defined radio radiometer.
 
-A traditional radiometer uses a square-law detector which takes the input signal and produces a voltage that is proportional to the square of the voltage.  This allows us to take an analog RF signal and convert the noise voltage that for all intense and purposes has a mean value of zero, and produce a noise power.
+A traditional radiometer uses a square-law detector, it takes the input signal and produces a voltage that is proportional to the square of the voltage.  This allows us to take an analog RF signal and convert the noise voltage, that for all intents and purposes has a mean value of zero, and produce a noise power.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -72,47 +72,53 @@ A traditional radiometer uses a square-law detector which takes the input signal
 \end{figure}
 }
 
-To implement this in software we need to build a square law detector mathematically.   A square law detector mathematically is the sum of the squares.  Once the signal has been digitized, it is expressed in data bits of I and Q, which represent in-phase and quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal [\cite{Sarijari}][\cite{Rashid}] can be shown in equation \ref{sdr_x2}.
+To implement this in software, a square law detector is built mathematically as the sum of the squares[\cite{Sarijari}].  Once a signal has been digitized, it is expressed in data bits of I and Q, which represent the in-phase and the quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal and this is shown in equation \ref{sdr_x2}[\cite{Rashid}].
 
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
 \end{equation}
 
-Therefore, like the analog square-law detector we are taking peak voltage values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.  Figure \ref{square_block} shows the GNURadio blocks used to perform this function.
+Like the analog square-law detector we are taking peak voltage values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.  Figure \ref{square_block} shows the GNURadio blocks used to perform this function.
 
-Like the analog square-law detector, this signal will fluctuate rapidly and to improve the sensitivity of the radiometer we wish to integrate this signal.  We now want to look at how we can replicate a RC filter or integrator in the software defined radio.
+Like the analog square-law detector, this signal will fluctuate rapidly.  To improve the sensitivity of the radiometer the signal is integrated.  The next step is to replicate a RC filter or integrator in the software defined radio.
 
 \subsection{Integration}
 
-Another step that we typically do in a traditional radiometer is to integrate the signal over time.  This gives us an average of the signal and smooths out the output.  This also helps to improve the sensitivity of the radiometer by equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on an analog integrator.  We now want to see how we can replicate this analog component to the digital domain using a Finite Impulse Response filter.
+To improve our sensitivity, and reduce the rapid fluctuations in the power measurements, we integrate the power measurements.  This gives an average of the signal and reduces the fluctuations in the output.  This helps to improve the sensitivity of the radiometer as seen in equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on how an analog integrator works.  The digital equivelent to a integrator is a Finite Impulse Response (FIR) filter.
 
-A Finite Impulse Response (FIR) filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter and simply says that the nth output is a weighted average of the most recent P inputs. 
+A FIR filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter and simply says that the nth output is a weighted average of the most recent P inputs. 
 
 \begin{equation}\label{FIR_Eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}
 \end{equation} 
 
-An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except that we add a summation term which feeds back the previous output.  Equation \ref{IIR_eq} shows that a FIR filter is a IIR filter, except that $Q=0$[\cite{Cross}]. 
+An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except a summation term is added which feeds back the previous output.  Equation \ref{IIR_eq} shows that a FIR filter is a IIR filter, except $Q=0$[\cite{Cross}]. 
 
 \begin{equation}\label{IIR_eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
 \end{equation}
 
-To get a better understanding on how the digital IIR filter relates to the RC filter analog, we can look at the Fourier Transform and the relationship of the input to the output in the frequency domain.
+Both filters produce the same result by giving the average of the input signal.  An IIR filter however uses less computational power than a FIR filter.  Because of this, an IIR filter was used in defining our integrator in a software defined radiometer.
+
+To get a better understanding on how the digital IIR filter relates to the RC filter analog, look at the Fourier Transform and the relationship of the input to the output in the frequency domain in equation \ref{Fourier_IIR}.  In equation \ref{Fourier_IIR}, $f$ is our frequency in Hz and $T$ is the time between samples in seconds and is related to our sampling frequency.
 
 \begin{equation}\label{Fourier_IIR}
 H(f)=\frac{\displaystyle\sum\limits_{j=o}^{P-1} c_je^{-2\pi ijfT}}{1-\displaystyle\sum\limits_{k=1}^{Q} d_ke^{-2\pi ikfT}}
 \end{equation}
 
-In equation \ref{Fourier_IIR}, $f$ is our frequency in Hz and $T$ is the time between samples in seconds and is related to our sampling frequency.
+Now to show the link between the analog RC circuit and the IIR filter we look at equation \ref{eq:rc_circuit_eq}.  
 
-We now want to show the link between our analog RC circuit and the IIR filter.  Looking at equation \ref{eq:rc_circuit_eq}, which represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$, we can substitute for input and output of our IIR filter.  Since we are now in the time domain, we need to define what $T$ is and we can do that using equation \ref{sampling_rate_eq}.
+\begin{equation}\label{eq:rc_circuit_eq}
+\frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
+\end{equation}
+
+Equation \ref{eq:rc_circuit_eq} represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$.  We can substitute for input and output of our IIR filter in terms of $x_n$ and $y_n$.  Because we are now in the time domain, we need to define what $T$ is and we can do that using equation \ref{sampling_rate_eq}.
 
 \begin{equation}\label{sampling_rate_eq}
 T=time between samples=\frac{1}{sampling rate}
 \end{equation}
 
-We can now relate our input voltage to the input to our IIR filter and the output voltage to the output of our IIR filter.
+We can now relate our input voltage to the input to our IIR filter shown in equation \ref{input_IIR} and the output voltage shown in equation \ref{output_IIR}.
 
 \begin{equation}\label{input_IIR}
 x_n=v_{in}(nT)
@@ -122,13 +128,13 @@ x_n=v_{in}(nT)
 y_n=v_{out}(nT)
 \end{equation}
 
-We can now rewrite our difference equation with $x_n$ and $y_n$.
+Next we rewrite our difference equation with $x_n$ and $y_n$ shown in equation \ref{diff_xn_yn}.
 
 \begin{equation}\label{diff_xn_yn}
 \frac{x_n-y_n}{R}=C\frac{y_n-y_{n-1}}{T}
 \end{equation}
 
-Finally, we can solve for $y_n$ which results in our final equation for showing how a IIR filter is related to an RC filter.
+Finally, we can solve for $y_n$ which results in our final equation \ref{final_IIR_RC}.
 
 \begin{equation}\label{final_IIR_RC}
 y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
@@ -136,26 +142,29 @@ y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
 
 It can be seen that an IIR filter can have the same frequency response as we expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
 
-The $RC$ term gives us our time constant of the circuit and can be used to calculate out our coefficients.  We are not concerned about the actual values of R and C with our IIR filter, instead we just need the product of R and C.  
+%The $RC$ term gives us our time constant of the circuit and can be used to calculate out our coefficients.  We are not concerned about the actual values of R and C with our IIR filter, instead we just need the product of R and C.  
 
 In GNURadio most of the work is done for us.  We can simply enter in our desired cutoff frequency and GNURadio will calculate our IIR filter coefficients.  However, this shows that an IIR filter works much like an analog RC low pass filter.
 
 \subsection{Bandwidth and filtering}
+A traditional radiometer will use filters to restrict the bandwidth of the radiometer.  For a software defined radiometer, the sampling rate defines the bandwidth for a software defined radiometer.  
+
+Additional filtering can be created and used in a software defined radiometer.  These filters are often created using either IIR or FIR filters.  The most efficient method is to restrict bandwidth by setting the sampling rate.  However, these filters can be used to filter out a narrow band of frequencies.  This will be discussed in chapter \ref{ch:results}.
 
 \section{System overview}
 
-Like a traditional radiometer, the SDR will use an antenna to look at the target of interest.  SDRs still use a RF stage that takes the power from the source and amplifies it.  The difference though begins after that.  A SDR will then sample and generate I and Q values that represents the amplitude and phase of the signal.  From there, this data is sent to a computer to be processed.  We can then use this information to calculate the power that is being seen.  In addition, we can manipulate the signal in other ways such as applying a filter to filter out an unwanted source.
+Like a traditional radiometer, the SDR uses an antenna to look at the target of interest.  SDRs still use an amplification to improve the sensitivity of the SDR. After that stage though, a software defined radiometer is different.  A SDR will sample and generate I and Q values that represents the signal.  From there, this data is sent to a computer to be processed.  We can then use this information to calculate the power of the signal.  In addition, we can manipulate the signal in other ways such as applying a filter to filter out an unwanted source.
 
-As we have shown the two of the major components of a traditional radiometer, the power detection and integration of the signal can be replicated in software and therefore can be implemented in a software defined radio.  The information can now be stored, displayed or both for further analysis.  
+%As we have shown the two of the major components of a traditional radiometer, the power detection and integration of the signal can be replicated in software and therefore can be implemented in a software defined radio.  The information can now be stored, displayed or both for further analysis.  
 
-There is one component of the software defined radio that we are not able to implement in software and that is with the signal amplification.  This however does play a major role in the performance of the radiometer and is a key element that should not be overlooked.  While this is not implemented in software, it still plays a critical role in our software defined radio radiometer. 
+%There is one component of the software defined radio that we are not able to implement in software and that is with the signal amplification.  This however does play a major role in the performance of the radiometer and is a key element that should not be overlooked.  While this is not implemented in software, it still plays a critical role in our software defined radio radiometer. 
 
-Next we will look at the software used in defining the radiometer.  It will also be shown what the impact is of this software on the performance of the radiometer.
+Next we will now look at how we control the software defined radiometer using the software detailed in chapter \ref{ch:background}, section \ref{software_platform} in defining the radiometer.  We will also look at how the data is displayed and stored in the software defined radiometer.
 
 \subsection{Control of the SDR Hardware through GNURadio}
-The N200 sends all data across the 1 Gbps connection to be read in by a host computer running GNURadio.  This data is the raw I/Q values that is read by the on board A/D and processed by the on board FPGA.  An example of a very simple GNURadio software implementation would simply take this data and store the data to a hard drive in a file.  This can be very handy if we want to simply record the data and then process it later.  However, depending on the sample rate, it can consume a large amount of storage.  A short recording can easily consume 1-2 GB with a sample rate of 10 Msps.  It also does not give us any immediate feedback on the radiometer and it does not give us controls of the radiometer such as frequency, integration time or other key variables.  Fortunately GNURadio has tools that allows us to build up a very rich application that is able to give us the data we need and control the software defined radio as well.
+The N200 sends all data across the 1 Gbps Ethernet connection to be read in by a host computer running GNURadio.  This data is the raw I/Q values that is read by the on board A/D and processed by the on board FPGA.  An example of a very simple GNURadio software implementation would simply take this data and store the data to a hard drive in a file.  This can be very handy if we want to simply record the data and then process it later.  However, depending on the sample rate, this can consume a large amount of storage.  A short recording can  consume 1-2 GB with a sample rate of 10 Msps.  This simple system also does not give us any immediate feedback on the radiometer and it does not give us controls of the radiometer such as frequency, integration time or other key variables.  Fortunately GNURadio has tools that allows us to build up a very rich application that is able to give us the data we need and control the software defined radio as well.
 
-The GNURadio Companion allows us to create python code that is used to not only receive the data from the SDR but also perform signal processing on the incoming information.  Additional controls are added that allow for tuning of the signal processing parameters and control of the radio functions.  This allows us to build up an application that can be run on any computer that is capable of running GNURadio.  
+The GNURadio Companion allows us to create python code that is used to not only receive the data from the SDR but also perform signal processing on the incoming information.  Additional controls are added that allow for tuning of the signal processing parameters and control of the radio functions.  With this we can build up an application that can be run on any computer that is capable of running GNURadio.  
 
 {\begin{figure}[h!tb] 
 \centering
@@ -165,24 +174,26 @@ The GNURadio Companion allows us to create python code that is used to not only 
 \end{figure}
 }
 
-Through this interface we are able to control several key aspects of not only the radio hardware within the SDR but also with the behavior of the radiometer as well.  Hardware control of the SDR hardware allows us to change frequency and also adjust gain values within the N200.  Bandwidth is another parameter that can be altered from here as well.  Bandwidth affects the bandwidth for the RF signal, but also has an impact on the radiometer sensitivity as well.  Additional controls allows for alterations to the radiometer and includes being able to adjust the integration time of the radiometer.  
+Through this interface we are able to control several key aspects of the radio hardware within the SDR.  This has the impact of affecting the behavior of this software defined radiometer as well.  Through this we can control: frequency, sample rate (Bandwidth), integration time, and the gain on the DBSRX2 daughter board.  We will no look at how these controls impact the performance of the radiometer.  
 
 \subsection{Impact of the Controls Related to Radiometry}
 
-The controls that have been added for controlling the radiometer can have a large impact on the performance of the radiometer.  There is a reason why these controls were added to the GUI for the radiometer and that is they play key roles in how the radiometer performs.  
+Having the ability to control these key aspects of the software defined radiometer allows us to affect the performance of the radiometer.  The $NE\Delta T$, equation \ref{NEAT_EQ}, discussed in chapter \ref{ch:background} outlines what some of these changes affect in a radiometer.
 
-For any radiometer noise temperature is a large consideration and is critical to the design of the radiometer.  One method to determine how well a radiometer is to look at the sensitivity of the radiometer.  We can do this by looking at the smallest change in temperature the radiometer can see.  We will call this the Noise Equivalent $\Delta T$ or $NE\Delta T$ of the radiometer and is equation \ref{NEAT_EQ} covered in chapter \ref{ch:background}.
+%For any radiometer noise temperature is a large consideration and is critical to the design of the radiometer.  One method to determine how well a radiometer is to look at the sensitivity of the radiometer.  We can do this by looking at the smallest change in temperature the radiometer can see.  We will call this the Noise Equivalent $\Delta T$ or $NE\Delta T$ of the radiometer and is equation \ref{NEAT_EQ} covered in chapter \ref{ch:background}.
 
 $\beta$ can be changed by changing the sample rate of the SDR.  The sample rate effectively controls the bandwidth in which the SDR is operating at.  This also gives us a band-pass filter as well, since the SDR will not respond to frequencies outside of this bandwidth.  
 
 $\tau$ is the integration time for the radiometer.  This parameter is set by the user through the GUI and allows us to change the integration time in seconds.
 
+We will now look at how this data is handled and displayed by the software defined radiometer.
+
 \subsection{GNURadio Data Handling}
-Once we have the data that has been processed by the software defined radio we will want to display this information and be able to store the data so we can analyze it later if needed.  Data display can be handled GNURadio where we can plot the total power over time.  This allows the user to be able to visualize the total power and be able to determine if the total power has increased or decreased over the time window shown.  
+Once we have the data that has been processed by the software defined radio we will want to display this information and be able to store the data so we can analyze it later if needed.  Data display is handled by GNURadio by plotting the total power over time.  This allows the user to be able to visualize the total power and be able to determine if the total power has increased or decreased over the time window shown.  
 
-Although not usually needed for a total power radiometer we also have the ability to look at the signal in terms of a frequency versus amplitude.  This allows looking for any unusual signals that may be interfering with the system or causing erroneous data with our radiometer.  
+We also have the ability to look at a signal in terms of frequency versus amplitude.  This allows looking for any unusual signals that may be interfering with the system or causing erroneous data with our radiometer and is covered in chapter \ref{ch:results}.  
 
-Finally, we will want to store the data so we can do additional analyses on it at a later time.  The GNURadio program allows us to store the data in two formats.  The first format is storing the raw I/Q data from the radiometer.  This format allows us to playback the data through GNURadio at a later time.  This can be useful for if we wish to change parameters in GNURadio such as bandwidth or integration time.  It is also a good diagnostic tool as we can check that the signal coming in is clean or if we need to apply additional filters to remove an unwanted signal. This file may be quite large, consuming several gigabytes of data for a 20 MHz wide signal in a matter of minutes of record time.
+Finally, we will want to store the data so we can do additional analyses on it at a later time.  The GNURadio program allows us to store the data in two formats.  The first format is storing the raw I/Q data from the radiometer.  This format allows us to playback the data through GNURadio at a later time.  This can be useful for if we wish to change parameters in GNURadio such as bandwidth or integration time.  It is also a good diagnostic tool as we can check that the signal coming in is clean or if we need to apply additional filters to remove an unwanted signal.
 
 The second format is the total power that has been calculated by the radiometer.  This file is much smaller since much of the signal information has now been reduced to simple power versus time information.  This allows for easy manipulation through any math program such as Matlab for analysis.  
 
