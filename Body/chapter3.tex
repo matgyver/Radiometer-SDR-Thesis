@@ -99,21 +99,52 @@ Two criteria used to determine how well a radiometer performs are: 1) Sensitivit
 
 \emph{Sensitivity}.  Sensitivity of a radiometer is the smallest change in power that can be detected.  A radiometer must be able to differentiate between signal noise received by  the antenna ($T_{A}$) and the system generated noise ($T_N$).
 
-To understand this, look at the example of where T$_{A}$ has a value of 200 K and T$_{N}$ has a value of 800 K.  Since T$_{N}$ is added to the antenna signal, we have a total noise temperature of 1,000 K.  This means to detect a change as small as 1 K, the difference between 1,000 K and 1,001 K needs to be measured.[\cite{skou}].
-
-The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent Delta ($\Delta$) Temperature or NE$\Delta$T and is shown in equation \ref{NEAT_EQ}. 
+Two methods to quantify the sensitivity of a radiometer are: 1) experimentally, and 2) analytically.  Experimentally, sensitivity can be computed as the standard deviation of the measured power (assuming a stable radiometer).  Analytically, sensitivity can be computed as a function of radiometer properties.  Equation \ref{NEAT_EQ} gives this relation.  The term Noise Equivalent Delta ($\Delta$) Temperature ($NE\Delta T$) is often used interchangeably with sensitivity.  As can be seen in Equation \ref{NEAT_EQ}, sensitivity improves (i.e. becomes smaller) as the bandwidth ($\beta$) and integration time ($\tau$) of the radiometer increases[\cite{ulaby}].
 
 \begin{equation} \label{NEAT_EQ}
 NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}} 
 \end{equation}
 
-The sensitivity of the radiometer is a function of the bandwidth, ($\beta$), of the incoming signal and the integration time, ($\tau$) used.  Since the sensitivity improves as the bandwidth increases, as much bandwidth that is possible is desired.  In a traditional radiometer, this bandwidth is often fixed and it is dependent on the band-pass filters used in the radiometer.  A longer integration time ($\tau$) will also help improve the sensitivity of the radiometer to a certain degree.[\cite{ulaby}]
+The following example illustrates the impact system generated noise has on a radiometers ability to detect changes in signal noise.  Lets assume we want a sensitivity of 1 K.  If there is no system generated noise (i.e. $T_N = 0$) and the received signal at the antenna is 200 K (i.e. $T_A = 200$), we can then calculate our receiver sensitivity by using equation \ref{NEAT_EQ}.  Lets assume a bandwidth of 10 MHz (i.e. $\beta = 10 x 10^6$) and that our integration time is 40 milliseconds (i.e. $\tau = 0.04$).  We can now take these values and put them in Equation \ref{NEAT_EQ} which results in Equation \ref{NEAT_EX1}.
 
-\emph{Stability.}  The primary task of a radiometer is to measure power to within a certain degree of accuracy.  In order to accurately and precisely measure power to a high degree, a radiometer must take into account factors such as the system noise, the bandwidth of the signal and the stability of the system as a whole[\cite{Evans}]. 
+\begin{equation} \label{NEAT_EX1}
+NE\Delta T=\frac{200 + 0}{\sqrt{10 x 10^6 * 0.04} = 1 K} 
+\end{equation}
 
-Instabilities in a radiometer are due to fluctuations in the gain values in a Low Noise Amplifiers (LNAs) which are referred to as gain fluctuations.  Two factors cause gain fluctuations: voltage changes and the physical temperature of the LNA.  
+Equation \ref{NEAT_EX1} gives us a result of 1 K for our sensitivity which meets our goal.  Because we do not have an ideal radiometer (i.e. $T_N != 0$) lets assume our system noise added is 800 K (i.e. $T_N = 800$).  Assuming that our bandwidth ($\beta$), our integration time ($\tau$) and our antenna signal ($T_A$) is the same, we can now apply Equation \ref{NEAT_EQ} which results in Equation \ref{NEAT_EX2}.  This results in a sensitivity of 5 K, which is five times higher than our ideal sensitivity of 1 K. 
 
-The impact these gain fluctuations have in the system are shown in equation \ref{eq:rad_stability}.  Here, the change in the noise temperature due to gain fluctuations, $\Delta T_{G}$, is a result of the change in the gain, $\Delta G$ divided by our gain, $G$, and multiplied by our system noise, $T_{sys}$.  
+\begin{equation} \label{NEAT_EX2}
+NE\Delta T=\frac{200 + 800}{\sqrt{10 x 10^6 * 0.04} = 5 K} 
+\end{equation}
+
+As can be clearly seen, system noise makes the job of detecting changes in signal noise more difficult[\cite{skou}].
+
+Section \ref{Exp2_analysis} uses these two methods of finding sensitivity as a cross validation of the correctness of a SDR based radiometer.
+
+%To understand this, look at the example of where T$_{A}$ has a value of 200 K and T$_{N}$ has a value of 800 K.  Since T$_{N}$ is added to the antenna signal, we have a total noise temperature of 1,000 K.  This means to detect a change as small as 1 K, the difference between 1,000 K and 1,001 K needs to be measured.[\cite{skou}].
+
+%The ability of a radiometer to detect these small changes is the radiometer's sensitivity, or the standard deviation of the output signal from the radiometer.  This sensitivity is also referred to as the Noise Equivalent Delta ($\Delta$) Temperature or NE$\Delta$T and is shown in equation \ref{NEAT_EQ}. 
+
+%\begin{equation} \label{NEAT_EQ}
+%NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}} 
+%\end{equation}
+
+%The sensitivity of the radiometer is a function of the bandwidth, ($\beta$), of the incoming signal and the integration time, ($\tau$) used.  Since the sensitivity improves as the bandwidth increases, as much bandwidth that is possible is desired.  In a traditional radiometer, this bandwidth is often fixed and it is dependent on the band-pass filters used in the radiometer.  A longer integration time ($\tau$) will also help improve the sensitivity of the radiometer to a certain degree.[\cite{ulaby}]
+
+\emph{Stability.}  Stability for a radiometer means that any fluctuations we see is a result of the source and not a change occurring within the radiometer.  Lets examine Equation \ref{eq:final_power} which defines the total power the radiometer receives.  If our bandwidth ($\beta$), Gain ($G$), system noise ($T_N$), and Boltzmann constant ($k$) are constant, then the system is stable.  We can assume that our bandwidth is fixed and that our system noise is constant.  This results in our Gain ($G$) being the uncertain variable that may cause unwanted fluctuations[\cite{Evans}]. 
+
+Radiometer instabilities are due to Low Noise Amplifier (LNAs) gain fluctuations.  Two factors cause gain these gain fluctuations: 1) fluctuations in the LNA's voltage supply, and 2) fluctuation in the LNA's physical temperature.  
+
+The impact these gain fluctuations have on stability is given by equation \ref{eq:rad_stability}.  Where:
+
+\begin{itemize}
+\item $\Delta T_G$ is the noise temperature fluctuation,
+\item $\Delta G$ is the LNA gain fluctuation,
+\item $G$ is the gain of the LNA and,
+\item $T_{sys}$ is the combined antenna source ($T_A$) and system noise ($T_N$).
+\end{itemize}
+
+%Here, the change in the noise temperature due to gain fluctuations, $\Delta T_{G}$, is a result of the change in the gain, $\Delta G$ divided by our gain, $G$, and multiplied by our system noise, $T_{sys}$.  
 
 \begin{equation} \label{eq:rad_stability}
 \Delta T_G=T_{sys} \left(\frac{\Delta G}{G}\right)
