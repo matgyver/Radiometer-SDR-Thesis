@@ -84,7 +84,7 @@ Like the analog square-law detector, this signal will fluctuate rapidly.  To imp
 
 \subsection{Integration}
 
-To improve our sensitivity, and reduce the rapid fluctuations in the power measurements, we integrate the power measurements.  This gives an average of the signal and reduces the fluctuations in the output.  This helps to improve the sensitivity of the radiometer as seen in equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on how an analog integrator works.  The digital equivelent to a integrator is a Finite Impulse Response (FIR) filter.
+To improve our sensitivity, and reduce the rapid fluctuations in the power measurements, we integrate the power measurements.  This gives an average of the signal and reduces the fluctuations in the output.  This helps to improve the sensitivity of the radiometer as seen in equation \ref{NEAT_EQ}.  The digital equivalent to a integrator is a Finite Impulse Response (FIR) filter.
 
 A FIR filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter and simply says that the nth output is a weighted average of the most recent P inputs. 
 

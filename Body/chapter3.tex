@@ -150,19 +150,19 @@ The impact these gain fluctuations have on stability is given by equation \ref{e
 \Delta T_G=T_{sys} \left(\frac{\Delta G}{G}\right)
 \end{equation}
 
-These gain fluctuations can be controlled by closely monitoring and controlling both the voltage and the temperature of the LNAs. However, this adds complexity to the radiometer which can be impractical in some cases.  Therefore, other types of radiometers have been developed to compensate for these fluctuations.  There are three common types of radiometers designed to adjust for gain fluctuations.  They are: Dicke radiometer, Noise injection radiometer, and Polarimetric or correlating radiometer.
+These gain fluctuations can be controlled by closely monitoring and controlling both the voltage and temperature of the LNAs. However, this adds levels of complexity to the radiometer, that may be impractical in some cases.  As an alternative, modifications to the basic radiometer given in Figure \ref{trad_radiometer} have been developed to compensate for these fluctuations.  There are three common types of radiometers designed to account for gain fluctuations.  They are: Dicke, Noise injection, and Polarimetric or Correlating radiometers.
 
-The first type of radiometer used is the Dicke radiometer.  Figure \ref{dicke_radiometer} shows a block diagram of a Dicke radiometer which switches between the measurement of the source or antenna and a known reference source[\cite{Dicke}].  By referencing this reference source very quickly the Dicke radiometer can account for and greatly reduce gain fluctuations.  
+\emph{Dicke Radiometer.}  Figure \ref{dicke_radiometer} shows the block diagram of a Dicke radiometer, which switches between the measurement of the source signal ($T_A$) and a known reference signal ($T_R$)[\cite{Dicke}].  By quickly switching between the source and reference signal at a frequency of $F_S$, a Dicke radiometer can reduce the impact of gain fluctuations on its stability.  
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=\textwidth]{Images/Dicke_block.png}
+\includegraphics[width=\textwidth]{Images/Dicke_Radiometer.pdf}
 \isucaption{A block diagram of a Dicke radiometer}
 \label{dicke_radiometer}
 \end{figure}
 }
 
-While a Dicke radiometer greatly reduces the fluctuations seen in the gain of a radiometer and improves stability, it does so at the cost of not seeing the object of interest while it is referencing the known source.  Because of this, the overall sensitivity of the radiometer is decreased.
+While a Dicke radiometer improves stability, it does so at the cost of not seeing the object of interest while it is measuring the reference signal.  This reduces the sensitivity of the radiometer since the source signal is only observed for a fraction of the time.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -172,9 +172,9 @@ While a Dicke radiometer greatly reduces the fluctuations seen in the gain of a 
 \end{figure}
 }
 
-A noise injection radiometer is a variation of the Dicke radiometer where a variable noise source is used and injected into the RF chain as seen in Figure \ref{NoiseInj_radiometer}.  The output of this noise source is then adjusted so the noise input plus the signal from the source is equal to the reference noise.  This completely eliminates gain fluctuations but, it increases the system noise which also reduces the sensitivity of the radiometer.
+\emph{Noise Injection Radiometer.}  A noise injection radiometer is a variation of the Dicke radiometer, where a variable noise signal ($T_I$) is injected into the RF chain as seen in Figure \ref{NoiseInj_radiometer}.  The injected noise signal power is adjusted so when added to the source signal, their sum equals to the reference signal.  This eliminates gain fluctuations, but increases system noise ($T_N$) which reduces radiometer sensitivity.
 
-A polarimetric or correlating radiometer uses two polarized signals, referred to as vertical polarization (V-Pol) and horizontal polarization (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is then fed into the radiometer and correlated.  Because the noise signal of interest has polarization and the gain fluctuations does not, it can eliminate the gain fluctuations.  This reduces gain fluctuations and helps maintain the sensitivity of the radiometer but at the cost of adding complexity to the radiometer. A correlating radiometer requires two identical receivers, one for each polarization. 
+\emph{Polarimetric Radiometer} A polarimetric (or correlating) radiometer uses two polarized signals, referred to as vertically polarized (V-Pol) and horizontally polarized (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is fed into the radiometer and correlated.  Because the source noise signal has polarization and the gain fluctuations does not, the gain fluctuations can be eliminated.  This reduces gain fluctuations to increase stability, helping maintain sensitivity.  However, this is at the cost of increasing radiometer complexity and price, since two identical receivers (one for each polarization) is required. 
 
 
 %Stability and accuracy are additional problems that need to be considered when looking at the radiometer system.  To begin we can once again look at the power received equation \ref{eq:final_power}.
@@ -183,44 +183,44 @@ A polarimetric or correlating radiometer uses two polarized signals, referred to
 
  
 \section{Software Defined Radios Basics} 
-A Software Defined Radio (SDR) is defined as a device that will digitize a received RF signal as soon as possible, and processes the digital representation of the signal with a computer, FPGA, or a dedicated System on Chip (SoC).  A canonical software defined radio architecture is one that consists of a power supply, antenna, analog to digital converter, and a processing unit to carry out the radio functions in software [\cite{Mitola1995}]. An ideal software defined radio block diagram is shown in figure \ref{ideal_sdr}.
+A Software Defined Radio (SDR) is a device that digitizes a received RF signal as soon as possible, and processes the digital representation of the signal using a computer, FPGA, or dedicated System on Chip (SoC).  A canonical software defined radio architecture consists of a power supply, antenna, analog to digital converter, and a processing unit to carry out radio functions in software [\cite{Mitola1995}]. An ideal software defined radio block diagram is shown in figure \ref{ideal_sdr}.
 
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=\textwidth]{Images/SDR_Ideal_block.pdf}
-\isucaption{An ideal software defined radiometer}
+\isucaption{An ideal software defined radio}
 \label{ideal_sdr}
 \end{figure}
 }
 
-A SDR allows can perform certain hardware functions, such as filtering, in the digital domain and is then defined by software.  Since the software is now processing the signal, it can rapidly change what functions are executed on the signal by changing the software.  This gives SDRs a high amount of flexibility because components that were normally done in hardware can now be done in software.  They can also be changed by simply uploading new software or firmware to the system.  This is a cost benefit as certain components are no longer needed and changes made in software do not require additional hardware to be added, deleted or changed.
+A SDR can perform certain hardware functions in software (e.g. filtering).  This gives SDRs a high amount of flexibility because components that were normally performed in hardware can now be performed in software.  Changes can be made by simply uploading new software or firmware to the system.  This has a cost benefit as certain hardware components are no longer needed and changes made in software do not require additional hardware to be added, removed or modified.
 
-A more realistic software defined radio is shown in figure \ref{prac_sdr}.  There are two items added to this software defined radio.  Amplification of the signal or gain is added to improve the sensitivity of the SDR.  A mixer can often be used to down-convert a high frequency RF signal to a lower frequency signal in order to use a less expensive analog to digital converter.  If however, the original frequency is already within the range of the analog to digital converter, the mixer may be omitted.  
+A more realistic software defined radio is shown in figure \ref{prac_sdr}, where two items have been added.  First, an amplification of the signal (gain) is added to improve SDR sensitivity.  Second, a mixer is often used to down-convert the high frequency RF source signal to a lower frequency so a less expensive analog to digital converter can be used.  However, if the source signal frequency is already within the range of the analog to digital converter, then the mixer may be omitted.  
 
 %An ideal software defined receiver simply has an antenna connected to an analog to digital converter which sends information to a processing unit such as a Field Programmable Gate Array (FPGA) or computer.  For a transmitter, we reverse it and use a digital to analog converter to produce the correct waveform which is then transmitted by the antenna.  In reality, SDRs require some additional hardware to make a viable working transceiver.  Amplification is still required to amplify the incoming signal and to amplify the signal going to the antenna.  Some SDRs also use a mixing stage to move a high frequency signal to a lower frequency signal.  This allows for less expensive analog to digital and digital to analog converters to be used.  
 
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=\textwidth]{Images/SDR_Prac_block.pdf}
-\isucaption{A typical software defined radiometer}
+\isucaption{A typical software defined radio}
 \label{prac_sdr}
 \end{figure}
 }
 
-\emph{Software Defined Radio Applications.}  Software Defined Radios (SDRs) are used for a variety of applications, but their primary application has been in the area of communications.  Some examples of these applications include:  mobile communications, wireless local area networks, personal area networks and digital broadcast.  They appeal to applications where having the ability to change a modulation scheme or filter on the fly is desirable.  In these areas, SDRs often outperform traditional hardware-only radios in their ability to easily change their operations by changing the software.  
+\emph{Software Defined Radio Applications.}  Software Defined Radios (SDRs) can be for a variety of applications, but have been primarly used in the area of communications.  Some examples of these applications include:  mobile communications, wireless local area networks, personal area networks and digital broadcast.  They appeal to applications where having the ability to change a modulation scheme or filter on the fly is desirable.  In these respects, SDRs often outperform traditional hardware-only radios because of their ability to easily change their operations through software.  
 
-Early SDRs were expensive due to the high costs in the analog to digital converters (ADCs) needed and the high speed Field Programmable Gate Arrays (FPGA) used.  In recent years, the cost of SDRs have decreased due to the cost of these key components decreasing.  Even though the cost has gone down, the performance of SDRs have increased.  This has led to developments in using SDRs in new and different ways[\cite{jondral2005software}].
+Early SDRs were expensive due to the cost of high speed analog to digital converters (ADCs) and high-end Field Programmable Gate Arrays (FPGA) that were required.  In recent years, the cost of SDRs have decreased due to the cost of these key components decreasing.  Also, while the cost of SDRs has gone down, their performance has increased.  This has led to SDRs becoming feasible for use in many new ways [\cite{jondral2005software}].
 
 
 %But this is the strength of a software defined radio, it is capable of performing all of these operations and can be adapted to new ones by simply updating the software that defines it.
 
 \section{Software Defined Radio Development Platform} \label{SDR_platform}
-This section will discuss the development platform used to develop a software defined radiometer.  The hardware and software tools used are off the shelf tools used for software defined radio development.  This section will examine the hardware platform used and discusses the software platform used.  
+This section discusses the platform used to develop a software defined radio based radiometer.  The hardware and software tools used are off the shelf.  First, the hardware platform will be introduced, followed by the software platform.  
 
 %The work of this thesis is to use an off the shelf software defined radio (SDR) to perform the same operation or better of a traditional analog radiometer.  Using a SDR radio also means that we are able to be more flexible in how the radiometer performs, is capable of frequency agility and adapting to changing conditions such as interference.  Using a software defined radio also allows for implementation of different radiometer types such as a correlation radiometer or a polarimetric radiometer that uses Stokes parameters [\cite{Wang}].  Normally, these require changes to hardware, but all of these types of radiometers can be implemented in software increasing the flexibility of the system.  
 
 \subsection{Hardware Platform}
-The hardware platform selected for this work is the Ettus Research Group N200 SDR and can be seen in figure \ref{N200}.  The N200 has the following features that made it desirable for our specific application:
+The hardware platform selected for this work is the Ettus Research Group N200 SDR shown in figure \ref{N200}.  The N200 has the following features that made it desirable for our specific application:
 
 \begin{itemize}
 \item Dual 14-bit ADC,
@@ -228,7 +228,7 @@ The hardware platform selected for this work is the Ettus Research Group N200 SD
 \item Modular daughter-board system for RF front end.
 \end{itemize}
 
-The flexible architecture and the ability of the N200 to handle large amounts of bandwidth made this hardware ideal for the software defined radio radiometer work done in this thesis.
+Its flexible architecture and ability to support a large bandwidth made the N200 an ideal hardware platform for the software defined radio based radiometer development.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -238,9 +238,9 @@ The flexible architecture and the ability of the N200 to handle large amounts of
 \end{figure}
 }
 
-When selecting the hardware for this thesis, the requirements defined in chapter \ref{ch:implementation}, section \ref{requirements} were examined in detail.  The bandwidth requirement was a deciding factor in the hardware selected.  The requirement stated that a minimum of 20 MHz needs to be processed by the SDR.  The N200 selected is capable of 25 MHz per channel and this met the requirement.  The 14-bit ADC was not a defined requirement, but it does allow the ability to accurately record the signal with a high level of resolution.  
+When selecting the hardware for this thesis, the requirements defined section \ref{requirements} were examined.  The bandwidth requirement was a deciding factor for hardware selection.  It was decided that a minimum bandwidth of 20 MHz was desired.  The 14-bit ADC was not a defined requirement, but was deemed to provide an adequate level of resolution.  The N200 has a flexible architecture through the use of daughter-boards.  
 
-The N200 utilizes a flexible architecture through the use of daughter-boards for a variety of RF systems.  Figure \ref{N200_block} shows the overall architecture of the N200 SDR.  This daughter board directly receive the RF signal and then outputs the analog I and Q signals that are then sampled by the N200 A/D converter for reception or receives the I and Q values from the N200 D/A converter for transmission. 
+Figure \ref{N200_block} shows the overall architecture of the N200 SDR.  A daughter board directly receives the RF signal and then outputs analog I (in-phase) and Q (quadrature phase) signals that are then sampled by the N20014-bit  A/D converter.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -253,7 +253,7 @@ The N200 utilizes a flexible architecture through the use of daughter-boards for
 %The requirements outlined above was the guiding factor in selecting the N200 SDR for our hardware platform.  These reasons, and the fact that this hardware is well supported by GNURadio, lead to using this for the work in this thesis.
 %While not a defined requirement, it was indicated by Dr. Brian Hornbuckle that it would be ideal to look at two signals at the same time.  The N200 is able to have up to two daughter boards installed.
 
-\emph{The DBSRX2 Receiver.}  The daughter board selected is the DBSRX2 daughter board shown in figure \ref{dbsrx2}.  This daughter board is a receive only and operates between 800 MHz and 2400 MHz.  A requirement for this system is operation between 1400 MHz and 1425 MHz, and this daughter board meets those requirements.  
+\emph{The DBSRX2 Receiver.}  The daughter board selected for this work was the DBSRX2 shown in figure \ref{dbsrx2}.  This daughter board is receive only, and operates between 800 MHz and 2400 MHz, which includes the frequency band required for this work (1400 MHz - 1425 MHz).
 
 {\begin{figure}[h!tb] 
 \centering
@@ -263,11 +263,11 @@ The N200 utilizes a flexible architecture through the use of daughter-boards for
 \end{figure}
 }
 
-The DBSRX2 has all of the RF hardware needed to process our RF signal.  This includes a programmable gain amplifier, a direct-conversion converter, a mixer and finally a band pass filter that can be seen in figure \ref{dbsrx2_block}.  First the signal is amplified through a Programmable Gain Amplifier (PGA).  This PGA is accessible from the software and can be configured by the software.  Next the signal goes into a direct-conversion integrated circuit, a Maxim 2112.  This integrated circuit directly converts the RF signal to analog I and Q values and uses an integrated mixer and bandpass filter.
+The DBSRX2 has the RF hardware needed to transform the received RF signal into phase and quadrature phase outputs.  This includes a programmable gain amplifier, a direct-conversion converter, a mixer, and finally a band-pass filter.  Figure \ref{dbsrx2_block} provides a block diagram of the DBSRX2.  First, the signal received is amplified by the Programmable Gain Amplifier (PGA).  The PGA is can be configured by the software.  Next, the signal goes into a direct-conversion integrated circuit (a Maxim 2112).  This integrated circuit directly converts the RF signal into analog I (in-phase) and Q (quadrature phase) values and is composed of an integrated mixer and band-pass filter.
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=\textwidth]{Images/DBSRX2_block.pdf}
+\includegraphics[width=12cm]{Images/DBSRX2_block.pdf}
 \isucaption{Block diagram of the DBSRX2 daughter board.}
 \label{dbsrx2_block}
 \end{figure}
@@ -281,21 +281,21 @@ The DBSRX2 has all of the RF hardware needed to process our RF signal.  This inc
 %\end{figure}
 %}
 
-These analog I and Q values are then sent to the the analog to digital converter to be digitized.  The IQ values are differential signals to minimize interference due to noise.  Once digitized, the digital I and Q values are sent to the FPGA to be processed and then sent to the computer for signal processing.
+These analog I and Q values are then sent to the analog to digital converter to be digitized.  The IQ values are transmitted as differential signals to minimize noise.  Once digitized, the digital I Q values are sent to a FPGA to be processed, and then sent to the PC for soft-ware based signal processing.
 
 %Since we are using the DBSRX2 after the LNAs that are already in use, the noise temperature added by the DBSRX2 will be small.  The DBSRX2 adds approximately 1.05 dB to the overall noise factor of the system.
 
 \subsection{Software Platform} \label{software_platform}
 
-There are two pieces of software that are used with the software defined radio:  1) the firmware that is used in the FPGA of the N200 and 2) the software running on the host computer.  
+There are two pieces of software that are used with the software defined radio:  1) the firmware that is used in the FPGA of the N200, and 2) the software running on the host PC.  
 
-The firmware provides low level processing of the signal so it can be sent to the software located on the computer.  It also provides a link for controlling key aspects of the software defined radio such as gain, bandwidth and the center frequency.  This firmware is already pre-loaded into the FPGA by Ettus Research and can be upgraded using tools provided by Ettus Research.
+The firmware provides low level processing of the signal before being sent to the software located on the PC.  It also provides a link for controlling key aspects of the software defined radio, such as gain, bandwidth and the center frequency.  This firmware comes pre-loaded into the FPGA by Ettus Research, and can be upgraded using tools provided by Ettus Research.
 
-The software on the host computer is the software that provides the signal processing on the I/Q data.  For this task, GNURadio was selected.   GNUradio is an open source software designed for software defined radios.  It is also well supported by our hardware.  It also provides a GUI framework to create an interactive environment for the user.   
+The software on the host PC performs signal processing on the I/Q data.  GNURadio was selected to be this software.   GNUradio is an open source software package designed for software defined radio application development.  It provides a GUI framework to create an interactive environment for the user, and is well supported by the N200 hardware.  
 
-GNURadio uses a combination of Python and C++, where Python handles the high level interface and C++ is used as drivers and low level interface to the hardware.  This combination allows for a system that is easy to use, but still meets the demanding performance of handling large amounts of data. 
+GNURadio uses a combination of Python and C++, where Python handles the high level interface and C++ is used to implement drivers and low level interfaces to the hardware.  This combination allows for a system that is easy to use, but still meets the demanding performance required for handling large amounts of data. 
 
-GNURadio also has a rapid development tool called GNURadio companion, or GRC.  GRC uses a simple to use graphical system to design and build radio components in software. An example of GRC is shown in figure \ref{N200_GRC}.
+GNURadio also has a rapid development tool called GNURadio companion (GRC).  GRC is a simple to use graphical system for designing and building radio components in software. An example of GRC is shown in figure \ref{N200_GRC}.
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/noisesrc_radiometer.png}
@@ -304,14 +304,14 @@ GNURadio also has a rapid development tool called GNURadio companion, or GRC.  G
 \end{figure}
 }
 
-GNUradio Companion works by having the common functions, such as signal sources, signal processing and signal sinks, as blocks that can picked and placed on the screen.  Once placed, the blocks can be wired up, much like LabView, and the flow of data can be controlled in this fashion.  GNURadio Companion also includes blocks that allow for building a GUI interface.  This gives us tools for building a user interface to display data and control the software defined radio.
+GNUradio Companion provides common functions, such as signal sources, signal processing and signal sinks, as blocks that can picked and placed on the screen.  Once placed, the blocks can be wired up, much like LabView, and the flow of data can be controlled in this fashion.  GNURadio Companion also includes blocks that allow for building a GUI interface, which can be used to display data and control the software defined radio.
 
-If a block does not exist, it is possible to create new blocks.  Because GNURadio uses Python, users can use this powerful and flexible language to build new blocks that can be imported into GRC.  
+If a block does not exist, it can be created.  Because GNURadio uses Python, users can use this powerful and flexible language to build new blocks that can be imported into GRC.  
 
 %Additional blocks can also be created using Python.  This allows the users to create other blocks and access other common Python libraries.  Each block is then defined in While GNURadio Companion provides most of the essential blocks used in most applications additional blocks can by added if needed.  This is done by using Python and the blocks in GNUradio Companion are simply blocks of Python code.  To compile a GNURadio Companion flow diagram, you simply run the sheet, which then generates the Python code that is then executed.   
 
 
-With GNURadio and GNURadio Companion, a software defined radio can be rapidly built with little programming experience.  The excellent support of the hardware selected and the ease of use of this software made it ideal for our development tool for building the necessary software in our software defined radiometer.
+Using GNURadio and GNURadio Companion, a software defined radio can be rapidly built with little programming experience.  The excellent support of the hardware selected, and the ease of use made it an ideal development tool for building the necessary software for our software defined radiometer.
 
 %----------------------------------------------------------
 % End of Chapter 3.  Anything below this is extra information
