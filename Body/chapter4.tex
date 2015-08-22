@@ -47,23 +47,41 @@ A traditional radiometer uses a device called a square law detector to measure p
 \end{figure}
 }
 
-Equation \ref{sdr_x2} gives the mathematical representation of a square law detector's functionality where I is the in-phase of the input signal, Q is the quadrature-phase of the input signal, and $P_{out}$ is the power of the signal.
+Equation \ref{sdr_x2} gives the mathematical representation of a square law detector's functionality where I is the in-phase of the input signal, Q is the quadrature-phase of the input signal, and $P_{out}$ is the power of the signal.  By squaring and summing the in-phase and quadrature phase of the signal, we obtain the magnitude of the signal which represents the power measured[\cite{Rashid}].  
 
-To implement this in software, a square law detector is built mathematically as the sum of the squares[\cite{Sarijari}].  Once a signal has been digitized, it is expressed in data bits of I and Q, which represent the in-phase and the quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal and this is shown in equation \ref{sdr_x2}[\cite{Rashid}].
+%Because we have the in-phase signal (I) and the quadrature phase (Q), which is the signal shifted ninety degrees (i.e. $\phi + 90^{\circ}$) of the signal, 
+
+%To implement this in software, a square law detector is built mathematically as the sum of the squares[\cite{Sarijari}].  Once a signal has been digitized, it is expressed in data bits of I and Q, which represent the in-phase and the quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal and this is shown in equation \ref{sdr_x2}[\cite{Rashid}].
 
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
 \end{equation}
 
-Like the analog square-law detector we are taking peak voltage values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.  Figure \ref{square_block} shows the GNURadio blocks used to perform this function.
+Figure \ref{square_block} shows the actual implementation in GNURadio Companion.  This shows the block "Complex to Mag^2) which is the equivalent to Equation \ref{sdr_x2}.  As with a traditional radiometer, this measurement will fluctuate rapidly.  To smooth this signal, we can integrate and also apply a low pass filter to the signal.  Integration is covered in the next section.
 
-Like the analog square-law detector, this signal will fluctuate rapidly.  To improve the sensitivity of the radiometer the signal is integrated.  The next step is to replicate a RC filter or integrator in the software defined radio.
+%Like the analog square-law detector we are taking peak voltage values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.  Figure \ref{square_block} shows the GNURadio blocks used to perform this function.
+
+%Like the analog square-law detector, this signal will fluctuate rapidly.  To improve the sensitivity of the radiometer the signal is integrated.  The next step is to replicate a RC filter or integrator in the software defined radio.
 
 \subsection{Integration}
 
-To improve our sensitivity, and reduce the rapid fluctuations in the power measurements, we integrate the power measurements.  This gives an average of the signal and reduces the fluctuations in the output.  This helps to improve the sensitivity of the radiometer as seen in equation \ref{NEAT_EQ}.  The digital equivalent to a integrator is a Finite Impulse Response (FIR) filter.
+The output of a square law detector tends to be very "noisy".  Figure \ref{square_raw} shows an example of this raw output.  This makes detecting small changes in power difficult (i.e. hinders sensitivity).  
 
-A FIR filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter and simply says that the nth output is a weighted average of the most recent P inputs. 
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=17cm]{Experiments/Exp1/noisy_voltage.pdf}
+\isucaption{Power measurements from a square law detector before integration or filtering}
+\label{square_raw}
+\end{figure}
+}
+
+A common solution used by radiometers is to "smooth" out this output by sending it through an integrator.  In short, an integrator averages a signal over time, which effectively eliminated the effects of noise (assuming noise that has a zero mean amplitude).  
+
+A traditional radiometer will use a simple Resistor and Capacitor (RC) circuit to accomplish this.  Because our signal, even a noisy one, has a frequency component, this RC circuit acts like a low pass filter.  Thus the higher frequency "noise" is filtered out.
+
+%To improve our sensitivity, and reduce the rapid fluctuations in the power measurements, we integrate the power measurements.  This gives an average of the signal and reduces the fluctuations in the output.  This helps to improve the sensitivity of the radiometer as seen in equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on how an analog integrator works.  The digital equivalent to a integrator is a Finite Impulse Response (FIR) filter.
+
+To implement this as a digital filter, a Finite Impulse Response (FIR) or Infinite Impulse Response (IIR) is used.  A FIR filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter and simply says that the nth output is a weighted average of the most recent P inputs. 
 
 \begin{equation}\label{FIR_Eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}
@@ -75,7 +93,7 @@ An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except 
 y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
 \end{equation}
 
-Both filters produce the same result by giving the average of the input signal.  An IIR filter however uses less computational power than a FIR filter.  Because of this, an IIR filter was used in defining our integrator in a software defined radiometer.
+Both filters produce the same result by giving the average of the input signal.  An IIR filter however uses less computational power than a FIR filter.  Because of this, an IIR filter was used in defining our integrator in a software defined radio based radiometer.
 
 To get a better understanding on how the digital IIR filter relates to the RC filter analog, look at the Fourier Transform and the relationship of the input to the output in the frequency domain in equation \ref{Fourier_IIR}.  In equation \ref{Fourier_IIR}, $f$ is our frequency in Hz and $T$ is the time between samples in seconds and is related to our sampling frequency.
 
