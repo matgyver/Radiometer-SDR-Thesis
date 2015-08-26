@@ -16,14 +16,14 @@
 %Summary paragraph, the summary paragraph the summarized the analysis of the results.
 
 \chapter{RESULTS AND ANALYSIS}\label{ch:results}
-This chapter will display the results obtained from the experiments outlined in Chapter \ref{ch:exp_design}.  We will then give an analysis of the data including data interpretation and the information learned from each experiment.  Next we will do an analysis of a traditional radiometer vs our software defined radiometer in terms of price, weight, and quality.  Finally we will summarize our results and analysis from this chapter.
+This chapter will present the results obtained from the experiments outlined in Chapter \ref{ch:exp_design}.  We discuss the analysis of the results and what was learned from each experiment.  This chapter concludes with a trade off analysis between SDR-based radiometer in terms of price, weight, and quality.
 
-\section{Experiment I - Software Defined Radiometer Verification and Calibration} \label{Exp1_results}
-As outlined in Chapter \ref{ch:exp_design}, Section \ref{Exp1}, this experiment is to verify the operation of a software defined radiometer.  This is done by performing experiments that are similar to verification and calibration methods used on a traditional radiometer.  By comparing these results to a square-law detector, receiving the same signal, we can verify the operation of the software defined radiometer.
+\section{Experiment I - Software Defined Radio Based Radiometer Verification and Calibration} \label{Exp1_results}
+As outlined in Chapter \ref{ch:exp_design}, Section \ref{Exp1}, this experiment is to verify the operation of a software defined radio based radiometer.  This is done by performing experiments that are similar to the verification and calibration methods used for a traditional radiometer.  By comparing these results to a square-law detector, receiving the same signal, we can verify the operation of the software defined radio based radiometer.
 
 \subsection{Data Collected}\label{Exp1_data}
 
-The data collected for experiment one is the total power measurements collected from the software defined radiometer and the voltage measurements, which represent the total power measurements, from the square-law detector.  This data was then calibrated by manually recording the rQ values and voltage values when the matched load is submerged into either an ice water bath or liquid nitrogen (LN2) bath.  Table \ref{exp1_datapoints} shows the values collected during the experiment.  These data points were then used to generate the data analysis in the proceeding section.
+The data collected for experiment one is the total power measurements collected from the software defined radio based radiometer and the square-law detector.  This data is then calibrated by using the known physical temperature of the matched load.  Table \ref{exp1_datapoints} shows the values collected during the experiment and is used to calibrate the raw total power measurements.
 
 \begin{table}[h!tb] \centering
 \isucaption{Total Power calibration data points}
@@ -38,7 +38,7 @@ The data collected for experiment one is the total power measurements collected 
 
 \subsection{Data Analysis}\label{Exp1_analysis}
 
-In our results, we used iPython Notebook to read and generate the graphs used in this thesis.  This tool uses Python along with HTML and Markdown code to generate a virtual notebook for each experiment.  Figure \ref{matlab_display} shows a screen shot of a iPython notebook used in this thesis
+To analyze the results, iPython Notebook is used to read and generate the graphs used in this thesis.  This tool uses Python along with HTML and Markdown code to generate a virtual notebook for each experiment.  Figure \ref{matlab_display} shows a screen shot of a iPython notebook used in this thesis
 
 {\begin{figure}[h!tb] 
 \centering
@@ -47,7 +47,7 @@ In our results, we used iPython Notebook to read and generate the graphs used in
 \label{matlab_display}
 \end{figure}
 
-The first data we will look at with be with the software defined radio.  The SDR records the total power measurements to a binary file that either Matlab or Python can read.  This file format is explained in section \ref{exp1_data}. Additional information on data analysis is explained in section \ref{Exp1_analysis}.  We will begin by looking at the raw total power readings which we will call raw Q values or rQ values.  These are the uncalibrated total power readings from the software defined radio.  
+\emph{Software Defined Radio Data.}  The SDR records the total power measurements in a binary file that either Matlab or Python can read.  This file format is explained in section \ref{exp1_data}.  We begin by looking at the raw total power readings also called rQ values.  Because these are uncalibrated total power readings, there are no units for these values.
 
 \begin{figure}[h!tb] \centering
 
@@ -56,7 +56,7 @@ The first data we will look at with be with the software defined radio.  The SDR
 \label{SDR_rQ}
 \end{figure}
 
-Figure \ref{SDR_rQ} shows the total power reading versus time and is also marked when the matched load was submerged in Ice Water, LN2, or a hot water bath.  Since we know what the temperatures are for the ice water and LN2, we can now calibrate these readings to a noise temperature reading.  This is done by reading in a calibration file we have stored in csv format and performing linear algebra to solve the slope of the line.  This was done in our iPython Notebook using the following code.
+Figure \ref{SDR_rQ} shows the total power reading versus time.  This figure has also been annotated to show which medium the matched load has been placed in (i.e. Ice water, LN2, Hot water).  Since we know the temperatures of the ice water and LN2, we can calibrate these readings to a noise temperature reading.  This is done by reading a calibration file we have stored in csv format and solving for the slope of a line.  This was accomplished using the following code written in Python.
 
 \lstset{language=Python}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
@@ -65,17 +65,17 @@ b = numpy.array([temp_values[0],temp_values[1]])
 z = numpy.linalg.solve(a,b)
 \end{lstlisting}
 
-Now that we have our calibration points, we can now re-graph this data but now calibrated as a reference noise temperature. Figure \ref{SDR_Calibrated} shows a calibrated graph of the data in relation to noise temperature.  In addition, we have colorized this graph to show warmer to cooler temps.  This is helpful as we often refer to these as noise temperatures.
+Now that we have our calibration points, we can re-graph this data but now calibrated as a reference noise temperature. Figure \ref{SDR_Calibrated} shows a calibrated graph of the data in relation to noise temperature.  In addition, we have colorized this graph to show warmer to cooler temps.  This is helpful as we often refer to these as noise temperatures.
 
 \begin{figure}[h!tb] \centering
 
 \includegraphics[width=\textwidth]{Experiments/Exp1/sdr_calibrated_color.pdf}
 
-\isucaption{Graph of the calibrated noise temperature of Experiment I}
+\isucaption{Graph of the calibrated noise temperature for Experiment I}
 \label{SDR_Calibrated}
 \end{figure}
 
-Now that we have looked at the software defined radio data, we want to look at the square-law detector with the end result of comparing the two.  The square-law detector gives us power information as a voltage, so once again we will need to calibrate this to the known temperature references.  However, before that we need to do one other step with the data.  Unlike the software defined radio, there is no filter or integrator to help smooth out the data, so the square-law data is very noisy.  Our first step will be to filter the data.  Figure \ref{X2_Raw} shows our raw data that we get from the square-law detector.
+\emph{Square Law Detector Data.}  Now that we have looked at the software defined radio data, we want to look at the square-law detector with the end result of comparing the two.  The square-law detector gives us power information as a voltage, so once again we will need to calibrate this to the known temperature references.  However, before that we need to do one other step with the data.  Unlike the software defined radio, there is no filter or integrator to help smooth out the data, so the square-law data is very noisy.  Our first step will be to filter the data.  Figure \ref{X2_Raw} shows our raw data that we get from the square-law detector.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp1/noisy_voltage.pdf}
@@ -110,7 +110,7 @@ Using the same technique as earlier, we can now calibrate the raw voltages from 
 \label{X2_Calibrated}
 \end{figure}
 
-We now want to compare both the Software Defined Radio and the square-law to make sure that they match up.  Since both the SDR and the square-law are now calibrated to a noise temperature, we can easily graph both of the data and compare to see how well they match up.
+\emph{SDR-based radiometer vs square-law detector.}  We now want to compare both the Software Defined Radio and the square-law to make sure that they match up.  Since both the SDR and the square-law are now calibrated to a noise temperature, we can easily graph both of the data and compare to see how well they match up.
 
 \begin{figure}[h!tb] \centering
 
@@ -163,7 +163,7 @@ If we assume that our LN2 is dry soil and that our ice water bath is wet soil, w
 
 While this demonstrates that we can calibrate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
 
-\section{Experiment II - Verification of sensitivity and stability} \label{Exp2_results}
+\section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
 
 \subsection{Data Collected}
 For the sensitivity portion of this experiment, the same data collected from section \ref{Exp1_data} is used.  The data collected for the stability is the total power data collected from the software defined radiometer. For calibration the data points shown in table \ref{exp2_datapoints} was collected and used to calibrate the total power measurements.
@@ -190,7 +190,7 @@ The standard deviation is calculated to be 0.09 Kelvin by using the standard dev
 \label{exp2_param}
 % Use: \begin{tabular{|lcc|} to put table in a box
 \begin{tabular}{ccc} \hline
-\textbf{Bandwidth ($\beta$)} & \textbf{Integration Time ($\tau$)} & \textbf{$T_{A}+T_{sys}$}\\ \hline
+\textbf{Bandwidth ($\beta$)} & \textbf{Integration Time ($\tau$)} & \textbf{$T_{A}+T_{N}$}\\ \hline
 10 MHz & 2 sec & 437 K \\ \hline
 \end{tabular}
 \end{table}
@@ -200,9 +200,9 @@ Python was then used to calculate the $NE\Delta T$ using the data from table \re
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 tau = 2
 BSDR = 10e6
-Tsys = 350
+TN = 350
 TA = 77
-NEAT_SDR = (TA+Tsys)/sqrt(BSDR*tau)
+NEAT_SDR = (TA+TN)/sqrt(BSDR*tau)
 \end{lstlisting}
 
 This gives us the result of 0.1 Kelvin for the expected $NE\Delta T$.  We can now look at the data collected from experiment one.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data.  To determine our sensitivity, we will zoom in on data that was collected while the matched load was submerged in LN2.  Figure \ref{Sensitivity} shows this graph.  
@@ -327,7 +327,7 @@ The taps value is generated by Python using the filter design program.  For this
 A final note on lining up the square-law detector information and the software defined radiometer data.  Both systems have a record function and must be started manually by the user.  They also run on separate computers.  Therefore, there is a human error that also gets introduced to the system as well.  This is usually no more than 1 or 2 seconds.  But in this experiment it was noted that there was a slightly longer delay between the two of about 4 seconds.  
 
 \section{Experiment IV - Performance impact of interfering signal mitigation} \label{Exp4_results}
-The goal of this experiment is to examine what affect adding a filter does to the performance of the radiometer.  This performance would be the same no matter what type of radiometer we use as a f
+The goal of this experiment is to examine what affect adding a filter does to the performance of the radiometer.  While we have demonstrated that we can filter an offending signal, this comes at a cost.  This experiment examines this impact on the measurement of total power while filtering an interfering signal.
 
 \subsection{Data Collected}
 The data collected for this experiment is the data points collected in table \ref{exp4_data_power} and table \ref{exp4_datapoints}.  The remaining data is data generated from the equations outlined in this section.
@@ -378,14 +378,14 @@ The data collected for this experiment is the data points collected in table \re
 
 \subsection{Data Analysis}
 
-For experiment four, we will look at the performance of a software defined radiometer when a filter is used and what impact that has.  Recall the following equation for $NE\Delta T$ from equation \ref{NEAT_EQ}.  Our sensitivity is based on the amount of noise we have from both the antenna or $T_{A}$ plus the addition of our system noise which is $T_{sys}$.  Finally our bandwidth of the signal, $\beta$ and our integration time, $\tau$, are the final factors that determine our $NE\Delta T$.
+For experiment four, we will look at the performance of a software defined radiometer when a filter is used and what impact that has.  Recall the following equation for $NE\Delta T$ from equation \ref{NEAT_EQ}.  Our sensitivity is based on the amount of noise we have from both the antenna or $T_{A}$ plus the addition of our system noise which is $T_{N}$.  Finally our bandwidth of the signal, $\beta$ and our integration time, $\tau$, are the final factors that determine our $NE\Delta T$.
 
 Our integration time is controllable, and can be set using the GUI panel for the software defined radio.  In a typical radiometer, we often do not have any control of the bandwidth.  It is often set by the mechanical bandwidth filters that are in place and the detection circuit to detect the noise power.  In a software defined radio radio we do have more control on bandwidth as we can change our sampling rate which in turns controls our bandwidth.  There is a limit as larger sampling rates require more data and processing bandwidth to process.  
 
 Recall from experiment III in section \ref{Exp3_results} where we filtered out an offending signal.  While this allows us to filter out the offending signal and resume total power measurements, it comes at a cost of reducing the overall bandwidth available for power detection.  In this experiment we look at this and derived the following equation \ref{NEAT_FILTER}.
 
 \begin{equation}\label{NEAT_FILTER}
-NE\Delta T=\frac{T_{A}+T_{sys}}{\sqrt{(\beta - \beta_{filter})  \tau}}
+NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{(\beta - \beta_{filter})  \tau}}
 \end{equation}
 
 Since we are notching out a portion of the bandwidth in order to remove the offending signal, this also takes away that bandwidth for our total power detection.  The larger the filter, the more bandwidth that is subtracted from the total bandwidth available.  Equation \ref{NEAT_FILTER} accounts for this loss by subtracting the filter bandwidth from the total bandwidth.  
@@ -398,7 +398,7 @@ This equation now takes into account the subtraction of the filter.  The width o
 \label{neat_bw}
 \end{figure}
 
-We can graph the expected response of the $NE\Delta T$ by adjusting the values of $\beta_{fitler}$ to range from a narrowband filter, in our example 125 kHz all the way to 9.99 MHz or nearly all of the bandwidth.  Figure \ref{neat_bw} shows the expected exponential response of the $NE\Delta T$ as the size of the filter increases.  
+We can graph the expected response of the $NE\Delta T$ by adjusting the values of $\beta_{fitler}$ to range from a narrow-band filter, in our example 125 kHz all the way to 9.99 MHz or nearly all of the bandwidth.  Figure \ref{neat_bw} shows the expected exponential response of the $NE\Delta T$ as the size of the filter increases.  
 
 Figure \ref{neat_bw} also shows measured standard deviation points for the software defined radiometer for set filter sizes.  These filter sizes and collected data is in table \ref{exp4_data_power}.  It can be seen in figure \ref{neat_bw} that there is a good correlation between the expected sensitivity of the radiometer and the measured sensitivity of the radiometer.
 
@@ -422,7 +422,7 @@ To compare this theoretical power to the actual power measured, we collected the
 
 %---------------------------------------------------------------
 
-\section{Benefits to Software Defined Radio Radiometer}
+\section{Advantages of a Software Defined Radio Based Radiometer}
 A study was conducted on what benefits a software defined radio radiometer would have over a more traditional radiometer.  This was focused on looking at three main areas; cost, weight and size, and the value a SDR radiometer can add over traditional radiometers.
 
 \subsection{Cost Benefits}
@@ -448,7 +448,7 @@ Spectracyber 1420 MHz Hydrogen Line Spectrometer & 1 & \$2,650 \\ \hline
 \end{tabular}
 \end{table}
 
-As seen in table \ref{cost_table}, even the higher cost Ettus research equipment is a lower cost option than the custom built ISU radiometer purchased from University of Michigan and even a comparable off the shelf radiometer.  It should be noted that the radiometer from the University of Michigan is also a dual polarization radiometer so there are two RF front ends and two ADCs that feed into a FPGA board.  It would be quite easy to add dual polarization to the Ettus N200 SDR as it does support two daughter-boards.  This would increase the cost to \$2,179 for the additional LNAs and daughter-board.
+As seen in table \ref{cost_table}, even the higher cost Ettus research equipment is a lower cost option than the custom built radiometer in use at Iowa State University and even a comparable off the shelf radiometer.  It should be noted that the radiometer in use at Iowa State University is also a dual polarization radiometer so there are two RF front ends and two ADCs that feed into a FPGA board.  It would be quite easy to add dual polarization to the Ettus N200 SDR as it does support two daughter-boards.  This would increase the cost to \$2,179 for the additional LNAs and daughter-board.
 
 The largest cost benefit is that key components that you find in a radiometer, the filters and square-law detector can now be all done in software instead of needed additional equipment.  The system is also much more frequency agile, which means it can work on a broader range of frequencies than most traditional radiometers with very little change in hardware and in some cases may require no change in hardware.  Some of this does depend on the SDR hardware however.  The Ettus N200 for example uses daughter-boards to provide the RF interface.  While these boards provide a high quality in the RF signal, it does come at a cost and are usually designed for certain bands of frequencies.  Other low cost SDRs however are also very wide range in the frequencies they will work in.  The HackRF for example works from 10 MHz to 6 GHz, but does so at the cost of lower resolution, less gain in its front end and a lower bandwidth that it can handle.
 
@@ -483,7 +483,7 @@ A software defined radio radiometer adds additional value for two reasons.  One,
 
 Second, we are able to have an agile system that is able to adapt to changing conditions with very little or no change to hardware.  Different types of radiometers can be implemented such as a Dicke radiometer, dual polarization radiometer or a radiometer that can perform Stokes parameters.  In addition, since we have both frequency and power information we can create a system that is able to adapt to changing conditions such as dealing with an interfering signal.  
 
-\section{Disadvantages of a SDR Radiometer}
+\section{Drawbacks of a SDR-based Radiometer}
 Although we have outlined a number of advantages of using a COTS SDR Radiometer and how a SDR can add additional value to the radiometer system, there are some disadvantages to a SDR Radiometer.
 
 \subsection{Power Consumption}
@@ -496,7 +496,7 @@ While SDR technology has advanced, bandwidth is still a constraint that affects 
 
 In contrast, a square-law detector usually has a very large bandwidth, as much as one gigahertz, and is why we usually need to filter to the frequency band of interest.  
 
-\section{Results Summary}
+%\section{Results Summary}
 
 
 %----------------------------------------------------------
