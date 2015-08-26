@@ -20,7 +20,7 @@ Table \ref{rad_performance} summarizes the specification of three parameters tha
 \textbf{Parameter} & \textbf{Value} & \textbf{Units} \\ \hline
 Minimum bandwidth & 20 & MHz \\
 Operational frequency & 1400 - 1420 & MHz \\
-$NE\Delta T$ & 1 & Kelvin \\ \hline
+$NE\Delta T$ (sensitivity) & 1 & Kelvin \\ \hline
 \end{tabular}
 \end{table}
 
@@ -36,7 +36,7 @@ The use of a software defined radio (SDR) to implement a radiometer requires map
 
 \subsection{Power measurement}
 
-A traditional radiometer uses a device called a square law detector to measure power.  It transforms an input signal into an output voltage whose square is proportional to the input signal power.  For a signal that is the thermal noise of the object, the mean value is zero.  However, a square-law detector takes the peak values of the envelope of the signal.  This is shown in Figure ....
+A traditional radiometer uses a device called a square law detector to measure power.  It transforms an input signal into an output voltage whose square is proportional to the input signal power.  For a signal that is the thermal noise of the object, the mean value is zero.  However, a square-law detector takes the peak values of the envelope of the signal.
 
 
 {\begin{figure}[h!tb] 
@@ -57,8 +57,7 @@ Equation \ref{sdr_x2} gives the mathematical representation of a square law dete
 I^2+Q^2 = P_{out}
 \end{equation}
 
-Figure \ref{square_block} shows the actual implementation in GNURadio Companion.  This shows the block "Complex to Mag^2) which is the equivalent to Equation \ref{sdr_x2}.  As with a traditional radiometer, this measurement will fluctuate rapidly.  To smooth this signal, we can integrate and also apply a low pass filter to the signal.  Integration is covered in the next section.
-
+Figure \ref{square_block} shows the actual implementation in GNURadio Companion.  This shows the block \emph{Complex to Mag\^2} which is the equivalent to Equation \ref{sdr_x2}.  As with a traditional radiometer, this measurement will fluctuate rapidly.  To smooth this signal, we can integrate and also apply a low pass filter to the signal.  Integration is covered in the next section.
 %Like the analog square-law detector we are taking peak voltage values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.  Figure \ref{square_block} shows the GNURadio blocks used to perform this function.
 
 %Like the analog square-law detector, this signal will fluctuate rapidly.  To improve the sensitivity of the radiometer the signal is integrated.  The next step is to replicate a RC filter or integrator in the software defined radio.
@@ -75,76 +74,107 @@ The output of a square law detector tends to be very "noisy".  Figure \ref{squar
 \end{figure}
 }
 
-A common solution used by radiometers is to "smooth" out this output by sending it through an integrator.  In short, an integrator averages a signal over time, which effectively eliminated the effects of noise (assuming noise that has a zero mean amplitude).  
+A common solution used by radiometers is to "smooth" out this output by sending it through an integrator.  In short, an integrator averages a signal over time, which effectively eliminates the effects of noise (assuming noise that has a zero mean amplitude).  
 
 A traditional radiometer will use a simple Resistor and Capacitor (RC) circuit to accomplish this.  Because our signal, even a noisy one, has a frequency component, this RC circuit acts like a low pass filter.  Thus the higher frequency "noise" is filtered out.
 
 %To improve our sensitivity, and reduce the rapid fluctuations in the power measurements, we integrate the power measurements.  This gives an average of the signal and reduces the fluctuations in the output.  This helps to improve the sensitivity of the radiometer as seen in equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on how an analog integrator works.  The digital equivalent to a integrator is a Finite Impulse Response (FIR) filter.
 
-To implement this as a digital filter, a Finite Impulse Response (FIR) or Infinite Impulse Response (IIR) is used.  A FIR filter is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  This type of digital filter can be represented by equation \ref{FIR_Eq} which mathematically expresses the FIR Filter and simply says that the nth output is a weighted average of the most recent P inputs. 
+To implement this as a digital filter, a Finite Impulse Response (FIR) or Infinite Impulse Response (IIR) can be used.  A FIR filter, also known as a non-recursive filter, is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  Equation \ref{FIR_Eq} shows the output of this filter ($y_N$) with the input $x_n$, where $P$ defines the order of the filter and is a weighted average of the most recent $P$ inputs.  The array $c_i$ holds $P$ arbitrary constants.  These values define the frequency response of the FIR filter.  
 
 \begin{equation}\label{FIR_Eq}
-y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}
+y_n=\displaystyle\sum\limits_{i=o}^{P} c_ix_{n-i}
 \end{equation} 
 
-An Infinite Impulse Response (IIR) filter is the same as the FIR filter, except a summation term is added which feeds back the previous output.  Equation \ref{IIR_eq} shows that a FIR filter is a IIR filter, except $Q=0$[\cite{Cross}]. 
+An Infinite Impulse Response (IIR) filter, also known as a recursive filter, is the same as the FIR filter, except a summation term is added which feeds back the previous output.  Equation \ref{IIR_eq} shows that a FIR filter is a IIR filter, with an extra summation term added[\cite{Cross}]. This term has the $d_j$ array which holds the weighting coefficients for feeding back the previous $y_{n-j}$ outputs.  IIR filters can produce better results with less computational cost.  However, they are harder to design and may become unstable if not designed properly.
 
 \begin{equation}\label{IIR_eq}
-y_n=\displaystyle\sum\limits_{i=o}^{P-1} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
+y_n=\displaystyle\sum\limits_{i=o}^{P} c_ix_{n-i}+\displaystyle\sum\limits_{j=1}^{Q} d_jy_{n-j}
 \end{equation}
 
-Both filters produce the same result by giving the average of the input signal.  An IIR filter however uses less computational power than a FIR filter.  Because of this, an IIR filter was used in defining our integrator in a software defined radio based radiometer.
+To design either a FIR or IIR filter, the coefficient arrays $c_i$ and $d_j$ are often referred to as "taps".  These tap values define the filter as shown in Equation \ref{FIR_Eq} and Equation \ref{IIR_eq}.  To generate these tap values, GNURadio provides a filter design program.  This program is both a standalone GUI program and can also be called from within a GNURadio Companion.  The sampling rate, frequency response and cutoff frequency can be sent to the program to calculate the required taps.  
 
-To get a better understanding on how the digital IIR filter relates to the RC filter analog, look at the Fourier Transform and the relationship of the input to the output in the frequency domain in equation \ref{Fourier_IIR}.  In equation \ref{Fourier_IIR}, $f$ is our frequency in Hz and $T$ is the time between samples in seconds and is related to our sampling frequency.
+In terms of computational and memory requirements, the more taps we generate the more accurate the filter will become.  It will also be possible to design a filter with a faster (steeper) frequency response with more taps.  However, each tap requires memory for it to be stored and also requires computation against the input signal.  Therefore more taps also require more computational and memory requirements.  
+
+%Both filters produce the same result by giving the average of the input signal.  An IIR filter however often uses less computational power than a FIR filter.  Because of this, an IIR filter was used in defining our integrator in a software defined radio based radiometer.
+
+To get a better understanding on how the digital IIR filter relates to the RC filter analog, we need to look at the frequency response of the digital filter.  We can do that by looking at the Fourier Transform and the relationship of the input to the output in the frequency domain in Equation \ref{Fourier_IIR} where $f$ is our frequency in Hz and $T$ is our time between samples in seconds.  
 
 \begin{equation}\label{Fourier_IIR}
 H(f)=\frac{\displaystyle\sum\limits_{j=o}^{P-1} c_je^{-2\pi ijfT}}{1-\displaystyle\sum\limits_{k=1}^{Q} d_ke^{-2\pi ikfT}}
 \end{equation}
 
-Now to show the link between the analog RC circuit and the IIR filter we look at equation \ref{eq:rc_circuit_eq}.  
+Our IIR filter needs to behave like a low pass filter to filter out the high frequency components.  As discussed earlier, an analog radiometer might do this with a simple RC circuit.  Figure \ref{rc_circuit} shows what this circuit looks like.
+
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=17cm]{Images/rc-circuit.png}
+\isucaption{A simple RC circuit.}
+\label{rc_circuit}
+\end{figure}
+}
+
+In Figure \ref{rc_circuit}, the input is $V_{in}$, the resistance value is $R$, the capacitance value is $C$ and the output is $V_{out}$.  This circuit can be represented by Equation \ref{eq:rc_circuit_eq}.
 
 \begin{equation}\label{eq:rc_circuit_eq}
 \frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
 \end{equation}
 
-Equation \ref{eq:rc_circuit_eq} represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$.  We can substitute for input and output of our IIR filter in terms of $x_n$ and $y_n$.  Because we are now in the time domain, we need to define what $T$ is and we can do that using equation \ref{sampling_rate_eq}.
+Equation \ref{eq:rc_circuit_eq} represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$.  We can substitute the input to the RC circuit ($V_{in}$) as the input to Equation \ref{IIR_eq} or $x_n$.  The output of our RC circuit ($V{out}$) can also be expressed as the output in Equation \ref{IIR_eq} which is $y_n$.  However, in order to do that we must move from the continuous domain to the discrete domain that our digital filter operates in.  This is done by showing the relationship between our sampling frequency $f_s$ and our period or time between samples, $T$ and is shown in Equation \ref{sampling_rate_eq}.
 
 \begin{equation}\label{sampling_rate_eq}
-T=time between samples=\frac{1}{sampling rate}
+T=time between samples=\frac{1}{f_s}
 \end{equation}
 
-We can now relate our input voltage to the input to our IIR filter shown in equation \ref{input_IIR} and the output voltage shown in equation \ref{output_IIR}.
+We can now relate our input voltage ($V_{in}$) to the input to our IIR filter ($x_n$) by multiplying our voltage input to th our period and the number of samples, $n$. shown in Equation \ref{input_IIR} and the output voltage shown in Equation \ref{output_IIR}.
 
 \begin{equation}\label{input_IIR}
-x_n=v_{in}(nT)
+x_n=V_{in}(nT)
 \end{equation}
 
 \begin{equation}\label{output_IIR}
-y_n=v_{out}(nT)
+y_n=V_{out}(nT)
 \end{equation}
 
-Next we rewrite our difference equation with $x_n$ and $y_n$ shown in equation \ref{diff_xn_yn}.
+Next we rewrite our difference equation by substituting $x_n$ and $y_n$ into Equation \ref{eq:rc_circuit_eq} which results in an approximated finite difference equation shown in Equation \ref{diff_xn_yn}.
 
 \begin{equation}\label{diff_xn_yn}
 \frac{x_n-y_n}{R}=C\frac{y_n-y_{n-1}}{T}
 \end{equation}
 
-Finally, we can solve for $y_n$ which results in our final equation \ref{final_IIR_RC}.
+We can now solve for $y_n$ algebraically and this results in our final Equation \ref{final_IIR_RC}.
 
 \begin{equation}\label{final_IIR_RC}
 y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
 \end{equation}
 
-It can be seen that an IIR filter can have the same frequency response as we expect from an analog RC filter.  As our sampling rate approaches infinity, the approximation gets closer to the original response from the analog RC circuit.  
+Equation \ref{final_IIR_RC} shows an IIR filter that has a frequency response that closely approximates an RC circuit.  The approximation improves as $T$ approaches zero or our sampling rate approaches infinity.
+
+To design the filter we need to look at what our desired cut-off frequency needs to be.  For a RC filter, our resistance and capacitance define our cutoff frequency ($f_c$) and has the relationship shown in Equation \ref{fc_RC}.
+
+\begin{equation}\label{fc_RC}
+f_c=\frac{\sqrt{3}}{2\pi RC}
+\end{equation}
+
+Given our desired cutoff frequency we can determine our combined $RC$ value by rearranging Equation \ref{fc_RC} algebraically to Equation \ref{RC_fc}.
+
+\begin{equation}\label{RC_fc}
+RC=\frac{\sqrt{3}}{2\pi f_c}
+\end{equation}
+
+The $RC$ values are also referred to as the time constant of the circuit and we do not need to find the individual R and C values.  An example of how we can find the coefficients of our IIR filter, given a desired cutoff frequency of $f_c$ is shown next.  
+
+For a low pass filter, we want a cutoff frequency ($f_c$) of 1000 Hz.  Given this and using Equation \ref{RC_fc} we can determine our time constant to be 2.757 x $10^-4$ or 275.7 microseconds.  If our sample rate is 1 MHz, then our $T$ value is 1 x $10^-6$ or 1 microsecond.  Plugging these values into Equation \ref{final_IIR_RC} results in the coefficient $c_0 = 0.0036$ and $d_1=0.9964$.  
+
+Again, GNURadio includes a program that allows us to define our filter and it will generate the coefficients and taps needed for our filters.  Chapter \ref{ch:results} goes into more depth on this program.
 
 %The $RC$ term gives us our time constant of the circuit and can be used to calculate out our coefficients.  We are not concerned about the actual values of R and C with our IIR filter, instead we just need the product of R and C.  
 
-In GNURadio most of the work is done for us.  We can simply enter in our desired cutoff frequency and GNURadio will calculate our IIR filter coefficients.  However, this shows that an IIR filter works much like an analog RC low pass filter.
 
 \subsection{Bandwidth and filtering}
-A traditional radiometer will use filters to restrict the bandwidth of the radiometer.  For a software defined radiometer, the sampling rate defines the bandwidth for a software defined radiometer.  
+A traditional radiometer will use filters to restrict the bandwidth of the radiometer.  For a software defined radiometer, the sampling rate defines the bandwidth for a software defined radiometer.  This sample rate may be adjusted but will be limited by the computational power available.  The higher the sample rate, and therefore the more bandwidth observed, the more computational power needed.  
 
-Additional filtering can be created and used in a software defined radiometer.  These filters are often created using either IIR or FIR filters.  The most efficient method is to restrict bandwidth by setting the sampling rate.  However, these filters can be used to filter out a narrow band of frequencies.  This will be discussed in chapter \ref{ch:results}.
+Additional filtering can be created and used in a software defined radiometer.  These filters are often created using either IIR or FIR filters.  The most efficient method is to restrict bandwidth by setting the sampling rate.  However, these filters can be used to filter out either a narrow band of frequencies or to temporarily reduce the overall bandwidth.  A common application of these additional filters is to remove an offending signal detected by the software defined radio based radiometer.  This method of mitigating signal interference will be discussed in chapter \ref{ch:results}.
 
 \section{System overview}
 

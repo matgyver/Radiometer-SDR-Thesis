@@ -4,9 +4,9 @@
 %Chapter 5 discusses the Experimental setup and experiments used and how I evaluated the performance of the radiometer.
 
 \chapter{EVALUATION SETUP AND EXPERIMENTAL DESIGN}\label{ch:exp_design}
-The experiments outlined in this chapter is to demonstrate and verify that a software defined radiometer is able to perform as well or better than a traditional radiometer.  In addition, it will be demonstrated that a software defined radiometer can add additional functionality not typically found in most radiometers. 
+The experiments outlined in this chapter are used to demonstrate and verify that a software defined radio (SDR) base radiometer can perform on par with a traditional radiometer.  In addition, these experiments are designed to demonstrate that a SDR based radiometer can provide additional functionality not typically found in traditional radiometers. 
 
-In this chapter we will look at four experiments.  Experiment one verifies the operation of a software defined radiometer by comparing typical operations to a square-law detector, a typical device used in radiometry and calibration of the radiometer.  Experiment two verifies the expected sensitivity and stability of a software defined radiometer.  Experiment three will demonstrate a software defined radiometer mitigating an interfering signal and compare the results to a traditional radiometer with no interfering signal mitigation.  Finally, Experiment four will examine the affect filtering and bandwidth of the signal affects performance.  
+Four experiments are described.  Experiment one verifies our SDR-based radiometer by comparing its operation to a square-law detector, a device typically used within a traditional radiometer.  Experiment two evaluates the sensitivity and stability of our SDR-based radiometer.  Experiment three will evaluate our SDR-based radiometer's ability to mitigate an interfering signal in comparison to the behavior of a traditional radiometer in the presence of an interfering signal.  Experiment four's purpose is to further examine the impact of our frequency based notching approach for RFI mitigation on radiometer sensitivity.
 
 \section{Experiment I - Software Defined Radiometer Verification and Calibration}\label{Exp1}
 %Experiment 1
@@ -14,52 +14,29 @@ In this chapter we will look at four experiments.  Experiment one verifies the o
 %What type of data will you collect?
 %What is the experimental setup?
 
-In this experiment we will verify the operation of a software defined radiometer.  This experiment will verify that a software defined radiometer is able to perform as expected and will compare our results to a square-law detector which is commonly used in traditional radiometers.  
-To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the software defined radio.  This signal is split using a power divider so that the information will be the same to both devices with the except for the 3 dB plus insertion loss the power divider adds.  This allows us to verify the software defined radio with a proven system.  
-
-\subsection{Data Collection}\label{exp1_data}
-
-Two sets of data is produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisitions device that is attached to the square-law detector.  Data from each one is stored to a local computer running the appropriate software.
-
-\emph{Software Defined Radio Data.  }The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP or a file.  In our case we will use a file sink to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows for the user to turn on and off recording of the data.  A block diagram of the file blocks is in figure \ref{filesink}.
-
-{\begin{figure}[h!tb] \centering
-\includegraphics[width=5cm]{Images/TPR_Filesink.png}
-\isucaption{The File Sink block used in GNURadio.  Source:  GNURadio}
-\label{filesink}
-\end{figure}
-}
-
-There are two types of files that the SDR generates.  The first type of file is the complete I and Q data points, which represents the phase and magnitude of the signal, recorded from the SDR.  This file is stored as a little-indian format and as complex values.  Due to the sampling rate, it is not uncommon for this file to grow to be quite large, usually several gigabytes of data for a 10-15 minute run.  However, this file can then be feed back through GNURadio later to be played back if needed and it contains the information needed to completely recreate the signal.
-
-The second file type is the total power values generated from the total power block in GNURadio.  A block diagram of this block can be found in Appendix \ref{appendix1} in figure \ref{TPR_GRC} and the source code for this can also be found in Appendix \ref{appendix1}.  This file is also a little-endian format however this file only has float values.  This file is also much smaller than the file that contains the I and Q data points.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
-
-\emph{Square-law detector data.}  The square-law detector outputs information as an analog voltage that is linearly proportional to the RF power measured.  This required a system that can capture the analog signal from the ADL5902 and then send the data to be stored.  The National Instruments USB-6009 data acquisition unit was selected as it met the requirements for an easy to use yet high enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample up to 48 ksps with a resolution of 14-bits which is more than adequate for the experiments.  To use the USB-6009 a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved the information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  The USB-6009 then connects to a host computer through the USB interface.  This made obtaining the data and using device straightforward to use.
-
-The Labview program created generates a user interface to display the data and allow for turning on and off the recording.  This allowed for easy monitoring of the square-law data while the experiment was being run.  A screen shot of the GUI created in Labview is shown in figure \ref{labviewgui}.
-
-{\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/labviewGUI.png}
-\isucaption{A screenshot of the Labview GUI interface.  Source:  Labview}
-\label{labviewgui}
-\end{figure}
-}
-
-This program uses the National Instruments DAQ assistant which allows for quick configuration and setup for the computer to talk to a number of NI devices.  Labview also includes blocks that allows us to easily record the data to a file and also use a low pass filter.  These blocks made up most of the program and resulted in a program that was quickly made.  Figure \ref{labviewblock} shows the blocks used and the wiring of the blocks.
-
-{\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/labview-diagram.png}
-\isucaption{A screenshot of the Labview block diagram.  Source:  Labview}
-\label{labviewblock}
-\end{figure}
-}
-
-%\emph{GNURadio Testing.  }Before testing the program with the N200, testing was done with the built in noise generator in GNURadio.  This was used to test its ability to measure small changes in noise.  This simulated noise verified that the program written was able to detect changes in noise power using a simulated Gaussian source.  It was also desired to also use a hardware based noise generator, however a suitable noise generator could not be located on campus.
-
-%After this was done additional tweaks were made to both the GUI interface and to the program that performs the calculations for the total power radiometer.  The essential components were moved to a custom block which helped to clean up the block diagram.  
+This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against a square-law detector, which is commonly used in traditional radiometers.  To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  This signal is split using a power divider so that the information will be the same to both devices.  This allows us to verify the software defined radio with a proven system.  
 
 \subsection{Experimental setup} \label{exp1_setup}
-For this experiment, the following hardware was used:
+
+Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our source signal.  This matched load is then submerged in temperature baths.  These baths use Liquid Nitrogen (LN2) which is known to boil at 77 Kelvin and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these could easily be monitored and maintained.  The load was submersed in each bath for a minimum of 2 minutes to allow for it to reach the same temperature as the bath.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  
+
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/Exp_1_Setup.pdf}
+\isucaption{Block diagram of Experiment 1 setup.  Source: Matthew E. Nelson}
+\label{Exp1_Block}
+\end{figure}
+}
+
+The radiometer RF front end provides the amplification needed for our experiments.  Figure \ref{ISURF} shows an image of the RF front end used with the LNAs and band-pass filters marked.  After the signal has been amplified we divide that signal between the ADL5902 square-law detector and the N200 Software defined radio.  The N200 is then connected to a personal computer running XUbuntu Linux and GNURadio.
+
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/ISU_RF_noted.jpg}
+\isucaption{The radiometer RF front end with LNAs and band-pass filters used in the experiments.  Source: Matthew E. Nelson}
+\label{ISURF}
+\end{figure}
+}
+
+The following hardware was used and has also been marked on Figure \ref{Exp1_Block}:
 
 \begin{enumerate}
 \item N200 Software Defined Radio with DBSRX2 Daughter-board
@@ -68,68 +45,79 @@ For this experiment, the following hardware was used:
 \item ZN2PD-20-S+ Power Divider
 \item 50-ohm matched load
 \item Rigol DP832 Power Supply
-\item ISU Radiometer RF Front End
-\end{enumerate}
-
-The ISU Radiometer, as shown in figure \ref{ISURF} was used as it has the necessary Low Noise Amplifiers (LNAs) to provide the needed amplification.  The only item powered for these experiments was the LNAs, all other components are passive or were deactivated.  The ISU Radiometer uses the following hardware:
-
+\item Radiometer RF Front End
 \begin{enumerate}
 \item 4 x Integrated Microwave Bandpass filters (1400 - 1425 MHz)
 \item 2 x Miteq AMF-3F-01400147-30-10P LNA
 \item 1 x Miteq AMF-2F-01400147-04-10P LNA
 \end{enumerate}
+\end{enumerate}
+
+%The radiometer RF front end, as shown in figure \ref{ISURF} was used as it has the necessary Low Noise Amplifiers (LNAs) to provide the needed amplification.  The only item powered for these experiments was the LNAs, all other components are passive or were deactivated.  The radiometer RF front end uses the following hardware:
+
+\subsection{Data Collection}\label{exp1_data}
+
+Two sets of data are produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisitions device that is attached to the square-law detector.  Data from each is stored to a local computer running the appropriate software.
+
+\emph{Software Defined Radio Data.}  The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP or a file.  As shown in Figure \ref{filesink}, a file sink block is used to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows for the user to turn on and off recording of the data.
 
 {\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/ISU_RF.jpg}
-\isucaption{The ISU radiometer's LNAs and bandpass filters used in most experiments.  Source: Matthew E. Nelson}
-\label{ISURF}
+\includegraphics[width=5cm]{Images/TPR_Filesink.png}
+\isucaption{The File Sink block used in GNURadio.  Source:  GNURadio}
+\label{filesink}
 \end{figure}
 }
 
-Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our antenna or source.  This matched load is then submerged in temperature baths.  These baths were temperature controlled first by using Liquid Nitrogen (LN2) which is known to boil at 77 Kelvin and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these could easily be monitored and maintained.  The load was submersed in each bath for a minimum of 2 minutes to allow for it to reach the same temperature as the bath.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  
+There are two types of files that the SDR generates.  The first type of file is the I (in-phase) and Q (quadrature phase) data points.  This file is stored in little-indian format as complex values.  Due to the sampling rate, it is not uncommon for this file to grow quite large, usually several gigabytes of data for a 10-15 minute run.  However, this file can then be feed back through GNURadio later to be played back if needed, and it contains the information needed to completely recreate the signal.
 
-The ISU radiometer provides the amplification needed for our experiments and finally we divide that signal between the ADL5902 square-law detector and the N200 Software defined radio.  The N200 is then connected to a personal computer running XUbuntu Linux and GNURadio.
+The second file type is the total power values generated from the total power block in GNURadio.  A diagram of this block can be found in Appendix \ref{appendix1} (Figure \ref{TPR_GRC}), and its source code can be found in Appendix \ref{appendix1}.  This file also uses a little-endian format, however this file only has real values.  This file is also much smaller than the file that contains the I and Q data points.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
+
+\emph{Square-law detector data.}  A square-law detector outputs information as an analog voltage that is linearly proportional to the RF power measured.  The Analog Devices ADL5902 is a single Integrated Circuit (IC) that contains a square-law detector and necessary amplification for the output signal and is shown in Figure \ref{square_law} .  This device operates from 50 MHz to 9 GHz and can detect power as low as -60 dBm.  The output voltage from the square-law is amplified to a range from zero to five volts with a calibrated output of 53 mV/dB.  
 
 {\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/Exp_1_Setup.png}
-\isucaption{Block diagram of Experiment 1 setup.  Source: Matthew E. Nelson}
-\label{Exp1_Block}
+\includegraphics[width=7cm]{Images/adl5902.jpg}
+\isucaption{The ADL50902 IC on a demonstration board.}
+\label{square_law}
 \end{figure}
 }
 
-%The 50 ohm load was then submersed into a hot or cold bath.  These baths were temperature controlled first by using Liquid Nitrogen (LN2) which is known to boil at 77 Kelvin and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these could easily be monitored and maintained.  The load was submersed in each bath for a minimum of 2 minutes to allow for it to reach the same temperature as the bath.  The noise temperature measured was then recorded using the setup described.
+To capture the voltage output from the ADL5902, a data acquisition unit (DAQ) is used.  The National Instruments USB-6009 DAQ unit was selected as it met the requirements for an easy to use yet high enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample at 48 KSPS with a resolution of 14-bits.  
 
-%\subsection{Laboratory Setup}
-%For this experiment the ISU radiometer was setup in the Make to Innovate lab located in Howe Hall at Iowa State University.  This lab was picked as it has an electronics area and has test equipment needed for certain experiments as well as the needed power supplies to power the equipment.  To measure the change in noise, a 50 ohm matched load was attached to the input of the LNAs and this output was then feed to a power divider which divides the signal between the software defined radio and the square-law detector.  This does add a 3.1 dB loss to both devices, however this was acceptable for these experiments.
+To use the USB-6009 a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved the information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  The USB-6009 then connects to a host computer through the USB interface.  A GUI program, shown in Figure \ref{labviewgui}, is then used to control and display the data.  This made obtaining the data and using the device straightforward.
 
-%\begin{figure}[h!tb] \centering
-%\includegraphics[width=\textwidth]{Images/exp1_setup.jpg}
-%\isucaption{An image of the typical lab setup used to test the software defined radiometer}
-%\label{LabSetup}
-%\end{figure}
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/labviewGUI.png}
+\isucaption{A screenshot of the Labview GUI interface.  Source:  Labview}
+\label{labviewgui}
+\end{figure}
+}
+
+For rapid development, the National Instruments DAQ assistant was used to quickly configure and setup the USB-6009.  Labview also includes blocks that allows us to easily record the data to a file and to use a low pass filter.  These blocks made up most of the program and resulted in a program that was quickly made.  Figure \ref{labviewblock} shows the blocks used and the wiring of the blocks.
+
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Images/labview-diagram.png}
+\isucaption{A screenshot of the Labview block diagram.  Source:  Labview}
+\label{labviewblock}
+\end{figure}
+}
 
 \section{Experiment II - Verification of sensitivity and stability}\label{Exp2}
 
 In this experiment we will verify the sensitivity and stability of a software defined radiometer.  This experiment will verify that a software defined radiometer is able to meet the expected sensitivity and stability within an acceptable range.    
 
-\subsection{Data Collection}
-The data collected for this experiment was the total power measurements made from the software defined radiometer.  These measurements uses the same method as outlined in section \ref{exp1_data}.
-
 \subsection{Experimental setup} \label{exp2_setup}
 The experimental setup used for experiment two is the same experiment as outlined in section \ref{exp1_setup}.  
 
+\subsection{Data Collection}
+The data collected for this experiment was the total power measurements made from the software defined radiometer.  These measurements uses the same method as outlined in section \ref{exp1_data}.
 
 \section{Experiment III - Interfering Signal Mitigation}\label{Exp3}
 
-In this experiment we will generate an interfering signal and then mitigate the signal using a software defined filter.  A square-law detector will be hooked up in parallel to measure the same signal but will have no mitigation methods for the signal.  We will then compare the two signals to verify that the software defined radiometer can mitigate an interfering signal and still make total power measurements.
+In this experiment we generate an interfering signal and then mitigate the signal using a software defined filter.  A square-law detector is hooked up in parallel to measure the same signal but is not provided with a mitigation mechanism.  We then compare the two signals to verify that the SDR-based radiometer can mitigate the interfering signal, while continuing to still make useful total power measurements.
 
-The addition of an unwanted signal can be a determinant to the radiometer and has an adverse effect on how the radiometer operates.  In today's world though, it is getting more difficult to control intentional radiators as the RF spectrum becomes crowded with more devices [\cite{Ellingson}].  This problem becomes even a greater issue with radiometers used in orbiting spacecrafts as they are able to see large areas[\cite{DeRooRFI}].  Even though the band we are working in of 1.4 GHz is an internationally protected frequency, there can still be both intentional and unintentional radiators that cause interference.
+This experiment was designed to determine whether or not a SDR-based radiometer can cope with an interfering signal.  This test injects a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  The amplitude of this signal is then incremented and decremented at various times in the test.  This was done to reflect a possible real world scenario and to make it easy to identify the interfering signal with the square-law detector which only measures power.  
 
-RFI detection and mitigation is not a new topic in radiometry and there have been other methods in both the detection and mitigation of these signals.  [\cite{Forte}][\cite{McIntyre_RFI}][\cite{DeRoo}].
-
-This test was designed to test whether or not a software defined radiometer would be able to cope with an interfering signal.  This test injected a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  The amplitude of this signal is then incremented and decremented at various times in the test.  This was done to reflect a possible real world scenario and to make it easy to identify the interfering signal with the square-law detector which only measures power.  
-
-In order to mitigate this offending signal, a filter is designed to remove the offending signal.  An initial design of the filter was designed using a program that is part of the GNURadio software package, GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of the tool when designing the band-reject filter for this application.  This tool generates filter values also called taps that GNURadio will use for defining the filter.  The GUI program shown in figure \ref{GRC_Filter_DSN} allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our software designed radiometer.  
+In order to mitigate the offending signal, a filter is designed to remove the offending signal.  The design of the filter used a program that is part of the GNURadio software package, called the GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of this tool when designing the band-reject filter for this application.  This tool generates filter values (also called taps) that GNURadio will use for defining the filter.  The GUI program shown in figure \ref{GRC_Filter_DSN} allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our SDR-based radiometer.  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/GNURadio_Filter_dsn.png}
@@ -137,15 +125,11 @@ In order to mitigate this offending signal, a filter is designed to remove the o
 \label{GRC_Filter_DSN}
 \end{figure}  
 
-\subsection{Data Collection}
-
-The data collected for this experiment includes both the total power measurements from the software defined radiometer and the square-law data.  Section \ref{exp1_data} explains in detail the setup and configuration of the equipment used to collect this data.
-
 \subsection{Experimental setup} \label{exp3_setup}
 
-The experimental setup for this experiment is similar to the setup outline in section \ref{Exp1}.  In addition to the setup outline in that section, another software defined radio was added and injected into the RF signal chain.  This software defined radio is then configured to operate like a signal generator and generates the offending signal.  
+The setup for this experiment is similar to the setup outline in section \ref{Exp1}.  In addition a second software defined radio was added to inject an offending signal into the RF signal chain.  This software defined radio was configured to operate as a signal generator to create the offending signal.  
 
-Our signal generator is the HackRF One shown in figure \ref{HackRF}.  This SDR is a cheaper SDR and thus has lower specifications than the Ettus Research N200 used as the software defined radiometer.  However, for the task of a signal source, it will suit our needs.
+Our signal generator is the HackRF One (or just HackRF), shown in figure \ref{HackRF}.  This SDR is cheaper, and has lower specifications than the Ettus Research N200 used as the SDR-based radiometer.  However, it suits our needs for the purpose of a signal generator.
 
 \begin{figure}[h!tb] \centering
 
@@ -154,18 +138,23 @@ Our signal generator is the HackRF One shown in figure \ref{HackRF}.  This SDR i
 \label{HackRF}
 \end{figure} 
 
-For this experiment, the HackRF will generate a sinusoidal wave at a fixed frequency and with the amplitude changed at different times during the experiment.  This is controlled from a program called \emph{osmocom\_siggen}.  Osmocom was originally developed to communicate with OsmocomSDR hardware.  However, it has expanded to include the HackRF and Ettus Research hardware.  The \emph{osmocom\_siggen} program provides us a GUI interface to set the frequency and amplitude as well as the type of signal generated.  
+The HackRF generates a sinusoidal wave at a fixed frequency, and the signal amplitude changed at different times during the experiment.  This is controlled from a program called \emph{osmocom\_siggen}.  Osmocom was originally developed to communicate with OsmocomSDR hardware.  However, it has been expanded to include the HackRF and Ettus Research hardware.  The \emph{osmocom\_siggen} program provides a GUI to set the frequency, amplitude, type of the signal generated.  
+
+\subsection{Data Collection}
+
+The data collected for this experiment includes both the total power measurements from the software defined radiometer and the square-law data.  Section \ref{exp1_data} explains in detail the setup and configuration of the equipment used to collect this data.
 
 \section{Experiment IV - Performance impact of interfering signal mitigation}\label{Exp4}
-In this experiment we will examine the impact of filtering an interfering signal on the performance of the software defined radiometer.  We will specifically look at the $NE\Delta T$ of the signal and also how reducing our overall bandwidth affects our total power received to the radiometer.
+
+In this experiment we examine the impact of filtering an interfering signal on the sensitivity of the SDR-based radiometer and how reducing our overall bandwidth affects our total power received to the radiometer.
+
+\subsection{Experimental setup} \label{exp4_setup}
+
+In this experiment we setup our experiment as outlined in section \ref{exp3_setup}.  The rest of the data collected is done by the analysis of the data collected.
 
 \subsection{Data Collection}
 
 The data collected for this experiment is the total power reading measurements obtained from the software defined radio.  This data is identical to the method used in section \ref{exp1_data}.
-
-\subsection{Experimental setup} \label{exp4_setup}
-
-In this experiment we setup our experiment as outlined in section \ref{exp1_setup}.  The rest of the data collected is done by the analysis of the data collected.
 
 %----------------------------------------------------------
 % End of Chapter 5.  Anything below this is extra information
