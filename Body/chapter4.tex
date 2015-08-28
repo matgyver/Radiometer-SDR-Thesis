@@ -2,15 +2,15 @@
 % that contains an adv. example table and figure.
 \chapter{SOFTWARE DEFINED RADIOMETER IMPLEMENTATION}\label{ch:implementation}
 
-This chapter examines the implementation of a software defined radio based radiometer.  This requires that we understand the requirements of both a traditional radiometer and a digital radiometer which we will examine in this chapter.  Next we will map the traditional radiometer components discussed in chapter \ref{ch:background} to their digital counterparts.  Finally we will give an overview of the software defined radiometer implemented in this thesis.
+This chapter examines the implementation of a software defined radio based radiometer.  First we will examine requirements of both a traditional radiometer and a digital radiometer.  Next we will map the traditional radiometer components discussed in chapter \ref{ch:background} to their digital counterparts.  Finally a high level overview of a software defined radio based radiometer will be given.
 
 \section{Requirements}\label{requirements}
 
 This section discusses the hardware and software requirements used to drive the selection of the hardware and software platforms use to implement our software defined radio based radiometer.  
 
-\emph{Hardware Requirements.}  The capabilities of existing traditional radiometers were the primary driving force in setting the requirements of our hardware development platform.  Dr. Brian Hornbuckle from the ECE and Agronomy department at Iowa State University was consulted with respect to key specifications of his radiometer.  Additionally, the specifications of other radiometers were examined. 
+\emph{Hardware Requirements.}  The capabilities of existing traditional radiometers were the primary driving force in setting the requirements of our hardware development platform.  Dr. Brian Hornbuckle from the Electrical and Computer Engineering and Agronomy department at Iowa State University was consulted with respect to key specifications of his radiometer.  Additionally, the specifications of other radiometers were examined. 
 
-Table \ref{rad_performance} summarizes the specification of three parameters that were decided upon for selecting our hardware development platform, based on our investigation.  This lead to the the selection of the N200 software defined radio platform with a DBSRX2 daughter board from Ettus Research as our platform.  Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
+Table \ref{rad_performance} summarizes the specification of three parameters that were decided upon for selecting our hardware development platform, based on our investigation.  This lead to the selection of the N200 software defined radio platform with a DBSRX2 daughter board from Ettus Research as our platform.  Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
 
 \begin{table}[h!tb] \centering
 \isucaption{Required Radiometer performance}
@@ -30,14 +30,13 @@ GNURadio met the stated requirements.  It includes a supplemental software packa
 
 %Since an easy to use system was a requirement in the selection of the software.  GNURadio was selected as it includes GNURadio Companion (GRC), a supplemental program which uses a graphical interface for creating the radio environment.  GNURadio and GRC is discussed in greater detail in Chapter \ref{ch:background}, section \ref{software_platform}. 
 
-\section{Mapping Traditional Radiometer Functions to a Software Defined Radio Radiometer}
+\section{Mapping Traditional Radiometer Functions to a Software Defined Radio Based Radiometer}
 
 The use of a software defined radio (SDR) to implement a radiometer requires mapping components of a traditional radiometer to SDR-based technology.  This section presents the mapping of three such components for implementing our SDR-based radiometer.  These components are:  1) power measurement, 2) integration, and 3) filtering.
 
 \subsection{Power measurement}
 
-A traditional radiometer uses a device called a square law detector to measure power.  It transforms an input signal into an output voltage whose square is proportional to the input signal power.  For a signal that is the thermal noise of the object, the mean value is zero.  However, a square-law detector takes the peak values of the envelope of the signal.
-
+A traditional radiometer uses a device called a square law detector to measure power.  It transforms an input signal into an output voltage whose square is proportional to the input signal power.  The random noise we measure is noise that is generated due to thermal agitation in the median.  This random noise has peak values but the mean value of the noise is zero.  The square-law detector takes the peak values of this random noise and this results in the total power detected.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -49,22 +48,15 @@ A traditional radiometer uses a device called a square law detector to measure p
 
 Equation \ref{sdr_x2} gives the mathematical representation of a square law detector's functionality where I is the in-phase of the input signal, Q is the quadrature-phase of the input signal, and $P_{out}$ is the power of the signal.  By squaring and summing the in-phase and quadrature phase of the signal, we obtain the magnitude of the signal which represents the power measured[\cite{Rashid}].  
 
-%Because we have the in-phase signal (I) and the quadrature phase (Q), which is the signal shifted ninety degrees (i.e. $\phi + 90^{\circ}$) of the signal, 
-
-%To implement this in software, a square law detector is built mathematically as the sum of the squares[\cite{Sarijari}].  Once a signal has been digitized, it is expressed in data bits of I and Q, which represent the in-phase and the quadrature-phase of the signal.  By squaring each term, we get the desired result of the power of the signal and this is shown in equation \ref{sdr_x2}[\cite{Rashid}].
-
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
 \end{equation}
 
-Figure \ref{square_block} shows the actual implementation in GNURadio Companion.  This shows the block \emph{Complex to Mag\^2} which is the equivalent to Equation \ref{sdr_x2}.  As with a traditional radiometer, this measurement will fluctuate rapidly.  To smooth this signal, we can integrate and also apply a low pass filter to the signal.  Integration is covered in the next section.
-%Like the analog square-law detector we are taking peak voltage values, which has an equivalent noise voltage and a mean value of zero, and square them to produce a noise power that is proportional to the square of this amplitude.  Figure \ref{square_block} shows the GNURadio blocks used to perform this function.
-
-%Like the analog square-law detector, this signal will fluctuate rapidly.  To improve the sensitivity of the radiometer the signal is integrated.  The next step is to replicate a RC filter or integrator in the software defined radio.
+Figure \ref{square_block} shows the block within GNURadio Companion that implements the equivalent square law detector, and integration.  The power detection block (Complex to Mag\^2) performs the mathematical function as shown in Equation \ref{sdr_x2}.  As with a traditional radiometer, this measurement will fluctuate rapidly.  The integrator block (Single Pole IIR Filter) performs as a low pass filter to smooth the signal.  Integration is covered in the next section.
 
 \subsection{Integration}
 
-The output of a square law detector tends to be very "noisy".  Figure \ref{square_raw} shows an example of this raw output.  This makes detecting small changes in power difficult (i.e. hinders sensitivity).  
+Output from the square-law detector is noisy due to the rapid fluctuations in the signal.  Figure \ref{square_raw} shows an example of this raw output.  This makes detecting small changes in power difficult (i.e. hinders sensitivity).  
 
 {\begin{figure}[h!tb] 
 \centering
@@ -74,13 +66,19 @@ The output of a square law detector tends to be very "noisy".  Figure \ref{squar
 \end{figure}
 }
 
-A common solution used by radiometers is to "smooth" out this output by sending it through an integrator.  In short, an integrator averages a signal over time, which effectively eliminates the effects of noise (assuming noise that has a zero mean amplitude).  
+A common solution used by radiometers is to use an integrator, implemented as a RC low pass filter to smooth out this signal.   An integrator averages a signal over time, which effectively reduces the rapid fluctuations in the output.
 
-A traditional radiometer will use a simple Resistor and Capacitor (RC) circuit to accomplish this.  Because our signal, even a noisy one, has a frequency component, this RC circuit acts like a low pass filter.  Thus the higher frequency "noise" is filtered out.
+%A traditional radiometer will use a simple Resistor and Capacitor (RC) circuit to accomplish this.  Because our signal, even a noisy one, has a frequency component, this RC circuit acts like a low pass filter.  Thus the higher frequency "noise" is filtered out.
 
 %To improve our sensitivity, and reduce the rapid fluctuations in the power measurements, we integrate the power measurements.  This gives an average of the signal and reduces the fluctuations in the output.  This helps to improve the sensitivity of the radiometer as seen in equation \ref{NEAT_EQ}.  Chapter \ref{ch:background} section \ref{int_filt} goes in to more detail on how an analog integrator works.  The digital equivalent to a integrator is a Finite Impulse Response (FIR) filter.
 
-To implement this as a digital filter, a Finite Impulse Response (FIR) or Infinite Impulse Response (IIR) can be used.  A FIR filter, also known as a non-recursive filter, is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  Equation \ref{FIR_Eq} shows the output of this filter ($y_N$) with the input $x_n$, where $P$ defines the order of the filter and is a weighted average of the most recent $P$ inputs.  The array $c_i$ holds $P$ arbitrary constants.  These values define the frequency response of the FIR filter.  
+To implement this low pass filter as a digital filter, an Infinite Impulse Response (IIR) filter is used.  This filter is then configured as a low pass filter that has a transfer function shown in Equation \ref{IIR_Transfer}
+
+\begin{equation}\label{IIR_Transfer}
+H(f)=\frac{\displaystyle\sum\limits_{i=0}^{P} b_i z^{-i}}{1+\displaystyle\sum\limits_{j=0}^{Q} a_j z^{-j}}
+\end{equation}
+
+%To implement this as a digital filter, a Finite Impulse Response (FIR) or Infinite Impulse Response (IIR) can be used.  A FIR filter, also known as a non-recursive filter, is a digital filter that can take an impulse signal and decays to zero after a finite number of iterations.  Equation \ref{FIR_Eq} shows the output of this filter ($y_N$) with the input $x_n$, where $P$ defines the order of the filter and is a weighted average of the most recent $P$ inputs.  The array $c_i$ holds $P$ arbitrary constants.  These values define the frequency response of the FIR filter.  
 
 \begin{equation}\label{FIR_Eq}
 y_n=\displaystyle\sum\limits_{i=o}^{P} c_ix_{n-i}
@@ -101,14 +99,14 @@ In terms of computational and memory requirements, the more taps we generate the
 To get a better understanding on how the digital IIR filter relates to the RC filter analog, we need to look at the frequency response of the digital filter.  We can do that by looking at the Fourier Transform and the relationship of the input to the output in the frequency domain in Equation \ref{Fourier_IIR} where $f$ is our frequency in Hz and $T$ is our time between samples in seconds.  
 
 \begin{equation}\label{Fourier_IIR}
-H(f)=\frac{\displaystyle\sum\limits_{j=o}^{P-1} c_je^{-2\pi ijfT}}{1-\displaystyle\sum\limits_{k=1}^{Q} d_ke^{-2\pi ikfT}}
+H(f)=\frac{\displaystyle\sum\limits_{i=0}^{P} b_i z^{-i}}{1+\displaystyle\sum\limits_{j=0}^{Q} a_j z^{-j}}
 \end{equation}
 
 Our IIR filter needs to behave like a low pass filter to filter out the high frequency components.  As discussed earlier, an analog radiometer might do this with a simple RC circuit.  Figure \ref{rc_circuit} shows what this circuit looks like.
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=17cm]{Images/rc-circuit.png}
+\includegraphics[width=14cm]{Images/rc-circuit.png}
 \isucaption{A simple RC circuit.}
 \label{rc_circuit}
 \end{figure}
