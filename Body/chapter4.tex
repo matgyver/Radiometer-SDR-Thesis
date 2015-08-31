@@ -36,13 +36,13 @@ The use of a software defined radio (SDR) to implement a radiometer requires map
 
 \subsection{Power measurement}
 
-A traditional radiometer uses a device called a square law detector to measure power.  It transforms an input signal into an output voltage whose square is proportional to the input signal power.  The random noise we measure is noise that is generated due to thermal agitation in the median.  This random noise has peak values but the mean value of the noise is zero.  The square-law detector takes the peak values of this random noise and this results in the total power detected.
+A traditional radiometer uses a device called a square law detector to measure power.  It transforms an input signal into an output voltage whose square is proportional to the input signal power.  Figure \ref{square_law_simple} shows a simple circuit diagram.  The random noise we measure is noise that is generated due to thermal agitation in the median.  This random noise has peak values but the mean value of the noise is zero.  The square-law detector takes the peak values of this random noise and this results in the total power detected.
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=17cm]{Images/TPR_grc.png}
-\isucaption{A block diagram showing how the radiometer performs the equivalent square law detector in software.}
-\label{square_block}
+\includegraphics[width=17cm]{Images/square_law.pdf}
+\isucaption{A simple diagram of a square-law detector.}
+\label{square_law_simple}
 \end{figure}
 }
 
@@ -52,21 +52,37 @@ Equation \ref{sdr_x2} gives the mathematical representation of a square law dete
 I^2+Q^2 = P_{out}
 \end{equation}
 
-Figure \ref{square_block} shows the block within GNURadio Companion that implements the equivalent square law detector, and integration.  The power detection block (Complex to Mag\^2) performs the mathematical function as shown in Equation \ref{sdr_x2}.  As with a traditional radiometer, this measurement will fluctuate rapidly.  The integrator block (Single Pole IIR Filter) performs as a low pass filter to smooth the signal.  Integration is covered in the next section.
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=17cm]{Images/TPR_grc.png}
+\isucaption{A block diagram of the power detection, low pass filter and decimation block used for total power measurements.}
+\label{square_block}
+\end{figure}
+}
+
+Figure \ref{square_block} shows the block within GNURadio Companion that performs the function of total power measurement.  In Figure \ref{square_block}, the block labeled as A performs mathematically the power detection as shown in Equation \ref{sdr_x2}.  As with a traditional radiometer, this measurement will fluctuate rapidly.  Block B performs as a low pass filter to smooth the signal.  Finally block C decimates the data to reduce the sample size and thus reduce the file size of the data.  
 
 \subsection{Integration}
 
-Output from the square-law detector is noisy due to the rapid fluctuations in the signal.  Figure \ref{square_raw} shows an example of this raw output.  This makes detecting small changes in power difficult (i.e. hinders sensitivity).  
+A typical radiometer implement an integrator as a RC low pass filter and an IIR filter can be configured to be a low pass filter.  Output from the square-law detector is noisy due to the rapid fluctuations in the signal.  Figure \ref{square_raw} shows an example of this raw output.  This makes detecting small changes in power difficult (i.e. hinders sensitivity).  
 
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=17cm]{Experiments/Exp1/noisy_voltage.pdf}
-\isucaption{Power measurements from a square law detector before integration or filtering}
+\isucaption{Power measurements from a square law detector before filtering}
 \label{square_raw}
 \end{figure}
 }
 
-A common solution used by radiometers is to use an integrator, implemented as a RC low pass filter to smooth out this signal.   An integrator averages a signal over time, which effectively reduces the rapid fluctuations in the output.
+{\begin{figure}[h!tb] 
+\centering
+\includegraphics[width=17cm]{Experiments/Exp1/x2_filter.pdf}
+\isucaption{Power measurements from a square law detector after filtering}
+\label{square_raw_filt}
+\end{figure}
+}
+
+%A common solution used by radiometers is to use an integrator, implemented as a RC low pass filter to smooth out this signal.   An integrator averages a signal over time, which effectively reduces the rapid fluctuations in the output.
 
 %A traditional radiometer will use a simple Resistor and Capacitor (RC) circuit to accomplish this.  Because our signal, even a noisy one, has a frequency component, this RC circuit acts like a low pass filter.  Thus the higher frequency "noise" is filtered out.
 
