@@ -249,7 +249,7 @@ The addition of a unwanted interfering signal has an adverse effect on how a rad
 
 \subsection{Data Collected}
 
-The data collected for experiment three is the total power values from the software defined radiometer and also the voltage data from the square-law detector.  These values are calibrated using the data points provided in table \ref{exp3_datapoints}.
+The data collected for Experiment III is the total power values from the SDR-based radiometer and the voltage data from the square-law detector.  These values are calibrated using the data points provided in table \ref{exp3_datapoints}.
 
 \begin{table}[h!tb] \centering
 \isucaption{Total Power calibration data points}
@@ -264,23 +264,23 @@ The data collected for experiment three is the total power values from the softw
 
 \subsection{Data Analysis}
 
-We begin by looking at the what happens to our total power readings with no filter applied.  As we stated in section \ref{exp3_setup}, the frequency of the offending signal will not change, but the amplitude will.  This will result in clear indications of the total power changing as the amplitude of the offending signal changes.  
+We begin by looking at what happens to our total power readings when no RFI mitigation is used.  As we stated in Section \ref{exp3_setup}, the frequency of the offending signal will not change, but the amplitude will.  This results in clear indications of the total power changing as the amplitude of the offending signal changes.  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp4/sdr_raw_unfiltered.pdf}
-\isucaption{Graph showing the unfiltered total power measurements on the software defined radio}
+\isucaption{Graph showing the unfiltered total power measurements of the software defined radio}
 \label{sdr_unfilt_raw}
 \end{figure}
 
-It can be seen that there are pulses that occur in the graph in Figure \ref{sdr_unfilt_raw} and that changes in the amplitude of the offending signal affect our total power readings.  These same pulses can also be seen in the square-law detector data shown in Figure \ref{x2_unfilt}.
+It can be seen that there are pulses that occur in Figure \ref{sdr_unfilt_raw} that correspond to changes in the amplitude of the offending signal that affect our total power readings.  These same pulses can be seen in the square-law detector data shown in Figure \ref{x2_unfilt_signal}.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp4/x2_voltage.pdf}
 \isucaption{Graph showing the raw total power read from the square-law detector with an interfering signal.}
-\label{x2_unfilt}
+\label{x2_unfilt_signal}
 \end{figure}
 
-We can see in both the software defined radio and the square-law detector that there is an interfering signal.  If we now look at the spectrum view on the software defined radio, we can see the signal in questions which is at 1.405 GHz and shown in Figure \ref{spectrum_interfering.}  The square-law detector has no frequency information, so our only method to detect an interfering signal is by looking at the total power readings.  In Figure \ref{X2_Calibrated} we can see the spikes in the square-law data, however, we do not know where in the spectrum that signal is at.
+We can see in both the software defined radio and the square-law detector that there is an interfering signal.  If we now look at the spectrum view of the software defined radio, shown in \ref{spectrum_interfering}, we can see the signal in question occurs  at 1.405 GHz.  The square-law detector has no frequency information, so our only method to detect an interfering signal is by looking at the total power readings.  In Figure \ref{x2_unfilt_signal} we can see the spikes in the square-law data, however, we do not know where in the spectrum the offending signal is located.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/spectrum_interference.png}
@@ -288,7 +288,7 @@ We can see in both the software defined radio and the square-law detector that t
 \label{spectrum_interfering}
 \end{figure}
 
-Since we know where the offending signal is, we can now design a filter to remove this signal.  In the GNURadio program we can specify both the frequency and the bandwidth that we desire for this band-reject filter.  Ideally we want to keep the bandwidth of the filter as tight as possible to the offending signal but we also want to make sure our filter is effective in removing the signal.  Figure \ref{spectrum_filter} shows the spectrum display from the software defined radio with the filter now turned on and filtering the offending signal.
+Since we know where the offending signal is located for the SDR-based radiometer, we can design a filter to remove this signal.  In GNURadio, we can specify both the frequency and the bandwidth that we desire for this band-reject filter.  Ideally we want to keep the bandwidth of the filter as tight as possible to the offending signal, while making sure our filter is effective in removing the signal.  Figure \ref{spectrum_filter} shows the spectrum display of the software defined radio while filtering the offending signal.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/spectrum_filter.png}
@@ -296,7 +296,7 @@ Since we know where the offending signal is, we can now design a filter to remov
 \label{spectrum_filter}
 \end{figure}
 
-Since we have now removed the offending signal, we will want to re-run our experiment and once again compare the difference between the software defined radio and the square law detector. We can begin by looking at the software defined radio total power readings.  Figure \ref{sdr_calib_filter} shows a calibrated graph of the noise temperature seen by the software defined radio.  This graph is similar to graphs we expect from a total power radiometer.  However, we want to compare this to our square-law detector as well.  
+Since we have now removed the offending signal, we want to re-run our experiment and once again compare the difference between the software defined radio and the square law detector. We can begin by looking at the software defined radio total power readings.  Figure \ref{sdr_calib_filter} shows a calibrated graph of the noise temperature seen by the software defined radio.  This graph is similar to graphs we expect from a total power radiometer.  However, we want to compare this to our square-law detector as well.  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp4/calib_filtered.pdf}
@@ -304,7 +304,7 @@ Since we have now removed the offending signal, we will want to re-run our exper
 \label{sdr_calib_filter}
 \end{figure}
 
-Figure \ref{filter_on} shows both the software defined radio and the square-law detector calibrated total power readings.  In this graph you can see that the software defined radio is able to make normal readings where the square-law detector still shows the changes in amplitude which would make both calibration and obtaining useful data difficult.
+Figure \ref{filter_on} shows both the software defined radio and the square-law detector calibrated total power readings.  In this graph you can see that the software defined radio is able to make normal readings where the square-law detector still shows changes in amplitude corresponding to offending signal pulses, which would make both calibration and obtaining useful data difficult.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp4/calib_filtered_both.pdf}
@@ -312,21 +312,21 @@ Figure \ref{filter_on} shows both the software defined radio and the square-law 
 \label{filter_on}
 \end{figure}
 
-\emph{Filter delay.}  It should be noted that when doing data analysis with this data, that there will be some delay due to two factors.  First, there is a delay in the software defined radiometer due to the integrator that is used.  This creates a time delay as the integrator accumulates information and then settles.  We use fairly large integration times, usually in seconds so this can add a significant delay.  Second we do have a smaller delay in the decimation and low power filter also used in the software defined radiometer.  These are Finite Impulse Response (FIR) filters and thus have a delay given in equation \ref{FIR_delay}, where $N$ is the number of taps generated and $F_{s}$ is our sampling frequency, in our case 10 MHz.
+\emph{Filter delay.}  It should be noted that when doing data analysis, that there will be some delay due to two factors.  First, there is a delay in the software defined radiometer due to the integrator that is used.  This creates a time delay as the integrator accumulates information and then settles.  We use fairly large integration times, usually in seconds so this can add a significant delay.  Second we do have a smaller delay in the decimation and low pass filter also used in the software defined radiometer.  These are Finite Impulse Response (FIR) filters and thus have a delay given in equation \ref{FIR_delay}, where $N$ is the number of taps generated and $F_{s}$ is our sampling frequency, in our case 10 MHz.
 
 \begin{equation}\label{FIR_delay}
 \frac{(N - 1)}{(2*F_{s})}
 \end{equation}
 
-The taps value is generated by Python using the filter design program.  For this experiment, the taps generated was 18,181.  Taking that and our sampling rate into account, our FIR filter only delays the signal by 9 milliseconds.  
+The taps value is generated by Python using the filter design program.  For this experiment, the taps generated was 18,181.  Taking this and our sampling rate into account, our FIR filter only delays the signal by 9 milliseconds.  
 
-A final note on lining up the square-law detector information and the software defined radiometer data.  Both systems have a record function and must be started manually by the user.  They also run on separate computers.  Therefore, there is a human error that also gets introduced to the system as well.  This is usually no more than 1 or 2 seconds.  But in this experiment it was noted that there was a slightly longer delay between the two of about 4 seconds.  
+A final note on aligning the square-law detector and the software defined radiometer data.  Both systems have a record function and must be started manually by the user.  They also run on separate computers.  Therefore, there is a human error that also gets introduced to the system as well.  This is usually no more than 1 or 2 seconds.  But in this experiment it was noted that there was a slightly longer delay between the two of about 4 seconds.  
 
 \section{Experiment IV - Performance impact of interfering signal mitigation} \label{Exp4_results}
-The goal of this experiment is to examine what affect adding a filter does to the performance of the radiometer.  While we have demonstrated that we can filter an offending signal, this comes at a cost.  This experiment examines this impact on the measurement of total power while filtering an interfering signal.
+The goal of this experiment is to examine what affect adding a filter was on the performance of the radiometer.  While we have demonstrated we can filter an offending signal, this comes at a cost.  This experiment examines the impact filtering out bands has on the measurement of total power and radiometer sensitivity.
 
 \subsection{Data Collected}
-The data collected for this experiment is the data points collected in table \ref{exp4_data_power} and table \ref{exp4_datapoints}.  The remaining data is data generated from Equations \ref{NEAT_FILTER} and \ref{PWR_FILTER}.
+The data collected for this experiment is shown tables \ref{exp4_data_power} and \ref{exp4_datapoints}, and the remaining data is data generated from Equations \ref{NEAT_FILTER} and \ref{PWR_FILTER}.  This data will be examined next.
 
 \begin{table}[h!tb] \centering
 \isucaption{Measured sensitivity and Bandwidth of Filter}
@@ -374,9 +374,9 @@ The data collected for this experiment is the data points collected in table \re
 
 \subsection{Data Analysis}
 
-For experiment four, we will look at the performance of a software defined radiometer when a filter is used and what impact that has.  Recall the following equation for $NE\Delta T$ from equation \ref{NEAT_EQ}.  Our sensitivity is based on the amount of noise we have from both the antenna ($T_{A}$) and the addition of the system noise ($T_{N}$).  The bandwidth ($\beta$) and the integration time ($\tau$), are the final factors that determine our $NE\Delta T$.
+In Experiment IV, we examine the performance of a software defined radiometer when a filter is used.  Recalling the equation for $NE\Delta T$ from equation \ref{NEAT_EQ}, our sensitivity is a function of the amount of noise from both the antenna ($T_{A}$) and the addition of system noise ($T_{N}$).  Sensitivity is also a function of the radiometer's bandwidth ($\beta$) and integration time ($\tau$).
 
-Our integration time is controllable, and can be set using the GUI panel for the software defined radio.  In a typical radiometer, we often do not have any control of the bandwidth.  It is often set by the mechanical bandwidth filters that are in place and the detection circuit to detect the noise power.  In a software defined radio radio we do have more control on bandwidth as we can change our sampling rate which in turns controls our bandwidth.  There is a limit as larger sampling rates require more data and processing bandwidth to process.  
+Our integration time is controllable, and can be set using the GUI panel of the software defined radio.  In a typical radiometer, we often do not have any control of the bandwidth.  It is often set by the mechanical band-pass filters that are in place and the square-law detector circuit to measure the noise power.  In a SDR radio, we have more control over bandwidth as we can change our sampling rate which in turns controls our bandwidth.  There is a limit as larger sampling rates require more data and processing bandwidth to process.  
 
 Recall from experiment III in section \ref{Exp3_results} where we filtered out an offending signal.  While this allows us to filter out the offending signal and resume total power measurements, it comes at a cost of reducing the overall bandwidth available for power detection.  In this experiment we look at this and derived the following Equation \ref{NEAT_FILTER}.
 
