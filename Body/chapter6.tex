@@ -119,48 +119,7 @@ Figure \ref{X2_filter} shows our data after being filtered by the low pass filte
 
 We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up very nicely.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
 
-%For the data analysis in this experiment, the data collected from the software defined radiometer was compared with a known method of collecting total power readings by using a square-law detector.  The analysis of this data showed that the calibrated information from both the software defined radiometer and the square-law detector matched up.  This proved that the software defined radiometer was indeed performing as expected for a radiometer.  It also demonstrated that calibration is possible using two reference temperatures.  
 
-%Further analysis was then conducted to compare how a software defined radiometer might be used in a typical application, such as soil moisture measurements.  This is covered in the next section.
-
-%Move this section to 6.4.3 and edit
-\subsection{Application with Soil Moisture Readings}
-A common application of radiometers is in the measurement of soil moisture.  All items naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature and the amount that reaches the antenna varies by the amount of moisture in the soil.  If we calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  We will assume the soil is at a constant temperature during the observation.  We will look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
-
-Using the Software Defined Radio, we can set up two methods to visually look at the noise temperature and thus the soil moisture percentage.  Since we do not have an antenna hooked up, we will simulate this by using two reference temperatures.  In this case the ice water bath and the LN2 bath that was shown earlier.  
-
-A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.  This is the same program we have used but with the waterfall display now added.  The data for the waterfall is pulled directly from our source block or in our case the N200 software defined radio.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/LN2_waterfall.png}
-
-\isucaption{Screenshot of the waterfall display used in Experiment I}
-\label{LN2_waterfall}
-\end{figure}
-
-Two screen shots of the waterfall side by side is shown in Figure \ref{side_waterfall}.  The left image shows the matched load in Ice Water and the right image shows it in LN2.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/waterfall_side.pdf}
-
-\isucaption{Side by side comparison of the waterfall display for Experiment 1}
-\label{side_waterfall}
-\end{figure}
-
-Figure \ref{side_waterfall} we can see that the ice water screen shot (on the left) appears warmer than the right side screen shot which appears cooler.  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
-
-If we assume that our LN2 is dry soil and that our ice water bath is wet soil, we can now interpolate the data to this scale and show the information we obtained in Experiment one as both a noise temperature and soil moisture.  Figure \ref{SDR_soil} shows the data shown in Figure \ref{SDR_Calibrated} but with the soil moisture percentage added. 
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/sdr_soilmoisture.pdf}
-\isucaption{Plot of the noise temperature of Experiment 1 with soil moisture percentage}
-\label{SDR_soil}
-\end{figure}
-
-While this demonstrates that we can calibrate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
 
 \section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
 
@@ -284,7 +243,7 @@ We can see in both the software defined radio and the square-law detector that t
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/spectrum_interference.png}
-\isucaption{Image showing the spectrum view from the software defined radio}
+\isucaption{Image showing the spectrum view of the SDR-based radiometer with no RFI mitigation.}
 \label{spectrum_interfering}
 \end{figure}
 
@@ -292,7 +251,7 @@ Since we know where the offending signal is located for the SDR-based radiometer
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/spectrum_filter.png}
-\isucaption{Image showing the spectrum view from the SDR-based radiometer with the filter on and filtering the offending signal}
+\isucaption{Image showing the spectrum view from the SDR-based radiometer filtering the offending signal}
 \label{spectrum_filter}
 \end{figure}
 
@@ -333,7 +292,7 @@ The data collected for this experiment is shown tables \ref{exp4_data_power} and
 \label{exp4_data_power}
 % Use: \begin{tabular{|lc|} to put table in a box
 \begin{tabular}{lc} \hline
-\textbf{rQ Value} & \textbf{Temperature (K)} \\ \hline
+\textbf{NE\delta T (K)} & \textbf{Bandwidth (MHz) } \\ \hline
 .139 & .125 \\
 .141 & .250 \\
 .143 & .500 \\
@@ -355,7 +314,7 @@ The data collected for this experiment is shown tables \ref{exp4_data_power} and
 \label{exp4_datapoints}
 % Use: \begin{tabular{|lc|} to put table in a box
 \begin{tabular}{lc} \hline
-\textbf{rQ Value} & \textbf{Bandwidth (MHz)} \\ \hline
+\textbf{Total Power Value (rQ)} & \textbf{Bandwidth (MHz)} \\ \hline
 .003 & .125 \\
 .006 & .250 \\
 .012 & .500 \\
@@ -376,15 +335,15 @@ The data collected for this experiment is shown tables \ref{exp4_data_power} and
 
 In Experiment IV, we examine the performance of a software defined radiometer when a filter is used.  Recalling the equation for $NE\Delta T$ from equation \ref{NEAT_EQ}, our sensitivity is a function of the amount of noise from both the antenna ($T_{A}$) and the addition of system noise ($T_{N}$).  Sensitivity is also a function of the radiometer's bandwidth ($\beta$) and integration time ($\tau$).
 
-Our integration time is controllable, and can be set using the GUI panel of the software defined radio.  In a typical radiometer, we often do not have any control of the bandwidth.  It is often set by the mechanical band-pass filters that are in place and the square-law detector circuit to measure the noise power.  In a SDR radio, we have more control over bandwidth as we can change our sampling rate which in turns controls our bandwidth.  There is a limit as larger sampling rates require more data and processing bandwidth to process.  
+Our integration time is controllable, and can be set using the GUI panel of the software defined radio.  In a typical radiometer, we often do not have any control of the bandwidth.  It is often set by the mechanical band-pass filters that are in place and the square-law detector circuit to measure the noise power.  In a SDR radio, we have more control over bandwidth as we can change our sampling rate which in turns controls our bandwidth.  There is a limit as larger sampling rates require higher performance ADCs and greater computing speed.
 
-Recall from experiment III in section \ref{Exp3_results} where we filtered out an offending signal.  While this allows us to filter out the offending signal and resume total power measurements, it comes at a cost of reducing the overall bandwidth available for power detection.  In this experiment we look at this and derived the following Equation \ref{NEAT_FILTER}.
+Recall from Experiment III, in section \ref{Exp3_results}, where we filtered out an offending signal.  While we were able to filter out the offending signal and resume total power measurements, it comes at the cost of reducing the overall bandwidth available for power detection.  In this experiment, we examine how this impacts sensitivity and derive the following Equation \ref{NEAT_FILTER}.
 
 \begin{equation}\label{NEAT_FILTER}
 NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{(\beta - \beta_{filter})  \tau}}
 \end{equation}
 
-Because we are notching out a portion of the bandwidth in order to remove the offending signal, this also takes away that bandwidth for total power detection.  As the bandwidth of the filter ($\beta_{filter}$) increases, the more bandwidth that is subtracted from the total bandwidth ($\beta$) available.  Equation \ref{NEAT_FILTER} accounts for this loss by subtracting the filter bandwidth ($\beta_{filter}$) from the total bandwidth ($\beta$).  
+Because we are notching out a portion of the bandwidth in order to remove the offending signal, this also removes that bandwidth for total power detection.  As the bandwidth of the filter ($\beta_{filter}$) increases, the more bandwidth that is subtracted from the total bandwidth ($\beta$) available.  Equation \ref{NEAT_FILTER} accounts for this loss by subtracting the filter bandwidth ($\beta_{filter}$) from the total bandwidth ($\beta$).  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp5/neatvsbw_plot.pdf}
@@ -392,9 +351,9 @@ Because we are notching out a portion of the bandwidth in order to remove the of
 \label{neat_bw}
 \end{figure}
 
-We can graph the expected response of the $NE\Delta T$ by adjusting the values of $\beta_{fitler}$ to range from a narrow-band filter, in our example 125 kHz all the way to 9.99 MHz or nearly all of the bandwidth.  Figure \ref{neat_bw} shows the expected exponential response of the $NE\Delta T$ as the size of the filter increases.  
+We can graph the expected response of the $NE\Delta T$ by adjusting the values of $\beta_{fitler}$ to range from a narrow-band filter, in our example 125 kHz, all the way to 9.99 MHz or nearly all of the bandwidth.  Figure \ref{neat_bw} shows the expected exponential response of $NE\Delta T$ as the size of the filter increases.  
 
-Figure \ref{neat_bw} shows measured standard deviation points for the software defined radiometer for set filter sizes.  These filter sizes and collected data is in table \ref{exp4_data_power}.  It can be seen in figure \ref{neat_bw} that there is a good correlation between the expected sensitivity of the radiometer and the measured sensitivity of the radiometer.
+Figure \ref{neat_bw} shows measured standard deviation points for the SDR-based radiometer for different filter sizes.  These filter sizes and collected data found is found in table \ref{exp4_data_power}.  It can be seen in figure \ref{neat_bw} that there is a good correlation between the expected sensitivity of the radiometer and the measured sensitivity of the radiometer.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp5/combined_plot.pdf}
@@ -402,9 +361,9 @@ Figure \ref{neat_bw} shows measured standard deviation points for the software d
 \label{power_bw}
 \end{figure}
 
-Finally a line is added to figure \ref{neat_bw} to show a possible limit of when we may have filtered too much.  In this example a $NE\Delta T$ of 0.2 Kelvin is used.  In figure \ref{neat_bw} it can be seen that at about 5 MHz, our $NE\Delta T$ exceeds our threshold of 0.2 Kelvin.  This would mean that to meet this performance criteria, we would need to not exceed 5 MHz for our filter size.  This is assuming our integration time ($\tau$) and the bandwidth ($\beta$) is held constant. 
+Finally a line is added to figure \ref{neat_bw} to show a possible limit of when we may have filtered too much.  In this example a $NE\Delta T$ of 0.2 Kelvin is used.  In figure \ref{neat_bw} it can be seen that at about 5 MHz, our $NE\Delta T$ exceeds our threshold of 0.2 Kelvin.  This would mean that to meet this performance criteria we would need to not exceed 5 MHz for our filter size.  This is assuming our integration time ($\tau$) and the bandwidth ($\beta$) is held constant. 
 
-We now look at the relationship of the total power received as the bandwidth decreases.  Figure \ref{power_bw} shows us both the measured total power received and the expected total power received as the bandwidth of the filter increases.
+We now look at the relationship of the total power received as the bandwidth decreases.  Figure \ref{power_bw} shows both the measured total power received and the expected total power received as the bandwidth of the filter increases.
 
 The total power is calculated from equation \ref{eq:final_power} and is based on the system noise ($T_N$), and the antenna ($T_A$), the bandwidth ($\beta$) and the gain ($G$) of the amplifiers used.  Our gain and noise temperatures are fixed, and in this experiment we use a system gain of 30 dB.  This represents the gain that we see with the three LNAs used minus any losses or attenuation placed in the RF chain.  What changes in this experiment is the amount of bandwidth.  Again, we can modify equation \ref{eq:final_power} by subtracting the filter bandwidth ($\beta_{filter}$) from the total bandwidth available and is shown in equation \ref{PWR_FILTER}.
 
@@ -412,15 +371,60 @@ The total power is calculated from equation \ref{eq:final_power} and is based on
 P_{out}=k (\beta - \beta_{filter})G(T_{A}+T_{N})
 \end{equation}
 
-To compare this theoretical power to the actual power measured, we collected the rQ values by once again creating set filter sizes and then measuring the rQ value.  These values can be found in Table \ref{exp4_datapoints} and are added to Figure \ref{power_bw} as the dots indicated on the graph.  This also shows a very good correlation between the expected total power received and the measured total power received for experiment four.
+To compare this theoretical power to the actual power measured, we collected the rQ values by once again creating different filter sizes and then measuring the rQ values.  These values can be found in Table \ref{exp4_datapoints} and are added as dots to Figure \ref{power_bw}.  This also shows a very good correlation between the expected total power received and the measured total power received for Experiment IV.
+
+\subsection{Usage Scenario}
+%Move this section to 6.4.3 and edit
+\emph{Application with Soil Moisture Readings}.  A common application of radiometers is in the measurement of soil moisture.  All items naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature and the amount that reaches the antenna varies by the amount of moisture in the soil.  If we calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  We will assume the soil is at a constant temperature during the observation.  We will look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
+
+Using the SDR-based radiometer, we can set up two methods to visually look at the noise temperature and thus the soil moisture percentage.  Since we do not have an antenna hooked up, we will simulate this by using a matched load submerged in two reference temperatures.  In this case the ice water bath and the LN2 bath that was shown earlier.  
+
+A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.  This is the same program we have used but with the waterfall display now added.  The data for the waterfall is pulled directly from our source block or in our case the N200 software defined radio.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/LN2_waterfall.png}
+
+\isucaption{Screenshot of the waterfall display showing the magnitude of the recieved power as a color, the frequency on the y-axis and time on the x-axis.}
+\label{LN2_waterfall}
+\end{figure}
+
+Two screen shots of the waterfall side by side is shown in Figure \ref{side_waterfall}.  The left image shows the matched load in Ice Water and the right image shows it in LN2.
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/waterfall_side.pdf}
+
+\isucaption{Side by side comparison of the waterfall display for when the matched load is submerged in LN2 and ice water.}
+\label{side_waterfall}
+\end{figure}
+
+Figure \ref{side_waterfall} we can see that the ice water screen shot (on the left) appears warmer than the right side screen shot which appears cooler.  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
+
+If we assume that our LN2 is dry soil and that our ice water bath is wet soil, we can now interpolate the data to this scale and show the information we obtained in Experiment one as both a noise temperature and soil moisture.  Figure \ref{SDR_soil} shows the data shown in Figure \ref{SDR_Calibrated} but with the soil moisture percentage added. 
+
+\begin{figure}[h!tb] \centering
+
+\includegraphics[width=\textwidth]{Experiments/Exp1/sdr_soilmoisture.pdf}
+\isucaption{Plot of the noise temperature of Experiment 1 with soil moisture percentage}
+\label{SDR_soil}
+\end{figure}
+
+While this demonstrates that we can calibrate our total power readings with a soil moisture percentage, we would use actual field tests to calibrate the radiometer.  In addition, we could also calibrate to soil moisture content instead of a percentage if desired.  Both methods have been done with traditional radiometers[\cite{Jonard}][\cite{Shi}.
+
+\emph{Mitigating interference.} Experiment III demonstrates that an offending signal will impact and cause the total power received to increase.   This increase in total power will then invalidate our calibration of the SDR-based radiometer.  This will result in a spike as shown in Figure \ref{sdr_unfilt_raw}.  This spike shows a higher than normal total power which will result in a higher noise temperature.  A higher noise temperature will then cause the SDR-based radiometer to show drier soil conditions than what is actually present.
+
+By mitigating the interfering signal the SDR-based radiometer is able to make calibrated soil moisture measurements even with the signal present.  Figure \ref{sdr_calib_filter} demonstrates the SDR-based radiometer making total power measurements with an offending signal present.  
+
+Soil moisture measurements can continue with an offending signal present, however there is an impact on the system with filtering out this signal.  This is covered in Section \ref{Exp4_results}.  Because of this impact, re-calibration of the SDR-based radiometer still needs to take place.  Therefore while this solution is viable for interfering signals that are constant, other methods would need to be developed to handle sporadic interference.  
 
 %---------------------------------------------------------------
 
 \section{Advantages of a Software Defined Radio Based Radiometer}
-A study was conducted on what benefits a software defined radio radiometer would have over a more traditional radiometer.  This was focused on looking at three main areas; cost, weight and size, and the value a SDR radiometer can add over traditional radiometers.
+A study was conducted on what benefits a software defined radio radiometer would have over a more traditional radiometer.  We focused on three main areas; cost, weight and size, and the value a SDR-based radiometer can add over traditional radiometers.
 
 \subsection{Cost Benefits}
-Software defined radios have become more commonplace in recent years and this has generated a number of Commercial Off The Shelf (COTS) solutions.  A COTS solution is often a lower cost solution due to the mass manufacturing that takes place.  This has driven the cost of many SDRs to under one thousand dollars while still having excellent performance characteristics.  The N200 SDR purchased for this research cost fifteen hundred dollars and the daughter-board cost one hundred and fifty dollars approximately.  Other software defined radios however have come out on the market since then.  Ettus for example has some that are below one thousand dollars and the author has also obtained the HackRF One SDR that now sells for three hundred dollars.  The main difference with the different software defined radios on the market is with both the resolution and the bandwidth they are able to handle.
+Software defined radios have become more commonplace in recent years and this has generated a number of Commercial Off The Shelf (COTS) solutions.  A COTS solution is often a lower cost solution due to the mass manufacturing that takes place.  This has driven the cost of many SDRs to under one thousand dollars, while still having excellent performance characteristics.  The N200 SDR purchased for this research cost fifteen hundred dollars and the daughter-board approximately cost one hundred and fifty dollars.  Other software defined radios however have come out on the market since then.  Ettus, for example, has some that are below one thousand dollars and the author has also obtained the HackRF One SDR that now sells for three hundred dollars.  The main difference between defined radios on the market is in their resolution and the bandwidth they support.
 
 \begin{table}[h!tb] \centering
 \isucaption{Cost Analysis}
@@ -442,13 +446,13 @@ Spectracyber 1420 MHz Hydrogen Line Spectrometer & 1 & \$2,650 \\ \hline
 \end{tabular}
 \end{table}
 
-As seen in table \ref{cost_table}, even the higher cost Ettus research equipment is a lower cost option than the custom built radiometer in use at Iowa State University and even a comparable off the shelf radiometer.  It should be noted that the radiometer in use at Iowa State University is also a dual polarization radiometer so there are two RF front ends and two ADCs that feed into a FPGA board.  It would be quite easy to add dual polarization to the Ettus N200 SDR as it does support two daughter-boards.  This would increase the cost to \$2,179 for the additional LNAs and daughter-board.
+As seen in table \ref{cost_table}, even the higher cost Ettus research equipment is a lower cost option than the custom built radiometer in use at Iowa State University, and even a comparable off the shelf radiometer.  It should be noted that the radiometer in use at Iowa State University is also a dual polarization radiometer so there are two RF front ends and two ADCs that feed into a FPGA board.  It would be quite easy to add dual polarization to the Ettus N200 SDR as it does support two daughter-boards.  This would increase the cost to \$2,179 for the additional LNAs and daughter-board.
 
-The largest cost benefit is that key components that you find in a radiometer, the filters and square-law detector can now be all done in software instead of needed additional equipment.  The system is also much more frequency agile, which means it can work on a broader range of frequencies than most traditional radiometers with very little change in hardware and in some cases may require no change in hardware.  Some of this does depend on the SDR hardware however.  The Ettus N200 for example uses daughter-boards to provide the RF interface.  While these boards provide a high quality in the RF signal, it does come at a cost and are usually designed for certain bands of frequencies.  Other low cost SDRs however are also very wide range in the frequencies they will work in.  The HackRF for example works from 10 MHz to 6 GHz, but does so at the cost of lower resolution, less gain in its front end and a lower bandwidth that it can handle.
+The largest cost benefit is that key components that you find in a radiometer, the filters and square-law detector, can be performed in software instead of needing additional equipment.  The system is also much more frequency agile, which means it can work over a broader range of frequencies than most traditional radiometers, with very little change in hardware and in some cases may require no change in hardware.  The Ettus N200, for example, uses daughter-boards to provide the RF interface.  While these boards provide a high quality RF signal, it does come at a cost and are usually designed for certain bands of frequencies.  Other low cost SDRs, however, also support a wide range of frequencies.  The HackRF, for example, works from 10 MHz to 6 GHz, but does so at the cost of lower resolution, less gain in its front-end, and supports a lower bandwidth.
 
 \subsection{Weight and component size benefits}
 
-A typical radiometer has many components that are involved in the design of the radiometer.  This includes filters, LNAs and the power detection or square-law detector used.  These components add both weight, size and costs to the radiometer.  A software defined radio however digitizes the signal and we are able to replace the filters and square-law detector with their software equivalent.  While a software defined radio does add both the ADC and usually a FPGA to do the processing on the signal, advances in semiconductor technology has continued to shrink these components.  These components are also lighter than the filters often used in radiometers.
+A typical radiometer has many components that are involved in its design.  This includes filters, LNAs, and the power detection (i.e. square-law detector) used.  These components add weight, size and costs to a radiometer.  A software defined radio however digitizes the signal and we are able to replace the filters and square-law detector with their software equivalent.  While a software defined radio does add an ADC and usually a FPGA to perform signal processing, advances in semiconductor technology has continued to shrink these components.  These components are also lighter than the filters often used in traditional radiometers.  Table \ref{weight_table} displays the mass for the SDR-based radiometer built and the ISU Radiometer.  The ISU Radiometer is a representation of most traditional radiometers.
 
 \begin{table}[h!tb] \centering
 \isucaption{Weight Analysis}
@@ -469,24 +473,24 @@ Spectracyber 1420 MHz Hydrogen Line Spectrometer & 6 kg\tablefootnote{Estimated,
 \end{tabular}
 \end{table}
 
-Size is another benefit as since semiconductor technology has continued to shrink components.  Again, since items like the filters and square-law detector are removed and done in software this helps to reduce the overall size.  
+Size is another benefit, since semiconductor technology has continued to shrink components.  Again, since items like the filters and square-law detector are replaced with software implementations, this helps to reduce the overall size.  
 
 \subsection{Value added benefits}
 
-A software defined radio radiometer adds additional value for two reasons.  One, it is able to work with both frequency and magnitude information where a traditional radiometer does not.  This allows for additional analysis on the signal and can help identify issues such as an interfering signal that was demonstrated in this thesis.  
+A SDR-based radiometer adds additional value for two reasons.  One, it is able to work with both frequency and magnitude information, where a traditional radiometer does not.  This allows for additional analysis on the signal and can help identify issues such as an interfering signal that was demonstrated in this thesis.  
 
 Second, we are able to have an agile system that is able to adapt to changing conditions with very little or no change to hardware.  Different types of radiometers can be implemented such as a Dicke radiometer, dual polarization radiometer or a radiometer that can perform Stokes parameters.  In addition, since we have both frequency and power information we can create a system that is able to adapt to changing conditions such as dealing with an interfering signal.  
 
 \section{Drawbacks of a SDR-based Radiometer}
-Although we have outlined a number of advantages of using a COTS SDR Radiometer and how a SDR can add additional value to the radiometer system, there are some disadvantages to a SDR Radiometer.
+Although we have outlined a number of advantages of using a COTS SDR-based Radiometer and how a SDR can add additional value to the radiometer system, there are some disadvantages to a SDR-based Radiometer.
 
 \subsection{Power Consumption}
-One of the largest drawbacks to a SDR radiometer can be in the power consumption of the SDR.  With the move to perform functions such as power detection and filtering we now require additional computational power to perform these tasks.  With those computational cycles additional power is now required.  The use of FPGAs and SoC can help to minimize these power concerns as they are more efficient than using a PC.  
+One of the largest drawbacks to a SDR-based radiometer can be in the power consumption of the SDR.  With the move to perform functions such as power detection and filtering we now require additional computational power to perform these tasks.  With those computational cycles additional power is now required.  The use of FPGAs and SoC can help to minimize these power concerns as they are more efficient than using a PC.  
 
-Power and CPU requirements also increase as we add additional functionality such as filtering an offending signal.  While these additions may not require additional hardware, it can require additional processor or computational requirements.  This will cause additional strain on the processor and also in the memory requirements for the SDR as well.
+Power and CPU requirements also increase as we add additional functionality such as filtering an offending signal.  While these additions may not require additional hardware, it can require additional processor and memory requirements.  An increase and processing requirements will also increase power requirements and can also add additional requirements in cooling.
 
 \subsection{Bandwidth constraints}
-While SDR technology has advanced, bandwidth is still a constraint that affects SDRs and in turn a SDR-based Radiometer.  Bandwidth plays a critical role in the radiometer's sensitivity as explained in this thesis, therefore the fact that many SDRs are limited in bandwidth does create a disadvantage.  In many cases this bottleneck takes place in both the transport and processing of large bandwidth systems.  This also relates to the power consumption disadvantage since larger bandwidth also means requiring additional computational cycles as well.  
+While SDR technology has advanced, bandwidth is still a constraint that affects SDRs and in turn a SDR-based Radiometer.  Bandwidth plays a critical role in a radiometer's sensitivity as explained in this thesis, therefore the fact that many SDRs are limited in bandwidth does create a disadvantage.  In many cases, this bottleneck takes place in both the transport and processing of large bandwidth systems.  This also relates to the power consumption disadvantage since larger bandwidth also means requiring additional computational cycles.
 
 In contrast, a square-law detector usually has a very large bandwidth, as much as one gigahertz, and is why we usually need to filter to the frequency band of interest.  
 
