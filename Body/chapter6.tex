@@ -38,14 +38,16 @@ For this experiment, total power measurements were collected from the software d
 
 \subsection{Data Analysis}\label{Exp1_analysis}
 
-To analyze the results, iPython Notebook is used to read and generate the graphs used in this thesis.  This tool uses Python along with HTML and Markdown code to generate a virtual notebook for each experiment.  Figure \ref{matlab_display} shows a screen shot of a iPython notebook used in this thesis
+To analyze the results, iPython Notebook is used to read our data and generate the graphs used in this thesis.  This tool uses Python along with HTML and Markdown code to generate a virtual notebook for each experiment.  
 
-{\begin{figure}[h!tb] 
-\centering
-\includegraphics[width=17cm]{Images/python_gnuradio.png}
-\isucaption{A screenshot showing the iPython notebook code and related graphs generated for parsing GNURadio data}
-\label{matlab_display}
-\end{figure}
+%Figure \ref{matlab_display} shows a screen shot of a iPython notebook used in this thesis
+
+%{\begin{figure}[h!tb] 
+%\centering
+%\includegraphics[width=17cm]{Images/python_gnuradio.png}
+%\isucaption{A screenshot showing the iPython notebook code and related graphs generated for parsing GNURadio data}
+%\label{matlab_display}
+%\end{figure}
 
 \emph{Software Defined Radio Data.}  The SDR records the total power measurements in a binary file that either Matlab or Python can read.  This file format is explained in section \ref{exp1_data}.  We begin by looking at the raw or uncalibrated total power readings.  This power information is information collected after the total power radio block in GNURadio and is explained in Chapter \ref{ch:implementation}.  Because the values are uncalibrated total power readings, there are no units.
 
@@ -56,7 +58,7 @@ To analyze the results, iPython Notebook is used to read and generate the graphs
 \label{SDR_rQ}
 \end{figure}
 
-Figure \ref{SDR_rQ} shows the total power reading versus time.  This figure has also been annotated to show which medium the matched load has been placed in (i.e. Ice water, LN2, Hot water).  Since we know the temperatures of the ice water and LN2, we can calibrate these readings to a noise temperature reading.  This is done by reading a calibration file we have stored in a csv format and solving for the slope of a line.  This was accomplished using the following code written in Python.
+Figure \ref{SDR_rQ} shows the total power reading versus time.  This figure has also been annotated to show which medium the matched load has been placed in (i.e. Ice water and LN2).  Since we know the temperatures of the ice water and LN2, we can calibrate these readings to a noise temperature reading.  This is done by reading a calibration file we have stored in a csv format and solving for the slope of a line.  This was accomplished using the following code written in Python.
 
 \lstset{language=Python}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
@@ -119,8 +121,6 @@ Figure \ref{X2_filter} shows our data after being filtered by the low pass filte
 
 We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up very nicely.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
 
-
-
 \section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
 
 \subsection{Data Collected}
@@ -140,8 +140,6 @@ This experiment examines the sensitivity and stability of a SDR-based radiometer
 \subsection{Data Analysis}\label{Exp2_analysis}
 
 \emph{Sensitivity.}  Sensitivity for a radiometer is the $NE\Delta T$ that was covered in chapter \ref{ch:background} and is found in Equation \ref{NEAT_EQ}.  The sensitivity can also be measured as the standard deviation of the data that we collect from the software defined radiometer.  
-
-%The standard deviation is calculated to be 0.09 Kelvin by using the standard deviation function found in NumPy.  We can compare this to what we expected the $NE\Delta T$ to be which uses equation \ref{NEAT_EQ}.  To calculate the $NE\Delta T$, we need to know the integration time, the bandwidth, the total system and antenna noise.  This information is found in table \ref{exp2_param}.
 
 \begin{table}[h!tb] \centering
 \isucaption{Experimental parameters for experiment one.}
@@ -242,7 +240,7 @@ It can be seen that there are pulses that occur in Figure \ref{sdr_unfilt_raw} t
 We can see in both the software defined radio and the square-law detector that there is an interfering signal.  If we now look at the spectrum view of the software defined radio, shown in \ref{spectrum_interfering}, we can see the signal in question occurs  at 1.405 GHz.  The square-law detector has no frequency information, so our only method to detect an interfering signal is by looking at the total power readings.  In Figure \ref{x2_unfilt_signal} we can see the spikes in the square-law data, however, we do not know where in the spectrum the offending signal is located.
 
 \begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/spectrum_interference.png}
+\includegraphics[width=\textwidth]{Images/interfering_signal_filter.png}
 \isucaption{Image showing the spectrum view of the SDR-based radiometer with no RFI mitigation.}
 \label{spectrum_interfering}
 \end{figure}
@@ -250,7 +248,7 @@ We can see in both the software defined radio and the square-law detector that t
 Since we know where the offending signal is located for the SDR-based radiometer, we can design a filter to remove this signal.  In GNURadio, we can specify both the frequency and the bandwidth that we desire for this band-reject filter.  Ideally we want to keep the bandwidth of the filter as tight as possible to the offending signal, while making sure our filter is effective in removing the signal.  Figure \ref{spectrum_filter} shows the spectrum display of the software defined radio while filtering the offending signal.
 
 \begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/spectrum_filter.png}
+\includegraphics[width=\textwidth]{Images/interfering_signal.png}
 \isucaption{Image showing the spectrum view from the SDR-based radiometer filtering the offending signal}
 \label{spectrum_filter}
 \end{figure}
@@ -378,28 +376,6 @@ To compare this theoretical power to the actual power measured, we collected the
 \emph{Application with Soil Moisture Readings}.  A common application of radiometers is in the measurement of soil moisture.  All items naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature and the amount that reaches the antenna varies by the amount of moisture in the soil.  If we calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  We will assume the soil is at a constant temperature during the observation.  We will look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
 
 Using the SDR-based radiometer, we can set up two methods to visually look at the noise temperature and thus the soil moisture percentage.  Since we do not have an antenna hooked up, we will simulate this by using a matched load submerged in two reference temperatures.  In this case the ice water bath and the LN2 bath that was shown earlier.  
-
-A unique visual aid we can use with GNURadio is a waterfall display.  This display gives us information that includes frequency, amplitude and time.  It is referred to as a waterfall display due to the fact the display continually moves from top to bottom and looks like a waterfall.  Amplitude information is given by mapping the range of amplitudes to a color bar.  Frequency is given on the x-axis and time is on the y-axis.  Figure \ref{LN2_waterfall} shows a screen shot of the waterfall display in the GUI created in GNURadio Companion for this experiment.  This is the same program we have used but with the waterfall display now added.  The data for the waterfall is pulled directly from our source block or in our case the N200 software defined radio.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/LN2_waterfall.png}
-
-\isucaption{Screenshot of the waterfall display showing the magnitude of the recieved power as a color, the frequency on the y-axis and time on the x-axis.}
-\label{LN2_waterfall}
-\end{figure}
-
-Two screen shots of the waterfall side by side is shown in Figure \ref{side_waterfall}.  The left image shows the matched load in Ice Water and the right image shows it in LN2.
-
-\begin{figure}[h!tb] \centering
-
-\includegraphics[width=\textwidth]{Experiments/Exp1/waterfall_side.pdf}
-
-\isucaption{Side by side comparison of the waterfall display for when the matched load is submerged in LN2 and ice water.}
-\label{side_waterfall}
-\end{figure}
-
-Figure \ref{side_waterfall} we can see that the ice water screen shot (on the left) appears warmer than the right side screen shot which appears cooler.  There is a limitation in GNURadio and the waterfall display that limits what the range for the power readings are.  The overall power that we see only changes by about 3 dB and our current range in the waterfall display is set to 10 dB.  If we could reduce the range, the color change would be even greater and more pronounced.  However, this does show that a change can be seen visually with color to indicate the noise temperature.  
 
 If we assume that our LN2 is dry soil and that our ice water bath is wet soil, we can now interpolate the data to this scale and show the information we obtained in Experiment one as both a noise temperature and soil moisture.  Figure \ref{SDR_soil} shows the data shown in Figure \ref{SDR_Calibrated} but with the soil moisture percentage added. 
 
