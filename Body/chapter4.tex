@@ -230,13 +230,9 @@ It can be seen that Figure \ref{iir_response} is identical to Figure \ref{rc_res
 
 GNURadio includes a program that allows us to define our filter and it will generate the coefficients and taps needed for our filters.  Chapter \ref{ch:results} goes into more depth on this program.
 
-%The $RC$ term gives us our time constant of the circuit and can be used to calculate out our coefficients.  We are not concerned about the actual values of R and C with our IIR filter, instead we just need the product of R and C.  
+\emph{Bandwidth limiting.}  Bandwidth limiting is the process of defining the frequency band over which a radiometer measures power.  For a traditional radiometer, this is typically accomplished using analog filters.  Within a SDR-based radiometer, the analog to digital converter's sample rate dictates this bandwidth.
 
-
-\subsection{Bandwidth limitation}
-A traditional radiometer will use filters to define the bandwidth of the radiometer.  A software defined radio based radiometer however uses the sampling rate to define the bandwidth.  This sample rate may be adjusted but will be limited by the computational power available.  The higher the sample rate, and therefore the more bandwidth observed, the more computational power needed.  
-
-Additional filtering can be created and used in a software defined radiometer.  These filters are often created using either IIR or FIR filters.  The most efficient method is to restrict bandwidth by setting the sampling rate.  However, these filters can be used to filter out either a narrow band of frequencies or to temporarily reduce the overall bandwidth.  A common application of these additional filters is to remove an offending signal detected by the software defined radio based radiometer.  This method of mitigating signal interference will be discussed in chapter \ref{ch:results}.
+\emph{Filering.}  There are instances when the frequency being observed requires additional filtering (i.e. RFI mitigation, see section \ref{Exp3_results}).  Traditional radiometers deploy analog band-pass or band-reject filters to accomplish this, while in this thesis we show similar functionality can be obtain by implementing software defined filters. 
 
 \section{Software Defined Radio Based Radiometer Control System}
 
