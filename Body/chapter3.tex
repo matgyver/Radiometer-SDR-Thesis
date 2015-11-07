@@ -37,9 +37,9 @@ There are six stages common to all radiometers.  They are:
 \item Output (Voltage, rQ or Kelvin).
 \end{enumerate}
 
-Figure \ref{trad_radiometer} illustrates how a signal propagates through a radiometer.  First, the signal from the source enters the antenna, $T_A$.  Next the signal is filtered to a set bandwidth, $\beta$.  This filtered signal is then amplified by Low Noise Amplifiers (LNAs) by a gain of $G$.  The power information is then extracted from the signal using a square-law detector, $X^2$.  A square-law detector takes the input RF signal and produces a voltage that is proportional to the square of the voltage[\cite{Leinweber}].  This voltage output from the square-law detector is then integrated to smooth the signal using an integration time of $\tau$.  Finally the integrated voltage signal is then measured.
+Figure \ref{trad_radiometer} illustrates how a signal propagates through a radiometer.  First, the signal from the source enters the antenna, $T_A$.  Next the signal is filtered to a set bandwidth, $\beta$.  This filtered signal is then amplified by Low Noise Amplifiers (LNAs) by a gain of $G$.  The power information is then extracted from the signal using a square-law detector, $X^2$.  A square-law detector takes the input RF signal and produces a voltage whose square is proportional to the input signal's power[\cite{Leinweber}].  The voltage output from the square-law detector is then smoothed using an integrator with an integration time $\tau$.  Finally, the integrated voltage signal is then measured.
 
-A non-physical object that is present in all radiometers is system noise, represented as $T_{N}$.  System noise is noise that is generated from within the radiometer due to thermal agitation.  A radiometer is designed to reduce the system noise as much as possible by using low-loss components and amplifiers that are low noise such as Low Noise Amplifiers (LNA). 
+A non-physical object that is present in all radiometers is system noise, represented as $T_{N}$.  System noise is noise that is generated from within the radiometer due to thermal agitation.  A radiometer is designed to reduce system noise as much as possible by using low-loss components and amplifiers that are low noise, such as Low Noise Amplifiers (LNAs). 
 
 {\begin{figure}[h!tb] 
 \centering
@@ -54,7 +54,7 @@ A non-physical object that is present in all radiometers is system noise, repres
 As shown in Equation \ref{eq:power_rad_eq}, the power measured by an ideal radiometer is equal to the product of the power received from the source ($T_A$), the gain ($G$) and the bandwidth ($\beta$) of the radiometer, and the Boltzmann constant ($k=1.38 x 10^{-23} J/K$).
 
 \begin{equation} \label{eq:power_rad_eq}
-P=k*\beta*G*(T_{A}) (watts)
+P=k*\beta*G*(T_{A}) watts
 \end{equation}
 
 %\begin{equation} \label{eq:boltzmann}
@@ -67,35 +67,35 @@ While the components of an ideal radiometer do not contribute noise power ($T_N$
 P=k*\beta*G*(T_{A}+T_{N}) watts
 \end{equation}
 
-Gain ($G$) and bandwidth ($\beta$) are important design parameters of a radiometer.  While a large gain is desired to amplify the source signal, the magnitude of the gain must be limited since it also amplifies the unwanted system noise ($T_N$).
+Gain ($G$) and bandwidth ($\beta$) are important design parameters of a radiometer.  While a large gain is desired to amplify the source signal ($T_A$), the magnitude of the gain must be limited since it also amplifies the unwanted system noise ($T_N$).
 
 Since the bandwidth of the source signal is typically wide (ideally infinite), ideally one wants the radiometers bandwidth to be wide (large) as well.  The two primary limiting factors are: 1) hardware limitations (e.g. LNA operating limits), and 2) unwanted signals located at a number of frequencies (e.g. radio communication signals).
 
-\emph{Low Noise Amplification.}  The method used by most radiometer to mitigate the system noise contributed during the signal amplification is daisy chaining devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $N$ LNAs, is the sum of the gain values of each LNA shown in equation \ref{gain_sum}.
+\emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $N$ LNAs that is cascaded, is the sum of the gain values of each LNA shown in equation \ref{gain_sum}.
 
 \begin{equation}\label{gain_sum}
-G_{total}=G_1 + G_2 + G_3 + \cdots +G_{n-1}
+G_{total}=G_1 + G_2 + G_3 + \cdots +G_{n-1} dB
 \end{equation}
 
 A performance metric of a LNA is the noise figure ($NF$).  The noise figure gives us the difference between the actual noise output and an ideal amplifier with the same gain and bandwidth attached to a matched load at the standard noise temperature (290 K).
 
-Another terminology used is the noise factor ($F$).  The noise factor shows how much the signal to noise ratio is degraded by the LNA.  The noise factor is related to the noise figure shown in equation \ref{noise_figure}.
+Another terminology used is the noise factor ($F$).  The noise factor shows how much the signal to noise ratio is degraded by the LNA.  The noise factor (F) is related to the noise figure (NF) shown in Equation \ref{noise_figure}.
 
 \begin{equation}\label{noise_figure}
 NF=10 * \log_{10}(F) dB
 \end{equation}
 
-For devices that are cascaded, the total noise factor is found by the Friis formula and results in equation \ref{noise_factor}.  This equation allows us to examine how the noise figure, and also the noise factor propagates through the cascaded LNAs.  
+For devices that are cascaded, the total noise factor is found by the Friis formula and results in equation \ref{noise_factor}.  
 
 \begin{equation}\label{noise_factor}
 F=F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +\frac{F_n-1}{G_1 G_2 G_3 \cdots G_{n-1}}
 \end{equation}
 
-The key implication of this property is that the first LNA in the cascade contributes the most system noise.  As a consequence, it is critical that the first LNA has the smallest noise factor , while the remaining LNAs provide a majority of the signal gain.  While these LNAs provide higher gain they will have higher noise figures, but their contribution to the overall system noise is a fraction of the first LNA.
+The key implication is that the first LNA in the cascade contributes the most system noise.  As a consequence, it is critical that the first LNA has the smallest noise factor, while the remaining LNAs provide a majority of the signal gain.
 
 \subsection{Radiometer Performance Metrics}\label{performance_metrics}
 
-Two criteria used to determine how well a radiometer performs are: 1) Sensitivity and 2) Stability.  These criteria determine the smallest change in signal noise temperature (i.e. power) the radiometer can detect, and the amount drift power measurements have over an extended period of time.
+Two criteria used to determine how well a radiometer performs are: 1) Sensitivity and 2) Stability.  These criteria determine the smallest change in signal noise temperature (i.e. power) the radiometer can detect, and the amount of drift power measurements have over an extended period of time, respectively..
 
 \emph{Sensitivity}.  Sensitivity of a radiometer is the smallest change in power that can be detected.  A radiometer must be able to differentiate between signal noise received by  the antenna ($T_{A}$) and the system generated noise ($T_N$).
 
@@ -108,18 +108,16 @@ NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}}
 The following example illustrates the impact system generated noise has on a radiometers ability to detect changes in signal noise.  Lets assume we want a sensitivity of 1 K.  If there is no system generated noise (i.e. $T_N = 0$) and the received signal at the antenna is 200 K (i.e. $T_A = 200$), we can then calculate our receiver sensitivity by using equation \ref{NEAT_EQ}.  Lets assume a bandwidth of 10 MHz (i.e. $\beta = 10 x 10^6$) and that our integration time is 40 milliseconds (i.e. $\tau = 0.04$).  We can now take these values and put them in Equation \ref{NEAT_EQ} which results in Equation \ref{NEAT_EX1}.
 
 \begin{equation} \label{NEAT_EX1}
-NE\Delta T=\frac{200 + 0}{\sqrt{10 x 10^6 * 0.04} = 1 K} 
+NE\Delta T=\frac{200 + 0}{\sqrt{10 x 10^6 * 0.04}} = 1 K 
 \end{equation}
 
-Equation \ref{NEAT_EX1} gives us a result of 1 K for our sensitivity which meets our goal.  Because we do not have an ideal radiometer (i.e. $T_N != 0$) lets assume our system noise added is 800 K (i.e. $T_N = 800$).  Assuming that our bandwidth ($\beta$), our integration time ($\tau$) and our antenna signal ($T_A$) is the same, we can now apply Equation \ref{NEAT_EQ} which results in Equation \ref{NEAT_EX2}.  This results in a sensitivity of 5 K, which is five times higher than our ideal sensitivity of 1 K. 
+Equation \ref{NEAT_EX1} gives us a result of 1 K for our sensitivity, which meets our goal.  Because we do not have an ideal radiometer (i.e. $T_N \neq 0$), lets assume our system noise is 800 K (i.e. $T_N = 800$).  Assuming that our bandwidth ($\beta$), our integration time ($\tau$) and our antenna signal ($T_A$) is the same, we can now apply Equation \ref{NEAT_EQ}, which results in Equation \ref{NEAT_EX2}.  This results in a sensitivity of 5 K, which is five times higher than our ideal sensitivity of 1 K. 
 
 \begin{equation} \label{NEAT_EX2}
-NE\Delta T=\frac{200 + 800}{\sqrt{10 x 10^6 * 0.04} = 5 K} 
+NE\Delta T=\frac{200 + 800}{\sqrt{10 x 10^6 * 0.04}} = 5 K 
 \end{equation}
 
-As can be clearly seen, system noise makes the job of detecting changes in signal noise more difficult[\cite{skou}].
-
-Section \ref{Exp2_analysis} uses these two methods of finding sensitivity as a cross validation of the correctness of a SDR based radiometer.
+As can be clearly seen, system noise makes the job of detecting changes in signal noise more difficult[\cite{skou}].  Section \ref{Exp2_analysis} uses both the experimentation and analytical methods of finding sensitivity as a cross validation of the correctness of a SDR based radiometer.
 
 %To understand this, look at the example of where T$_{A}$ has a value of 200 K and T$_{N}$ has a value of 800 K.  Since T$_{N}$ is added to the antenna signal, we have a total noise temperature of 1,000 K.  This means to detect a change as small as 1 K, the difference between 1,000 K and 1,001 K needs to be measured.[\cite{skou}].
 
@@ -131,16 +129,16 @@ Section \ref{Exp2_analysis} uses these two methods of finding sensitivity as a c
 
 %The sensitivity of the radiometer is a function of the bandwidth, ($\beta$), of the incoming signal and the integration time, ($\tau$) used.  Since the sensitivity improves as the bandwidth increases, as much bandwidth that is possible is desired.  In a traditional radiometer, this bandwidth is often fixed and it is dependent on the band-pass filters used in the radiometer.  A longer integration time ($\tau$) will also help improve the sensitivity of the radiometer to a certain degree.[\cite{ulaby}]
 
-\emph{Stability.}  Stability for a radiometer means that any fluctuations we see is a result of the source and not a change occurring within the radiometer.  Lets examine Equation \ref{eq:final_power} which defines the total power the radiometer receives.  If our bandwidth ($\beta$), Gain ($G$), system noise ($T_N$), and Boltzmann constant ($k$) are constant, then the system is stable.  We can assume that our bandwidth is fixed and that our system noise is constant.  This results in our Gain ($G$) being the uncertain variable that may cause unwanted fluctuations[\cite{Evans}]. 
+\emph{Stability.}  Stability of a radiometer is a measure of the degree to which fluctuations we see are a result of the source and not a change occurring within the radiometer.  Lets examine Equation \ref{eq:final_power}, which defines the total power the radiometer receives.  If our bandwidth ($\beta$), Gain ($G$), system noise ($T_N$), and Boltzmann constant ($k$) are constant, then the system is stable.  If we can assume that our bandwidth is fixed and that our system noise (mean value) is constant, then this leaves our Gain ($G$) being the uncertain variable that may cause unwanted fluctuations[\cite{Evans}]. 
 
-Radiometer instabilities are due to Low Noise Amplifier (LNAs) gain fluctuations.  Two factors cause gain these gain fluctuations: 1) fluctuations in the LNA's voltage supply, and 2) fluctuation in the LNA's physical temperature.  
+Radiometer instabilities are due to Low Noise Amplifier (LNAs) gain fluctuations.  Two factors cause these gain fluctuations: 1) fluctuations in the LNA's voltage supply, and 2) fluctuation in the LNA's physical temperature.  
 
 The impact these gain fluctuations have on stability is given by equation \ref{eq:rad_stability}.  Where:
 
 \begin{itemize}
 \item $\Delta T_G$ is the noise temperature fluctuation,
 \item $\Delta G$ is the LNA gain fluctuation,
-\item $G$ is the gain of the LNA and,
+\item $G$ is the ideal gain of the LNA and,
 \item $T_{sys}$ is the combined antenna source ($T_A$) and system noise ($T_N$).
 \end{itemize}
 
@@ -150,9 +148,9 @@ The impact these gain fluctuations have on stability is given by equation \ref{e
 \Delta T_G=T_{sys} \left(\frac{\Delta G}{G}\right)
 \end{equation}
 
-These gain fluctuations can be controlled by closely monitoring and controlling both the voltage and temperature of the LNAs. However, this adds levels of complexity to the radiometer, that may be impractical in some cases.  As an alternative, modifications to the basic radiometer given in Figure \ref{trad_radiometer} have been developed to compensate for these fluctuations.  There are three common types of radiometers designed to account for gain fluctuations.  They are: Dicke, Noise injection, and Polarimetric or Correlating radiometers.
+These gain fluctuations can be controlled by closely monitoring and controlling both the voltage supply and temperature of the LNAs. However, this adds levels of complexity to the radiometer that may be impractical in some cases.  As an alternative, modifications to the basic radiometer given in Figure \ref{trad_radiometer} have been developed to compensate for these fluctuations.  There are three common types of radiometers designed to account for gain fluctuations.  They are: Dicke, Noise injection, and Polarimetric (or Correlating) radiometers.
 
-\emph{Dicke Radiometer.}  Figure \ref{dicke_radiometer} shows the block diagram of a Dicke radiometer, which switches between the measurement of the source signal ($T_A$) and a known reference signal ($T_R$)[\cite{Dicke}].  By quickly switching between the source and reference signal at a frequency of $F_S$, a Dicke radiometer can reduce the impact of gain fluctuations on its stability.  
+\emph{Dicke Radiometer.}  Figure \ref{dicke_radiometer} shows the block diagram of a Dicke radiometer, which switches between measuring the source signal ($T_A$) and a known reference signal ($T_R$)[\cite{Dicke}].  By quickly switching between the source and reference signal at a frequency of $F_S$, a Dicke radiometer can reduce the impact of gain fluctuations on its stability.  
 
 {\begin{figure}[h!tb] 
 \centering
@@ -162,7 +160,7 @@ These gain fluctuations can be controlled by closely monitoring and controlling 
 \end{figure}
 }
 
-While a Dicke radiometer improves stability, it does so at the cost of not seeing the object of interest while it is measuring the reference signal.  This reduces the sensitivity of the radiometer since the source signal is only observed for a fraction of the time.
+While a Dicke radiometer improves stability, it does so at the cost of not seeing the object of interest while it is measuring the reference signal.  This reduces the sensitivity of the radiometer, since the source signal is only observed for a fraction of the time.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -172,9 +170,9 @@ While a Dicke radiometer improves stability, it does so at the cost of not seein
 \end{figure}
 }
 
-\emph{Noise Injection Radiometer.}  A noise injection radiometer is a variation of the Dicke radiometer, where a variable noise signal ($T_I$) is injected into the RF chain as seen in Figure \ref{NoiseInj_radiometer}.  The injected noise signal power is adjusted so when added to the source signal, their sum equals to the reference signal.  This eliminates gain fluctuations, but increases system noise ($T_N$) which reduces radiometer sensitivity.
+\emph{Noise Injection Radiometer.}  A noise injection radiometer is a variation of the Dicke radiometer, where a variable noise signal ($T_I$) is injected into the RF chain, as shown in Figure \ref{NoiseInj_radiometer}.  The injected noise signal power is adjusted so when added to the source signal their sum equals the reference signal power.  This improves stability by eliminating gain fluctuations, but increases system noise ($T_N$), which reduces radiometer sensitivity.
 
-\emph{Polarimetric Radiometer} A polarimetric (or correlating) radiometer uses two polarized signals, referred to as vertically polarized (V-Pol) and horizontally polarized (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is fed into the radiometer and correlated.  Because the source noise signal has polarization and the gain fluctuations does not, the gain fluctuations can be eliminated.  This reduces gain fluctuations to increase stability, helping maintain sensitivity.  However, this is at the cost of increasing radiometer complexity and price, since two identical receivers (one for each polarization) is required. 
+\emph{Polarimetric Radiometer} A polarimetric (or correlating) radiometer uses two polarized signals, referred to as vertically polarized (V-Pol) and horizontally polarized (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is fed into the radiometer and correlated.  Because the source noise signal has polarization and the gain fluctuations do not, the gain fluctuations can be eliminated.  This reduces gain fluctuations to increase stability, while helping maintain sensitivity.  However, this is at the cost of increasing radiometer complexity and price, since two identical receivers (one for each polarization) are required. 
 
 
 %Stability and accuracy are additional problems that need to be considered when looking at the radiometer system.  To begin we can once again look at the power received equation \ref{eq:final_power}.
@@ -193,9 +191,9 @@ A Software Defined Radio (SDR) is a device that digitizes a received RF signal a
 \end{figure}
 }
 
-A SDR can perform certain hardware functions in software (e.g. filtering).  This gives SDRs a high amount of flexibility because components that were normally performed in hardware can now be performed in software.  Changes can be made by simply uploading new software or firmware to the system.  This has a cost benefit as certain hardware components are no longer needed and changes made in software do not require additional hardware to be added, removed or modified.
+A SDR can perform certain hardware functions in software (e.g. filtering), which provides flexibility over hardware solutions.  Changes can be made by simply uploading new software or firmware to the system.  This has a cost benefit as certain hardware components are no longer needed, and changes made in software do not require hardware to be added, removed or modified.
 
-A more realistic software defined radio is shown in figure \ref{prac_sdr}, where two items have been added.  First, an amplification of the signal (gain) is added to improve SDR sensitivity.  Second, a mixer is often used to down-convert the high frequency RF source signal to a lower frequency so a less expensive analog to digital converter can be used.  However, if the source signal frequency is already within the range of the analog to digital converter, then the mixer may be omitted.  
+A more realistic software defined radio is shown in figure \ref{prac_sdr}, where two items have been added.  First, an amplification of the signal (gain) is added to ensure the signal can be detected.  Second, a mixer is often used to down-convert the high frequency RF source signal to a lower frequency so a less expensive analog to digital converter can be used.  However, if the source signal frequency is already within the range of the analog to digital converter, then the mixer may be omitted.  
 
 %An ideal software defined receiver simply has an antenna connected to an analog to digital converter which sends information to a processing unit such as a Field Programmable Gate Array (FPGA) or computer.  For a transmitter, we reverse it and use a digital to analog converter to produce the correct waveform which is then transmitted by the antenna.  In reality, SDRs require some additional hardware to make a viable working transceiver.  Amplification is still required to amplify the incoming signal and to amplify the signal going to the antenna.  Some SDRs also use a mixing stage to move a high frequency signal to a lower frequency signal.  This allows for less expensive analog to digital and digital to analog converters to be used.  
 
@@ -207,7 +205,7 @@ A more realistic software defined radio is shown in figure \ref{prac_sdr}, where
 \end{figure}
 }
 
-\emph{Software Defined Radio Applications.}  Software Defined Radios (SDRs) can be for a variety of applications, but have been primarly used in the area of communications.  Some examples of these applications include:  mobile communications, wireless local area networks, personal area networks and digital broadcast.  They appeal to applications where having the ability to change a modulation scheme or filter on the fly is desirable.  In these respects, SDRs often outperform traditional hardware-only radios because of their ability to easily change their operations through software.  
+\emph{Software Defined Radio Applications.}  Software Defined Radios (SDRs) can be used for a variety of applications, but have been primarily used in the area of communications.  Some examples of these applications include:  mobile communications, wireless local area networks, personal area networks, and digital broadcast.  They appeal to applications where having the ability to change a modulation scheme or filter on the fly is desirable.  In these respects, SDRs often outperform traditional hardware-only radios because of their ability to easily change their operations through software.  
 
 Early SDRs were expensive due to the cost of high speed analog to digital converters (ADCs) and high-end Field Programmable Gate Arrays (FPGA) that were required.  In recent years, the cost of SDRs have decreased due to the cost of these key components decreasing.  Also, while the cost of SDRs has gone down, their performance has increased.  This has led to SDRs becoming feasible for use in many new ways [\cite{jondral2005software}].
 
@@ -228,7 +226,7 @@ The hardware platform selected for this work is the Ettus Research Group N200 SD
 \item Modular daughter-board system for RF front end.
 \end{itemize}
 
-Its flexible architecture and ability to support a large bandwidth made the N200 an ideal hardware platform for the software defined radio based radiometer development.
+Its flexible architecture and ability to support a large bandwidth made the N200 an ideal hardware platform for software defined radio based radiometer development.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -240,7 +238,7 @@ Its flexible architecture and ability to support a large bandwidth made the N200
 
 When selecting the hardware for this thesis, the requirements defined section \ref{requirements} were examined.  The bandwidth requirement was a deciding factor for hardware selection.  It was decided that a minimum bandwidth of 20 MHz was desired.  The 14-bit ADC was not a defined requirement, but was deemed to provide an adequate level of resolution.  The N200 has a flexible architecture through the use of daughter-boards.  
 
-Figure \ref{N200_block} shows the overall architecture of the N200 SDR.  A daughter board directly receives the RF signal and then outputs analog I (in-phase) and Q (quadrature phase) signals that are then sampled by the N20014-bit  A/D converter.
+Figure \ref{N200_block} shows the overall architecture of the N200 SDR.  A daughter board directly receives the RF signal and then outputs analog I (in-phase) and Q (quadrature phase) signals that are then sampled by the N200 14-bit  A/D converter.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -253,7 +251,7 @@ Figure \ref{N200_block} shows the overall architecture of the N200 SDR.  A daugh
 %The requirements outlined above was the guiding factor in selecting the N200 SDR for our hardware platform.  These reasons, and the fact that this hardware is well supported by GNURadio, lead to using this for the work in this thesis.
 %While not a defined requirement, it was indicated by Dr. Brian Hornbuckle that it would be ideal to look at two signals at the same time.  The N200 is able to have up to two daughter boards installed.
 
-\emph{The DBSRX2 Receiver.}  The daughter board selected for this work was the DBSRX2 shown in figure \ref{dbsrx2}.  This daughter board is receive only, and operates between 800 MHz and 2400 MHz, which includes the frequency band required for this work (1400 MHz - 1425 MHz).
+\emph{The DBSRX2 Receiver.}  The daughter board selected for this work was the DBSRX2, shown in Figure \ref{dbsrx2}.  This daughter board is receive only, and operates between 800 MHz and 2400 MHz, which includes the frequency band required for this work (1400 MHz - 1425 MHz).
 
 {\begin{figure}[h!tb] 
 \centering
@@ -263,7 +261,7 @@ Figure \ref{N200_block} shows the overall architecture of the N200 SDR.  A daugh
 \end{figure}
 }
 
-The DBSRX2 has the RF hardware needed to transform the received RF signal into phase and quadrature phase outputs.  This includes a programmable gain amplifier, a direct-conversion converter, a mixer, and finally a band-pass filter.  Figure \ref{dbsrx2_block} provides a block diagram of the DBSRX2.  First, the signal received is amplified by the Programmable Gain Amplifier (PGA).  The PGA is can be configured by the software.  Next, the signal goes into a direct-conversion integrated circuit (a Maxim 2112).  This integrated circuit directly converts the RF signal into analog I (in-phase) and Q (quadrature phase) values and is composed of an integrated mixer and band-pass filter.
+The DBSRX2 has the RF hardware needed to transform the received RF signal into in-phase and quadrature-phase outputs.  This includes a programmable gain amplifier, a direct-conversion converter, a mixer, and finally a band-pass filter.  Figure \ref{dbsrx2_block} provides a block diagram of the DBSRX2.  First, the signal received is amplified by the Programmable Gain Amplifier (PGA).  The PGA can be configured by software.  Next, the signal goes into a direct-conversion integrated circuit (a Maxim 2112).  This integrated circuit directly converts the RF signal into analog I (in-phase) and Q (quadrature phase) signals and is composed of an integrated mixer and band-pass filter.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -281,7 +279,7 @@ The DBSRX2 has the RF hardware needed to transform the received RF signal into p
 %\end{figure}
 %}
 
-These analog I and Q values are then sent to the analog to digital converter to be digitized.  The IQ values are transmitted as differential signals to minimize noise.  Once digitized, the digital I Q values are sent to a FPGA to be processed, and then sent to the PC for soft-ware based signal processing.
+These analog I and Q signals are then sent to the analog to digital converter to be digitized.  The IQ signal are transmitted as differential signals to minimize noise.  Once digitized, the digital I-Q values are sent to a FPGA to be processed, and then sent to the PC for software based signal processing.
 
 %Since we are using the DBSRX2 after the LNAs that are already in use, the noise temperature added by the DBSRX2 will be small.  The DBSRX2 adds approximately 1.05 dB to the overall noise factor of the system.
 
@@ -293,7 +291,7 @@ The firmware provides low level processing of the signal before being sent to th
 
 The software on the host PC performs signal processing on the I/Q data.  GNURadio was selected to be this software.   GNUradio is an open source software package designed for software defined radio application development.  It provides a GUI framework to create an interactive environment for the user, and is well supported by the N200 hardware.  
 
-GNURadio uses a combination of Python and C++, where Python handles the high level interface and C++ is used to implement drivers and low level interfaces to the hardware.  This combination allows for a system that is easy to use, but still meets the demanding performance required for handling large amounts of data. 
+GNURadio uses a combination of Python and C++, where Python handles the high level interface and C++ is used to implement drivers and low level interfaces to the hardware.  This combination allows for a system that is easy to use, but still meets the performance required for handling large amounts of data. 
 
 GNURadio also has a rapid development tool called GNURadio companion (GRC).  GRC is a simple to use graphical system for designing and building radio components in software. An example of GRC is shown in figure \ref{N200_GRC}.
 
@@ -304,14 +302,14 @@ GNURadio also has a rapid development tool called GNURadio companion (GRC).  GRC
 \end{figure}
 }
 
-GNUradio Companion provides common functions, such as signal sources, signal processing and signal sinks, as blocks that can picked and placed on the screen.  Once placed, the blocks can be wired up, much like LabView, and the flow of data can be controlled in this fashion.  GNURadio Companion also includes blocks that allow for building a GUI interface, which can be used to display data and control the software defined radio.
+GNURadio Companion provides common functions, such as signal sources, signal processing and signal sinks, as blocks that can be picked and placed on the screen.  Once placed, the blocks can be wired up, much like in LabView, and the flow of data can be controlled in this fashion.  GNURadio Companion also includes blocks that allow for building a GUI interface, which can be used to display data and control the software defined radio.
 
 If a block does not exist, it can be created.  Because GNURadio uses Python, users can use this powerful and flexible language to build new blocks that can be imported into GRC.  
 
 %Additional blocks can also be created using Python.  This allows the users to create other blocks and access other common Python libraries.  Each block is then defined in While GNURadio Companion provides most of the essential blocks used in most applications additional blocks can by added if needed.  This is done by using Python and the blocks in GNUradio Companion are simply blocks of Python code.  To compile a GNURadio Companion flow diagram, you simply run the sheet, which then generates the Python code that is then executed.   
 
 
-Using GNURadio and GNURadio Companion, a software defined radio can be rapidly built with little programming experience.  The excellent support of the hardware selected, and the ease of use made it an ideal development tool for building the necessary software for our software defined radiometer.
+Using GNURadio and GNURadio Companion, a software defined radio can be rapidly built with little programming experience.  The excellent support of the hardware selected, and the ease of use made it an ideal development tool for building the necessary software for our SDR-based radiometer.
 
 %----------------------------------------------------------
 % End of Chapter 3.  Anything below this is extra information
