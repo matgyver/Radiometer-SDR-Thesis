@@ -7,13 +7,12 @@ The following is the source code to several programs that make the radiometer po
 
 %The second code is the Matlab script that can be used to parse the output from GNURadio.  This code will plot the total power output as well as perform some other functions such as a NE$\delta$T calculation and also allows for calibration points to be entered as well.  This code can be used as a foundation for other programs.  
 
-The third code supplied is Python code that can be used to read the data generated and plot it.  In many ways it mimics the functions of the Matlab script buy uses Python, NumPy and SciPy to perform the mathematical functions.  This may be a better option for those that wish to look at the data but do not have access to Matlab since Python is free to download.
+The third code supplied is Python code that can be used to read the data generated and plot it.  In many ways it mimics the functions of the Matlab script but uses Python, NumPy and SciPy to perform the mathematical functions.  This may be a better option for those that wish to look at the data but do not have access to Matlab.
 
-Finally, this code has been included in this thesis as a point of reference.  It may be out of date and some other pieces of code was also used for the experimentation used in this thesis.  Copies of this thesis source \LaTeX code, some experimental data, and any other code used can be found on the author's GitHub repository, \url{https://github.com/matgyver/Radiometer-SDR-Thesis}.
-
+Finally, this code has been included in this thesis as a point of reference.  It may be out of date and some other pieces of code was also used for the experimentation used in this thesis.  Copies of this thesis source \LaTeX code, most experimental data, and other code sources may be found on the author's GitHub repository, \url{https://github.com/matgyver/Radiometer-SDR-Thesis}.
 
 \section*{Python code for total power radiometer}
-The main code that acts as the total power radiometer is the TPR.py code.  This module adds a custom block to GRC that can then be called and used like any other block in GRC.  A screenshot of the blocks used in this is shown below.
+The main code that acts as the total power radiometer is the TPR.py code.  This module adds a custom block to GRC that can then be called and used like any other block in GRC.  A screenshot of the blocks used is shown in Figure \ref{TPR_GRC}.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -66,7 +65,7 @@ The main code that acts as the total power radiometer is the TPR.py code.  This 
 %\newpage
 
 \section*{Python code for analyzing data}
-IPython notebooks was used to perform an analysis on the data.  The code presented here is the export of this notebook.  The Markdown language as well as some HTML is used to create easy to read pages that include the python code, generated graphs and descriptive text.  
+IPython notebooks was used to perform an analysis on the data used in this thesis.  The code presented here is an example of using iPython to read and parse data from the SDR-based radiometer.  The Markdown language as well as some HTML is used to create easy to read pages that include the python code, generated graphs and descriptive text.  
 \lstset{
   language=Python,
   showstringspaces=false,

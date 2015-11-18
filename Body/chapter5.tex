@@ -41,10 +41,10 @@ The following hardware was used and has also been marked on Figure \ref{Exp1_Blo
 \begin{enumerate}
 \item N200 Software Defined Radio with DBSRX2 Daughter-board
 \item ADL5902 Square-law detector
-\item National Instruments USB-6009 Data Acquisition Unit (not shown in figure)
+\item National Instruments USB-6009 Data Acquisition Unit (not shown in Figure \ref{Exp1_Block})
 \item ZN2PD-20-S+ Power Divider
 \item 50-ohm matched load ($Z_L$)
-\item Rigol DP832 Power Supply (not shown in figure)
+\item Rigol DP832 Power Supply (not shown in Figure \ref{Exp1_Block})
 \item Radiometer RF Front End
 \begin{enumerate}
 \item 4 x Integrated Microwave Bandpass filters (1400 - 1425 MHz)
@@ -115,7 +115,7 @@ In this experiment, we generate an interfering signal and then mitigate the sign
 
 This experiment was designed to determine whether or not a SDR-based radiometer can cope with an interfering signal.  This test injects a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  The amplitude of this signal is then incremented and decremented at various times during the test.  This was done to reflect a possible real world scenario and to make it easy to identify the interfering signal with the square-law detector, which only measures power.  
 
-In order to mitigate the offending signal, a filter is designed to remove the offending signal.  The design of the filter used a program that is part of the GNURadio software package, called the GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of this tool when designing the band-reject filter for this application.  This tool generates filter values (also called taps) that GNURadio will use for defining the filter.  The GUI program, shown in figure \ref{GRC_Filter_DSN}, allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our SDR-based radiometer.  
+In order to mitigate the offending signal, a filter is designed to remove the offending signal.  The design of the filter used a program that is part of the GNURadio software package, called the GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of this tool when designing the band-reject filter for this application.  This tool generates filter values (also called taps) that GNURadio will use for defining the filter.  The GUI program, shown in Figure \ref{GRC_Filter_DSN}, allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our SDR-based radiometer.  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/GNURadio_Filter_dsn.png}
@@ -127,7 +127,7 @@ In order to mitigate the offending signal, a filter is designed to remove the of
 
 The setup for this experiment is similar to the setup outline in section \ref{Exp1}.  In addition, a second software defined radio was added to inject an offending signal into the RF signal chain.  This software defined radio was configured to operate as a signal generator to create the offending signal.  
 
-Our signal generator is the HackRF One (or just HackRF), shown in figure \ref{HackRF}.  This SDR is cheaper, and has lower specifications than the Ettus Research N200 used as the SDR-based radiometer.  However, it suits our needs for the purpose of a signal generator.
+Our signal generator is the HackRF One (or just HackRF), shown in Figure \ref{HackRF}.  This SDR is cheaper, and has lower specifications than the Ettus Research N200 used as the SDR-based radiometer.  However, it suits our needs for the purpose of a signal generator.
 
 \begin{figure}[h!tb] \centering
 
@@ -156,40 +156,3 @@ The data collected for this experiment is the total power reading measurements o
 
 %----------------------------------------------------------
 % End of Chapter 5.  Anything below this is extra information
-
-%To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the software defined radio.  This signal is split using a power divider so that the information will be the same to both devices with the except for the 3 dB plus insertion loss the power divider adds.  This allows us to verify the software defined radio with a proven system. 
-
-%To test the ADL5902 a signal generator was used that had a controlled output.  The specific signal generator that was used was an older model that allowed us to change the output in 10 dBm increments.  The signal generator was also configured for 1.4 GHz as that is the frequency the ISU RF front end is configured to listen at.  Ideally a noise generator would have been desirable, however a noise generator with adjustable power output could not be located on campus.  
-
-%The ADL5902 is available from Analog Devices in an evaluation board.  This board pairs the ADL5902 with a AD7466 12-bit analog to an analog to digital converter.  This board can then be mated with Analog Devices BlackFin processor which acts as a USB gateway for the AD7466 data.  A test program written in LabView is also provided as well.
-
-%The test program provided by Analog Devices allows us to query the ADL5902 and record the raw ADC value.  This program also allows us to enter in the frequency used during testing, the temperature during the test, and allowed for calibration of the ADL5902.  All of the data is then stored into an Excel spreadsheet which can be accessed later.
-
-%For this test we used the signal generator set to 1.4 GHz and started at $-60$ dBm for the output signal.  This was selected as this is the lowest the square law detector can detect.  The output power was then incremented on the signal generator in 10 dBm steps.  There was no change to any other parameter.  This was done up to 0 dBm.  Any higher and there was risk of damage to the ADL5902.  This test was then repeated several times and was done with the signal generator stepping up from $-60$ dBm to 0 dBm and from 0 dBm to $-60$ dBm.  
-
-%The square-law detector that we obtained is the Analog Devices ADL5902.  The ADL5902 is a true rms responding power detector that has a square law detector, a variable gain amplifier, and an output driver. It also has a temperature sensor and will compensate for temperature variations.  The output driver allows for the small signal from the square law detector to be amplified to a level that most analog to digital devices can detect.  It should be noted that this is not an amplifier for the incoming RF signal, just to amplify the small signal from the diode.  This driver however does have low noise and has a noise output of approximately $25nV/ \sqrt{Hz}$ at 100 kHz.  The ADL5902 operates from 50 MHz to 9 GHz and in most cases can detect down to $-60$ dBm.  This works well in our application since the radiometer operates at 1.4 GHz and after the amplification stage we usually see between $-40$ to $-30$ dBm of power.  
-
-%{\begin{figure}[h!tb] \centering
-%\includegraphics[width=\textwidth]{Images/adl5902.jpg}
-%\isucaption{An image of the ADL5902 square-law detector used in these experiments}
-%\label{ADL5902}
-%\end{figure}
-%}
-
-%The specifications of the ADL5902 can be seen in Table~\ref{ADL5902_data} shown below.
-
-%\begin{table}[h!tb] \centering
-%\isucaption{ADL5902 Specifications}
-%\label{ADL5902_data}
-%\begin{tabular}{lcc} \hline
-%\textbf{Parameter @ 900 MHz} & \textbf{Value} & \textbf{Units} \\ \hline
-%Frequency Range & 50 to 9000 & MHz \\
-%Dynamic Range & 61 & dB \\
-%Minimum Input Level, $\pm 1.0$ dB & 60 & dB \\ 
-%Maximum Input Level, $\pm 1.0$ dB & 1 & db \\
-%Logarithmic Slope & 53.7 & mV/dB \\ 
-%Output Voltage Range & 0.03 to 4.8 & V \\ \hline
-%\end{tabular}
-%\end{table}
-
-%The ADL5902 outputs an analog signal that falls between 0.03 volts and 4.8 volts.  It outputs a change of 53.7 millivolt per dB detected by the ADL5902. 
