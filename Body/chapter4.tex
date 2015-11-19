@@ -1,8 +1,8 @@
 % Chapter 4 from the standard thesis template
 % that contains an adv. example table and figure.
-\chapter{SOFTWARE DEFINED RADIOMETER IMPLEMENTATION}\label{ch:implementation}
+\chapter{SOFTWARE DEFINED RADIO BASED RADIOMETER IMPLEMENTATION}\label{ch:implementation}
 
-This chapter examines the implementation of a software defined radio based radiometer.  First we will examine requirements of both a traditional radiometer and a digital radiometer.  Next we will map the traditional radiometer components discussed in chapter \ref{ch:background} to their digital counterparts.  Finally a high level overview of a software defined radio based radiometer will be given.
+This chapter examines the implementation of a software defined radio based radiometer.  First we will examine requirements of both a traditional radiometer and a Software Defined Radio (SDR) based radiometer.  Next we will map the traditional radiometer components discussed in chapter \ref{ch:background} to their digital counterparts.  Finally a high level overview of the operation of a SDR-based radiometer and what impact that has on the performance of the radiometer.
 
 \section{Requirements}\label{requirements}
 
@@ -10,7 +10,7 @@ This section discusses the hardware and software requirements used to drive the 
 
 \emph{Hardware Requirements.}  The capabilities of existing traditional radiometers were the primary driving force in setting the requirements of our hardware development platform.  Dr. Brian Hornbuckle from the Electrical and Computer Engineering and Agronomy department at Iowa State University was consulted with respect to key specifications of his radiometer.  Additionally, the specifications of other radiometers were examined. 
 
-Table \ref{rad_performance} summarizes the specification of three parameters that were decided upon for selecting our hardware development platform, based on our investigation.  This lead to the selection of the N200 software defined radio platform with a DBSRX2 daughter board from Ettus Research as our platform.  Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
+Table \ref{rad_performance} summarizes the specification of three parameters that were decided upon for selecting our hardware development platform, based on our investigation.  This lead to the selection of the N200 software defined radio platform with a DBSRX2 daughter board from Ettus Research as our hardware platform.  Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
 
 \begin{table}[h!tb] \centering
 \isucaption{Required Radiometer performance}
@@ -24,20 +24,20 @@ $NE\Delta T$ (sensitivity) & 1 & Kelvin \\ \hline
 \end{tabular}
 \end{table}
 
-\emph{Software Requirements.}  Since an objective of this work was to help make radiometers more wildly accessible to the general research and education communities, a requirement of the development software was ease of use.  Additionally, the user interfaces developed with these software tools needed to be easy to use, while providing sufficient computing efficiency for the signal processing required for radiometry.
+\emph{Software Requirements.}  Since an objective of this work was to help make radiometers more wildly accessible to the general research and education community, a requirement of the development software was ease of use.  Additionally, the user interfaces developed with these software tools needed to be easy to use, while providing sufficient computing efficiency for the signal processing required for radiometry.
 
 GNURadio met the stated requirements.  It includes a supplemental software package called GNURadio Companion (GRC), which uses a graphical interface for creating a radio environment.  GNURadio and GRC are discussed in greater detail in Section \ref{software_platform}.
 
 \section{Mapping Traditional Radiometer Functions to a Software Defined Radio Based Radiometer}
 
-The use of a software defined radio (SDR) to implement a radiometer requires mapping components of a traditional radiometer to SDR-based technology.  This section presents the mapping of three such components for implementing our SDR-based radiometer.  These components are:  1) power measurement, 2) integration, and 3) filtering.
+The use of a software defined radio (SDR) to implement a radiometer requires mapping components of a traditional radiometer to SDR-based technology.  This section presents the mapping of three such components for implementing our SDR-based radiometer.  These components are:  1) power measurement, 2) data smoothing, and 3) bandwidth limiting and filtering.
 
 \subsection{Power measurement}
 
-A traditional radiometer uses a device called a square law detector to measure power.  It transforms an input signal into an output voltage whose square is proportional to the input signal power.  Figure \ref{square_law_simple} shows a simple circuit diagram.  Mathematically it takes an input signal (x) and gives an output (y) as the square of the input as shown in Equation \ref{square_eq}.
+A traditional radiometer uses a device called a square law detector to measure power.  This device is a diode that operates in the square law region.  While the diode is operating in this region, the output voltage ($V_{out}$)is proportional to the square of the input voltage ($V_{in}$) and is therefore proportional to the input power ($P_{in}$).  This relationship is shown in Equation \ref{square_eq} [\cite{Navy_detector}].  Figure \ref{square_law_simple} shows a simple circuit diagram and input and output voltages from this circuit.
 
 \begin{equation}\label{square_eq}
-y = x^2
+V_{out} = nV_{in}^2 = nP_{in}
 \end{equation}
 
 {\begin{figure}[h!tb] 
@@ -48,7 +48,7 @@ y = x^2
 \end{figure}
 }
 
-The software defined radio based radiometer operates in the same manor as a traditional radiometer.  The input signal, represented as I (in-phase) and Q (quadrature-phase), is squared and summed to produce an output ($P_{out}$).  Equation \ref{sdr_x2} gives the mathematical representation of a software defined radio based radiometer implementation of a square law detector[\cite{Rashid}]. 
+The software defined radio based radiometer operates in a smiliar same manner as a traditional radiometer.  The input signal, represented as I (in-phase) and Q (quadrature-phase), is squared and summed to produce an output ($P_{out}$).  Equation \ref{sdr_x2} gives the mathematical representation of a software defined radio based radiometer implementation of a square law detector[\cite{Rashid}]. 
 
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
