@@ -48,7 +48,7 @@ V_{out} = nV_{in}^2 = nP_{in}
 \end{figure}
 }
 
-The software defined radio based radiometer operates in a smiliar same manner as a traditional radiometer.  The input signal, represented as I (in-phase) and Q (quadrature-phase), is squared and summed to produce an output ($P_{out}$).  Equation \ref{sdr_x2} gives the mathematical representation of a software defined radio based radiometer implementation of a square law detector[\cite{Rashid}]. 
+The software defined radio based radiometer operates in a similar manner as a traditional radiometer.  With the SDR-based radiometer our signal is converted to I (in-phase) and Q (quadrature-phase).  Adding the I and Q data allows us to recreate the signal.  The I and Q data contains the magnitude of the in-phase and quadrature-phase information respectively, when summed this represents the magnitude of the original signal.  To determine the total power, we square the magnitude to produce an output ($P_{out}$).  Equation \ref{sdr_x2} gives the mathematical representation of a software defined radio based radiometer implementation of a square law detector[\cite{Rashid}]. 
 
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
@@ -64,11 +64,11 @@ Figure \ref{square_block} shows the block within GNURadio Companion that perform
 \end{figure}
 }
 
-For both a traditional radiometer and a SDR based radiometer the output of this total power information will fluctuate rapidly.  To smooth this signal we will pass this signal through a low pass filter which is shown in Figure \ref{square_block} as block B.  Filtering will be discussed in the next section.
+For both a traditional radiometer and a SDR-based radiometer, the output of this total power information will fluctuate rapidly.  To smooth this signal we send this signal through a low pass filter which is shown in Figure \ref{square_block} as block B.  Filtering will be discussed in the next section.
 
-\subsection{Data filtering}
+\subsection{Data smoothing}
 
-Output from the square-law detector is noisy due to the rapid fluctuations in the signal.  Figure \ref{square_raw} shows an example of this raw output.  This makes detecting small changes in power difficult (i.e. hinders sensitivity).  
+Output from the square-law detector is noisy, which makes detecting small changes in power difficult (i.e. hinders sensitivity).  Figure \ref{square_raw} shows an example of this raw output.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -78,17 +78,15 @@ Output from the square-law detector is noisy due to the rapid fluctuations in th
 \end{figure}
 }
 
-A traditional radiometer will use an integrator, which is equivalent to a low pass filter, to smooth the output from the square-law detector.  This low pass filter is implemented as a simple RC circuit as shown in Figure \ref{rc_circuit}.  
+A traditional radiometer will use an integrator, which is equivalent to a low pass filter, to smooth the output from the square-law detector.  This low pass filter is implemented as a simple RC circuit as shown in Figure \ref{rc_circuit}.  This low pass filter allows us to reduce the noise and this results in Figure \ref{square_raw_filt}.  
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=11cm]{Images/rc_lpf.png}
+\includegraphics[width=7cm]{Images/rc_lpf.png}
 \isucaption{A simple RC circuit.}
 \label{rc_circuit}
 \end{figure}
 }
-
-This low pass filter allows us to reduce the noise and this results in Figure \ref{square_raw_filt}.  
 
 {\begin{figure}[h!tb] 
 \centering
@@ -98,23 +96,21 @@ This low pass filter allows us to reduce the noise and this results in Figure \r
 \end{figure}
 }
 
-This RC filter is described by the Laplace transform of its impulse response.  This RC filter is shown in Equation \ref where $K$ is the gain of the filter, $\tau$ is the time constant of the filter and $s$ is the Laplace transform variable.
+This RC filter is described by the Laplace transform of its impulse response.  This RC filter is shown in Equation \ref{RC_laplace} where $K$ is the gain of the filter, $\tau$ is the time constant of the filter and $s$ is the Laplace transform variable.
 
 \begin{equation}\label{RC_laplace}
 \frac{Output}{•Input} = K \frac{1}{\tau s + 1}
 \end{equation}
 
-We can now look at the impulse response of this filter as shown in Figure \ref{rc_response}.  Figure \ref{rc_response} shows an impulse function used as the input to a RC filter.
-
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=17cm]{Experiments/Exp6/rc_response.pdf}
+\includegraphics[width=17cm]{Experiments/Exp6/all_four.pdf}
 \isucaption{Impulse input and the response of a RC low pass filter}
 \label{rc_response}
 \end{figure}
 }
 
-To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the impulse response of this filter as we did with the RC filter impulse response.
+We can now look at the step response of this filter as shown in Figure \ref{rc_response}.  To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the step response of this filter as we did with the RC filter step response.
 
 A single pole IIR filter is also known as a recursive filter as the mathematical expression used to describe this filter is a recursive function shown in Equation \ref{iir_recursive}.  
 
@@ -122,25 +118,25 @@ A single pole IIR filter is also known as a recursive filter as the mathematical
 y[n] = a_0 * x[n] + b_1 * y[n-1]
 \end{equation}
 
-In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the input signal ($x[n]$) and is added to the previous sample calculated.  The coefficients, $a_0$ and $b_1$ then define the impulse response of the filter.
+In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the input signal ($x[n]$) and is added to the previous sample calculated.  The coefficients, $a_0$ and $b_1$ then define the impulse response of the filter.  Figure \ref{rc_response} shows the discrete step input given to the system and the output response.  This response is calculated using Equation \ref{iir_recursive}.
 
-Figure \ref{iir_response} shows the discrete impulse input given to the system and the output response.  This response is calculated using Equation \ref{iir_recursive}.
+%{\begin{figure}[h!tb] 
+%\centering
+%\includegraphics[width=17cm]{Experiments/Exp6/iir_response.pdf}
+%\isucaption{Impulse input and the response of a RC low pass filter}
+%\label{iir_response}
+%\end{figure}
+%}
 
-{\begin{figure}[h!tb] 
-\centering
-\includegraphics[width=17cm]{Experiments/Exp6/iir_response.pdf}
-\isucaption{Impulse input and the response of a RC low pass filter}
-\label{iir_response}
-\end{figure}
-}
+It can be seen that Figure \ref{rc_response} that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
 
-It can be seen that Figure \ref{iir_response} is identical to Figure \ref{rc_response} except that it is using discrete values.  Therefore are single pole IIR filter functions identically to a RC low pass filter.  
+GNURadio includes a program that allows us to define our filter and it will generate the coefficients and taps needed for our filters.  Chapter \ref{ch:exp_design} goes into more depth on this program.
 
-GNURadio includes a program that allows us to define our filter and it will generate the coefficients and taps needed for our filters.  Chapter \ref{ch:results} goes into more depth on this program.
+\subsection{Bandwidth limiting and filtering}
 
 \emph{Bandwidth limiting.}  Bandwidth limiting is the process of defining the frequency band over which a radiometer measures power.  For a traditional radiometer, this is typically accomplished using analog filters.  Within a SDR-based radiometer, the analog to digital converter's sample rate dictates this bandwidth.
 
-\emph{Filering.}  There are instances when the frequency being observed requires additional filtering (i.e. RFI mitigation, see section \ref{Exp3_results}).  Traditional radiometers deploy analog band-pass or band-reject filters to accomplish this, while in this thesis we show similar functionality can be obtain by implementing software defined filters. 
+\emph{Filtering.}  There are instances when the frequency being observed requires additional filtering (i.e. RFI mitigation, see section \ref{Exp3_results}).  Traditional radiometers deploy analog band-pass or band-reject filters to accomplish this, while in this thesis we show similar functionality can be obtain by implementing software defined filters. 
 
 \section{Software Defined Radio Based Radiometer Control System}
 
