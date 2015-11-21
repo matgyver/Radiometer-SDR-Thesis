@@ -64,11 +64,11 @@ Figure \ref{square_block} shows the block within GNURadio Companion that perform
 \end{figure}
 }
 
-For both a traditional radiometer and a SDR-based radiometer, the output of this total power information will fluctuate rapidly.  To smooth this signal we send this signal through a low pass filter which is shown in Figure \ref{square_block} as block B.  Filtering will be discussed in the next section.
+For both a traditional radiometer and a SDR-based radiometer, the output of this total power information will fluctuate rapidly.  To smooth this signal we send this signal through a low pass filter which is shown in Figure \ref{square_block} as block B.  This smoothing will be discussed in the next section.
 
-\subsection{Data smoothing}
+\subsection{Data smoothing}\label{smoothing}
 
-Output from the square-law detector is noisy, which makes detecting small changes in power difficult (i.e. hinders sensitivity).  Figure \ref{square_raw} shows an example of this raw output.
+Output from the square-law detector is noisy, which makes detecting small changes in power difficult (i.e. hinders sensitivity).  Figure \ref{square_raw} shows an example of this noisy output from a square-law detector.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -110,15 +110,13 @@ This RC filter is described by the Laplace transform of its impulse response.  T
 \end{figure}
 }
 
-We can now look at the step response of this filter as shown in Figure \ref{rc_response}.  To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the step response of this filter as we did with the RC filter step response.
+We can now look at the step response of this filter as shown in Figure \ref{rc_response} in the top left and top right graph.  To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the step response of this filter as we did with the RC filter step response.
 
-A single pole IIR filter is also known as a recursive filter as the mathematical expression used to describe this filter is a recursive function shown in Equation \ref{iir_recursive}.  
+A single pole IIR filter is also known as a recursive filter as the mathematical expression used to describe this filter is a recursive function shown in Equation \ref{iir_recursive}.  In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the input signal ($x[n]$) and is added to the previous sample calculated.  The coefficients, $a_0$ and $b_1$ then define the impulse response of the filter.  Figure \ref{rc_response} shows the discrete step input given to the system and the output response.  This response is calculated using Equation \ref{iir_recursive}.
 
 \begin{equation}\label{iir_recursive}
 y[n] = a_0 * x[n] + b_1 * y[n-1]
 \end{equation}
-
-In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the input signal ($x[n]$) and is added to the previous sample calculated.  The coefficients, $a_0$ and $b_1$ then define the impulse response of the filter.  Figure \ref{rc_response} shows the discrete step input given to the system and the output response.  This response is calculated using Equation \ref{iir_recursive}.
 
 %{\begin{figure}[h!tb] 
 %\centering
@@ -128,7 +126,7 @@ In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the 
 %\end{figure}
 %}
 
-It can be seen that Figure \ref{rc_response} that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
+It can be seen in Figure \ref{rc_response} that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
 
 GNURadio includes a program that allows us to define our filter and it will generate the coefficients and taps needed for our filters.  Chapter \ref{ch:exp_design} goes into more depth on this program.
 
@@ -140,17 +138,17 @@ GNURadio includes a program that allows us to define our filter and it will gene
 
 \section{Software Defined Radio Based Radiometer Control System}
 
-Like a traditional radiometer, the SDR uses an antenna to look at the target of interest.  SDRs still use an amplification to improve the sensitivity of the SDR. After that stage though, a software defined radiometer is different.  A SDR will sample and generate I and Q values that represents the signal.  From there, this data is sent to a computer to be processed.  We can then use this information to calculate the total power of the signal.  In addition, we can manipulate the signal in other ways such as applying a filter to filter out an unwanted source.
+A traditional radiometer will be designed with bandwidth and integration time fixed.  While changes can be made, it requires changes to the radiometers physical hardware.  A SDR-based radiometer allows us to control several functions that defines how it operates as a radiometer.  These changes can even be made while the radiometer is operating since both operations happen in the digital domain. Specifically we are able to control the following: 
 
-A traditional radiometer will be designed with bandwidth and integration time fixed.  While changes can be made, it requires changes to the radiometers physical hardware.  A Software Defined Radio (SDR) based radiometer however can have both the  bandwidth and the integration time changed.  These changes can even be made while the radiometer is operating since both operations happen in the digital domain.  
+\begin{enumerate}
+\item Center frequency,
+\item Bandwidth (i.e. $\beta$),
+\item Integration time (i.e. $\tau$)
+\item Gain
+\item and filters.
+\end{enumerate}
 
-Because these values have an impact on the performance of a SDR based radiometer, it is important to have access 
-
-Next we will now look at how we control the software defined radiometer using the software detailed in chapter \ref{ch:background}, section \ref{software_platform} in defining the radiometer.  We will also look at how the data is displayed and stored in the software defined radiometer.
-
-\subsection{Control of the SDR based radiometer through GNURadio}
-
-A GUI is designed to allow control of several key functions of the SDR based radiometer.  This GUI is shown in Figure \ref{radiometer_gui}. 
+The GUI for the SDR-based radiometer was designed knowing that these parameters such as frequency, bandwidth and integration time can be changed.  Figure \ref{radiometer_gui} shows a screenshot of the GUI.  Because these controls impact both the performance of the radiometer and in what frequency range the radiometer operates in, it was important to have these controls clearly marked.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -160,20 +158,29 @@ A GUI is designed to allow control of several key functions of the SDR based rad
 \end{figure}
 }
 
-This interface is able to control several key aspects of the radio hardware within the SDR.  This has the impact of affecting the behavior of this software defined radiometer as well.  Through this we can control: frequency, sample rate (Bandwidth), integration time, and the gain on the DBSRX2 daughter board.  We will no look at how these controls impact the performance of the radiometer.  
-
-\subsection{Impact of the Controls Related to Radiometry}
-
-Having the ability to control these key aspects of the software defined radiometer allows us to affect the performance of the radiometer.  The $NE\Delta T$, Equation \ref{NEAT_EQ}, discussed in chapter \ref{ch:background} outlines what some of these changes affect in a radiometer.
-
 $\beta$ can be changed by changing the sample rate of the SDR.  The sample rate effectively controls the bandwidth in which the SDR is operating at.  This also gives us a band-pass filter as well, since the SDR will not respond to frequencies outside of this bandwidth.  
 
 $\tau$ is the integration time for the radiometer.  This parameter is set by the user through the GUI and allows us to change the integration time in seconds.
 
+The bandwidth, $\beta$, and our integration time, $\tau$, both impact our sensitivity or $NE\Delta T$ of the radiometer as defined in Equation \ref{NEAT_EQ}.  It should be noted that our bandwidth is not infinite and is limited by hardware.  The integration time controls the IIR filter shown in Figure \ref{square_block}, Block B.  
+
+The SDR-based radiometer that is used in this thesis used Low Noise Amplifiers (LNAs) to increase the gain of the system.  The DBSRX2 hardware, described in Section \ref{N200_HW}, also has Programmable Gain Amplifier (PGA) that is controlled by software.  This allows for additional gain to be added or removed as needed.
+
+%Like a traditional radiometer, the SDR uses an antenna to look at the target of interest.  SDRs still use an amplification to improve the sensitivity of the SDR. After that stage though, a software defined radiometer is different.  A SDR will sample and generate I and Q values that represents the signal.  From there, this data is sent to a computer to be processed.  We can then use this information to calculate the total power of the signal.  In addition, we can manipulate the signal in other ways such as applying a filter to filter out an unwanted source.
+
+
+Next we will now look at how we control the software defined radiometer using the software detailed in chapter \ref{ch:background}, section \ref{software_platform} in defining the radiometer.  We will also look at how the data is displayed and stored in the software defined radiometer.
+
+\section{SDR-based radiometer data display}
+
+
+Having the ability to control these key aspects of the software defined radiometer allows us to affect the performance of the radiometer.  The $NE\Delta T$, Equation \ref{NEAT_EQ}, discussed in chapter \ref{ch:background} outlines what some of these changes affect in a radiometer.
+
+
 We will now look at how this data is displayed by the SDR based radiometer.
 
-\subsection{GNURadio Data Display}
-The information from the software defined radio can be displayed through GNURadio to show a number of things.  Since we have both frequency and magnitude information we can display this information.  We are able to also display the information that shows the total power that is being seen by the radiometer as well.
+
+The information from the software defined radio can be displayed through GNURadio to show relevant information to the user.  Currently, our SDR-based radiometer can display spectrum information and total power information.  Total power information is displayed as both un-calibrated values and calibrated values, assuming the correct calibration terms have been provided.  Figure \ref{radiometer_tpr_display} shows a screenshot of the total power display.  This includes a display in a "ticker tape" graph and as a bar graph.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -183,7 +190,7 @@ The information from the software defined radio can be displayed through GNURadi
 \end{figure}
 }
 
-We are not limited to just total power from the radiometer.  If the radiometer has been calibrated, those calibration points can be entered and GNURadio can calculate the calibrated noise temperature.  
+A view of the spectrum is also available since we have this information available to us.  This allows us to verify that the bandwidth that we are viewing is clear of any interference.  
 
 %----------------------------------------------------------------------------------
 %Everything below this needs to be moved/shifted or deleted
