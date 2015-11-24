@@ -128,6 +128,53 @@ y[n] = a_0 * x[n] + b_1 * y[n-1]
 
 It can be seen in Figure \ref{rc_response} that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
 
+%Re-added stuff on IIR filters per Phillips request
+
+In Figure \ref{rc_circuit}, the input is $V_{in}$, the resistance value is $R$, the capacitance value is $C$ and the output is $V_{out}$.  This circuit can be represented by Equation \ref{eq:rc_circuit_eq}.
+
+\begin{equation}\label{eq:rc_circuit_eq}
+\frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
+\end{equation}
+
+Equation \ref{eq:rc_circuit_eq} represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$.  We can substitute the input to the RC circuit ($V_{in}$) as the input to Equation \ref{IIR_eq} or $x_n$.  The output of our RC circuit ($V{out}$) can also be expressed as the output in Equation \ref{IIR_eq} which is $y_n$.  However, in order to do that we must move from the continuous domain to the discrete domain that our digital filter operates in.  This is done by showing the relationship between our sampling frequency $f_s$ and our period or time between samples, $T$ and is shown in Equation \ref{sampling_rate_eq}.
+
+\begin{equation}\label{sampling_rate_eq}
+T=Time Between Samples=\frac{1}{f_s}
+\end{equation}
+
+Next we rewrite our difference equation by substituting $x_n$ and $y_n$ into Equation \ref{eq:rc_circuit_eq} which results in an approximated finite difference equation shown in Equation \ref{diff_xn_yn}.
+
+\begin{equation}\label{diff_xn_yn}
+\frac{x_n-y_n}{R}=C\frac{y_n-y_{n-1}}{T}
+\end{equation}
+
+We can now solve for $y_n$ algebraically and this results in our final Equation \ref{final_IIR_RC}.
+
+\begin{equation}\label{final_IIR_RC}
+y_n=\frac{T}{T+RC}x_n+\frac{RC}{T+RC}y_{n-1}
+\end{equation}
+
+Equation \ref{final_IIR_RC} shows an IIR filter that has a frequency response that closely approximates an RC circuit.  The approximation improves as $T$ approaches zero or our sampling rate approaches infinity.
+
+To design the filter we need to look at what our desired cut-off frequency needs to be.  For a RC filter, our resistance and capacitance define our cutoff frequency ($f_c$) and has the relationship shown in Equation \ref{fc_RC}.
+
+\begin{equation}\label{fc_RC}
+f_c=\frac{\sqrt{3}}{2\pi RC}
+\end{equation}
+
+Given our desired cutoff frequency we can determine our combined $RC$ value by rearranging Equation \ref{fc_RC} algebraically to Equation \ref{RC_fc}.
+
+\begin{equation}\label{RC_fc}
+RC=\frac{\sqrt{3}}{2\pi f_c}
+\end{equation}
+
+The $RC$ values are also referred to as the time constant of the circuit and we do not need to find the individual R and C values.  An example of how we can find the coefficients of our IIR filter, given a desired cutoff frequency of $f_c$ is shown next.  
+
+For a low pass filter, we want a cutoff frequency ($f_c$) of 1000 Hz.  Given this and using Equation \ref{RC_fc} we can determine our time constant to be 2.757 x $10^-4$ or 275.7 microseconds.  If our sample rate is 1 MHz, then our $T$ value is 1 x $10^-6$ or 1 microsecond.  Plugging these values into Equation \ref{final_IIR_RC} results in the coefficient $c_0 = 0.0036$ and $d_1=0.9964$.
+
+%------------------------------------------------------
+
+
 GNURadio includes a program that allows us to define our filter and it will generate the coefficients and taps needed for our filters.  Chapter \ref{ch:exp_design} goes into more depth on this program.
 
 \subsection{Bandwidth limiting and filtering}
