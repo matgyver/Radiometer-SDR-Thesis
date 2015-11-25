@@ -96,11 +96,11 @@ A traditional radiometer will use an integrator, which is equivalent to a low pa
 \end{figure}
 }
 
-This RC filter is described by the Laplace transform of its impulse response.  This RC filter is shown in Equation \ref{RC_laplace} where $K$ is the gain of the filter, $\tau$ is the time constant of the filter and $s$ is the Laplace transform variable.
+%This RC filter is described by the Laplace transform of its impulse response.  This RC filter is shown in Equation \ref{RC_laplace} where $K$ is the gain of the filter, $\tau$ is the time constant of the filter and $s$ is the Laplace transform variable.
 
-\begin{equation}\label{RC_laplace}
-\frac{Output}{•Input} = K \frac{1}{\tau s + 1}
-\end{equation}
+%\begin{equation}\label{RC_laplace}
+%\frac{Output}{•Input} = K \frac{1}{\tau s + 1}
+%\end{equation}
 
 We can now look at the step response of this filter as shown in Figure \ref{rc_response} in the top left and top right graph.  To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the step response of this filter as we did with the RC filter step response.
 
@@ -118,6 +118,20 @@ A single pole IIR filter is also known as a recursive filter as the mathematical
 y[n] = a_0 * x[n] + b_1 * y[n-1]
 \end{equation}
 
+The coefficients $a_0$ and $b_1$ are determined in Equation \ref{iir_coefficients} for a low pass filter.  Here $x$ is the amount of decay between each sample and is also defined as between zero and one.  The higher value that $x$ is, the slower the decay between samples.  
+
+\begin{equation}\label{iir_coefficients}
+a_0 = 1 - x
+b_1 = x
+for
+0 < x < 1
+\end{equation}
+
+An analog RC filter has a similar decay that is determined by multiplying the physical value of the resistor and capacitor used in the circuit shown in Figure \ref{rc_circuit}.  This value is the number of seconds it takes for the circuit to decay to 36.8\% of its final value.  Equation relates this time constant to our value of $x$ for a desired cutoff frequency of $f_c$.  
+
+\begin{equation}
+x = e^{-2 \pi f_{c}}
+\end{equation}
 %{\begin{figure}[h!tb] 
 %\centering
 %\includegraphics[width=17cm]{Experiments/Exp6/iir_response.pdf}
