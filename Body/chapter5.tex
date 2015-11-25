@@ -6,7 +6,7 @@
 \chapter{EVALUATION SETUP AND EXPERIMENTAL DESIGN}\label{ch:exp_design}
 The experiments outlined in this chapter are used to demonstrate and verify that a software defined radio (SDR) base radiometer can perform on par with a traditional radiometer.  In addition, these experiments are designed to demonstrate that a SDR based radiometer can provide functionality not typically found in traditional radiometers. 
 
-Four experiments are described.  Experiment one verifies our SDR-based radiometer by comparing its operation to a square-law detector, a device typically used within a traditional radiometer.  Experiment two evaluates the sensitivity and stability of our SDR-based radiometer.  Experiment three evaluates our SDR-based radiometer's ability to mitigate an interfering signal in comparison to the behavior of a traditional radiometer in the presence of an interfering signal.  Experiment four's purpose is to further examine the impact of our frequency based notching approach for Radio Frequency Interference (RFI) mitigation on radiometer sensitivity.
+Four experiments are described.  Experiment one verifies our SDR-based radiometer by comparing its operation to a square-law detector, a device typically used within a traditional radiometer.  Experiment two evaluates the sensitivity and stability of our SDR-based radiometer.  Experiment three evaluates our SDR-based radiometer's ability to mitigate an interfering signal in comparison to the behavior of a traditional radiometer in the presence of an interfering signal.  Experiment four's purpose is to further examine the impact of our frequency notching approach for Radio Frequency Interference (RFI) mitigation on radiometer sensitivity.
 
 \section{Experiment I - Software Defined Radiometer Verification and Calibration}\label{Exp1}
 %Experiment 1
@@ -18,7 +18,7 @@ This experiment is designed to verify our SDR-based radiometer functions as expe
 
 \subsection{Experimental setup} \label{exp1_setup}
 
-Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our source signal.  This matched load is then submerged in temperature baths.  These baths use Liquid Nitrogen (LN2), which is known to boil at 77 Kelvin, and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these bath were monitored.  The load was submersed in each bath for a minimum of 2 minutes to allow it to reach the same temperature as the bath.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  
+Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our source signal.  This matched load is then submerged in temperature baths.  These baths use Liquid Nitrogen (LN2), which is known to boil at 77 Kelvin, and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these baths were monitored.  The load was submersed in each bath for a minimum of 2 minutes to allow it to reach the same temperature as the bath.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/Exp_1_Setup.pdf}
@@ -27,7 +27,7 @@ Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matc
 \end{figure}
 }
 
-The radiometer RF front end provides the amplification needed for our experiments.  Figure \ref{ISURF} shows an image of the RF front end, with the LNAs and band-pass filters marked.  After the signal has been amplified we divide that signal between the square-law detector (ADL5902) and the software defined radio (N200).  The N200 is then connected to a personal computer running XUbuntu Linux and GNURadio.
+The radiometer RF front end provides the amplification needed for our experiments.  Figure \ref{ISURF} shows an image of the RF front end, with the LNAs and band-pass filters marked.  After the signal has been amplified, we divide the signal between the square-law detector (ADL5902) and the software defined radio (N200).  The N200 is then connected to a personal computer running XUbuntu Linux and GNURadio.
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/ISU_RF_noted.jpg}
@@ -55,7 +55,7 @@ The following hardware was used and has also been marked on Figure \ref{Exp1_Blo
 
 \subsection{Data Collection}\label{exp1_data}
 
-Two sets of data are produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisitions device (USB-6009) that is attached to the square-law detector.  Data from each is stored to a local computer running the appropriate software.
+Two sets of data are produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisition device (USB-6009) that is attached to the square-law detector.  Data from each is stored to a local computer running the appropriate software.
 
 \emph{Software Defined Radio Data.}  The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP, or a file.  As shown in Figure \ref{filesink}, a file sink block is used to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows the user to turn on and off recording of the data.
 
@@ -70,7 +70,7 @@ There are two types of files the SDR generates.  The first type of file is the I
 
 The second file type is the total power values generated from the total power block in GNURadio.  A diagram of this block can be found in Appendix \ref{appendix1} (Figure \ref{TPR_GRC}), and its source code can be found in Appendix \ref{appendix1}.  This file also uses a little-endian format, however this file only has real values.  This file is also much smaller than the file that contains the I and Q data points.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
 
-\emph{Square-law detector data.}  The square-law detector used (ADL5902), outputs total power information as an analog voltage that is linearly proportional to the RF power measured.  The Analog Devices ADL5902 is a single Integrated Circuit (IC) that contains a square-law detector and necessary amplification for the output signal and is shown in Figure \ref{square_law} .  This device operates from 50 MHz to 9 GHz and can detect power as low as -60 dBm.  The output voltage from the square-law is amplified to a range from zero to five volts with a calibrated output of 53 mV/dB.  
+\emph{Square-law detector data.}  The square-law detector used (ADL5902) outputs total power information as an analog voltage that is linearly proportional to the RF power measured.  The Analog Devices ADL5902 is a single Integrated Circuit (IC) that contains a square-law detector and necessary amplification for the output signal and is shown in Figure \ref{square_law} .  This device operates from 50 MHz to 9 GHz and can detect power as low as -60 dBm.  The output voltage from the square-law is amplified to a range from zero to five volts with a calibrated output of 53 mV/dB.  
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=7cm]{Images/adl5902.jpg}
@@ -148,11 +148,11 @@ In this experiment we examine the impact of filtering an interfering signal on t
 
 \subsection{Experimental setup} \label{exp4_setup}
 
-In this experiment, we setup our experiment as outlined in Section \ref{Exp3}.
+In this experiment, we set up our experiment as outlined in Section \ref{Exp3}.
 
 \subsection{Data Collection}
 
-The data collected for this experiment is the total power reading measurements obtained from the software defined radio.  This data method is identical to the method used in Section \ref{exp1_data}.
+The data collected for this experiment is the total power reading measurements obtained from the software defined radio.  The data collection method is identical to the method used in Section \ref{exp1_data}.
 
 %----------------------------------------------------------
 % End of Chapter 5.  Anything below this is extra information

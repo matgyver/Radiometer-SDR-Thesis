@@ -19,7 +19,7 @@
 This chapter gives background information on the operation of  traditional radiometers and on software defined radios.  We begin by looking at the major components of a radiometer and how it measures power.  Next the metrics used to measure the performance of a traditional radiometer are discussed.  Then an overview of how software defined radios operate is given.  Finally, we review the tools used to develop a software defined radio based radiometer.  
 
 \section{Radiometer Basics}\label{rad_basics}
-A radiometer is a device designed to measure thermal electromagnetic emission by a material media due to the electron agitation within the material.[\cite{ulaby}.  This electromagnetic emission is the thermal noise of the object and can be correlated to the physical temperature of the object[\cite{Nyquist1928thermal}].  Because of this correlation, the amount of noise received is called the noise temperature and it is measured in Kelvin. 
+A radiometer is a device designed to measure thermal electromagnetic emission by a material media due to the electron agitation within the material [\cite{ulaby}.  This electromagnetic emission is the thermal noise of the object and can be correlated to the physical temperature of the object[\cite{Nyquist1928thermal}].  Because of this correlation, the amount of noise received is called the noise temperature and it is measured in Kelvin. 
 
 There are six stages common to all radiometers.  They are:
 
@@ -32,9 +32,7 @@ There are six stages common to all radiometers.  They are:
 \item Output (Voltage, rQ or Kelvin).
 \end{enumerate}
 
-Figure \ref{trad_radiometer} illustrates how a signal propagates through a radiometer.  First, the signal from the source enters the antenna, $T_A$.  Next the signal is filtered to a set bandwidth, $\beta$.  This filtered signal is then amplified by Low Noise Amplifiers (LNAs) by a gain of $G$.  The power information is then extracted from the signal using a square-law detector, $X^2$.  A square-law detector takes the input RF signal and produces a voltage whose square is proportional to the input signal's power[\cite{Leinweber}].  The voltage output from the square-law detector is then smoothed using an integrator with an integration time $\tau$.  Finally, the integrated voltage signal is then measured.
-
-A non-physical object that is present in all radiometers is system noise, represented as $T_{N}$.  System noise is noise that is generated from within the radiometer due to thermal agitation.  A radiometer is designed to reduce system noise as much as possible by using low-loss components and amplifiers that are low noise, such as Low Noise Amplifiers (LNAs). 
+Figure \ref{trad_radiometer} illustrates how a signal propagates through a radiometer.  First, the signal from the source enters the antenna, $T_A$.  Next the signal is filtered to a set bandwidth, $\beta$.  This filtered signal is then amplified by Low Noise Amplifiers (LNAs) by a gain of $G$.  The power information is then extracted from the signal using a square-law detector, $X^2$.  This device is a diode that operates in the square law region.  While the diode is operating in this region, the output voltage is proportional to the square of the input voltage and is therefore proportional to the input power [\cite{Leinweber}].  The voltage output from the square-law detector is then smoothed using an integrator with an integration time $\tau$.  Finally, the integrated voltage signal is then measured and recorded.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -44,33 +42,33 @@ A non-physical object that is present in all radiometers is system noise, repres
 \end{figure}
 }
 
+A non-physical object that is present in all radiometers is system noise, represented as $T_{N}$.  System noise is noise that is generated from within the radiometer due to thermal agitation.  A radiometer is designed to reduce system noise as much as possible by using low-loss components and amplifiers that are low noise, such as Low Noise Amplifiers (LNAs). 
+
 \subsection{Power Measurement}\label{pwr_measurement}
 
 As shown in Equation \ref{eq:power_rad_eq}, the power measured by an ideal radiometer is equal to the product of the power received from the source ($T_A$), the gain ($G$) and the bandwidth ($\beta$) of the radiometer, and the Boltzmann constant ($k=1.38 x 10^{-23} J/K$).
 
 \begin{equation} \label{eq:power_rad_eq}
-P=k*\beta*G*(T_{A}) watts
+P=k*\beta*G*(T_{A})\ watts
 \end{equation}
 
 While the components of an ideal radiometer do not contribute noise power ($T_N$) to the system, they do in a real radiometer.  The impact of this internally generated and unwanted noise on the power measured by the radiometer is captured by Equation \ref{eq:final_power}.
 
 \begin{equation} \label{eq:final_power}
-P=k*\beta*G*(T_{A}+T_{N}) watts
+P=k*\beta*G*(T_{A}+T_{N})\ watts
 \end{equation}
 
 Gain ($G$) and bandwidth ($\beta$) are important design parameters of a radiometer.  While a large gain is desired to amplify the source signal ($T_A$), the magnitude of the gain must be limited since it also amplifies the unwanted system noise ($T_N$).
 
 Since the bandwidth of the source signal is typically wide (ideally infinite), ideally one wants the radiometers bandwidth to be wide (large) as well.  The two primary limiting factors are: 1) hardware limitations (e.g. LNA operating limits), and 2) unwanted signals located at a number of frequencies (e.g. radio communication signals).
 
-\emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $N$ LNAs that is cascaded, is the sum of the gain values of each LNA shown in equation \ref{gain_sum}.
+\emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $N$ LNAs that are cascaded is the sum of the gain of each LNA shown in equation \ref{gain_sum}.
 
 \begin{equation}\label{gain_sum}
 G_{total}=G_1 + G_2 + G_3 + \cdots +G_{n-1} dB
 \end{equation}
 
-A performance metric of a LNA is the noise figure ($NF$).  The noise figure gives us the difference between the actual noise output and an ideal amplifier with the same gain and bandwidth attached to a matched load at the standard noise temperature (290 K).
-
-Another terminology used is the noise factor ($F$).  The noise factor shows how much the signal to noise ratio is degraded by the LNA.  The noise factor (F) is related to the noise figure (NF) shown in Equation \ref{noise_figure}.
+A performance metric of an LNA is the noise figure ($NF$).  The noise figure gives us the difference between the actual noise output and an ideal amplifier with the same gain and bandwidth attached to a matched load at the standard noise temperature (290 K).  Another metric used is the noise factor ($F$).  The noise factor is the ratio of the output noise power to the input noise power.  The noise factor (F) is related to the noise figure (NF) as shown in Equation \ref{noise_figure}.
 
 \begin{equation}\label{noise_figure}
 NF=10 * \log_{10}(F) dB
@@ -108,7 +106,7 @@ Equation \ref{NEAT_EX1} gives us a result of 1 K for our sensitivity, which meet
 NE\Delta T=\frac{200 + 800}{\sqrt{10 x 10^6 * 0.04}} = 5 K 
 \end{equation}
 
-As can be clearly seen, system noise makes the job of detecting changes in signal noise more difficult[\cite{skou}].  Section \ref{Exp2_analysis} uses both the experimentation and analytical methods of finding sensitivity as a cross validation of the correctness of a SDR based radiometer.
+As can be clearly seen, system noise makes the job of detecting changes in signal noise more difficult[\cite{skou}].  Section \ref{Exp2_analysis} uses both the experimentation and analytical methods of finding sensitivity as a cross validation of the correctness of our SDR based radiometer.
 
 \emph{Stability.}  Stability of a radiometer is a measure of the degree to which fluctuations we see are a result of the source and not a change occurring within the radiometer.  Lets examine Equation \ref{eq:final_power}, which defines the total power the radiometer receives.  If our bandwidth ($\beta$), Gain ($G$), system noise ($T_N$), and Boltzmann constant ($k$) are constant, then the system is stable.  If we can assume that our bandwidth is fixed and that our system noise (mean value) is constant, then this leaves our Gain ($G$) being the uncertain variable that may cause unwanted fluctuations[\cite{Evans}]. 
 
@@ -202,7 +200,7 @@ Its flexible architecture and ability to support a large bandwidth made the N200
 \end{figure}
 }
 
-When selecting the hardware for this thesis, the requirements defined section \ref{requirements} were examined.  The bandwidth requirement was a deciding factor for hardware selection.  It was decided that a minimum bandwidth of 20 MHz was desired.  The 14-bit ADC was not a defined requirement, but was deemed to provide an adequate level of resolution.  The N200 has a flexible architecture through the use of daughter-boards.  
+When selecting the hardware for this thesis, the requirements defined in Section \ref{requirements} were examined.  The bandwidth requirement was a deciding factor for hardware selection.  It was decided that a minimum bandwidth of 20 MHz was desired.  The 14-bit ADC was not a defined requirement, but was deemed to provide an adequate level of resolution.  The N200 has a flexible architecture through the use of daughter-boards.  
 
 Figure \ref{N200_block} shows the overall architecture of the N200 SDR.  A daughter board directly receives the RF signal and then outputs analog I (in-phase) and Q (quadrature phase) signals that are then sampled by the N200 14-bit  A/D converter.
 
