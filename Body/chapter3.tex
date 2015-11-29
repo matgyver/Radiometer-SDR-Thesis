@@ -28,8 +28,8 @@ There are six stages common to all radiometers.  They are:
 \item Bandwidth ($\beta$),
 \item Amplification (Gain or $G$),
 \item Power detection ($X^{2}$),
-\item Integration ($\tau$),
-\item Output (Voltage, rQ or Kelvin).
+\item Data smoothing,
+\item Output (Voltage, rQ, Kelvin).
 \end{enumerate}
 
 Figure \ref{trad_radiometer} illustrates how a signal propagates through a radiometer.  First, the signal from the source enters the antenna, $T_A$.  Next the signal is filtered to a set bandwidth, $\beta$.  This filtered signal is then amplified by Low Noise Amplifiers (LNAs) by a gain of $G$.  The power information is then extracted from the signal using a square-law detector, $X^2$.  This device is a diode that operates in the square law region.  While the diode is operating in this region, the output voltage is proportional to the square of the input voltage and is therefore proportional to the input power [\cite{Leinweber}].  The voltage output from the square-law detector is then smoothed using an integrator with an integration time $\tau$.  Finally, the integrated voltage signal is then measured and recorded.
@@ -60,18 +60,18 @@ P=k*\beta*G*(T_{A}+T_{N})\ watts
 
 Gain ($G$) and bandwidth ($\beta$) are important design parameters of a radiometer.  While a large gain is desired to amplify the source signal ($T_A$), the magnitude of the gain must be limited since it also amplifies the unwanted system noise ($T_N$).
 
-Since the bandwidth of the source signal is typically wide (ideally infinite), ideally one wants the radiometers bandwidth to be wide (large) as well.  The two primary limiting factors are: 1) hardware limitations (e.g. LNA operating limits), and 2) unwanted signals located at a number of frequencies (e.g. radio communication signals).
+The bandwidth of the source signal is typically wide (large) to maximize the power measured by the radiometer.  The two primary limiting factors to bandwidth are: 1) hardware limitations (e.g. LNA operating limits), and 2) unwanted signals located at a number of frequencies (e.g. radio communication signals).
 
-\emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $N$ LNAs that are cascaded is the sum of the gain of each LNA shown in equation \ref{gain_sum}.
+\emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining (i.e. cascading) devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $n$ LNAs that are cascaded is the sum of the gain of each LNA shown in equation \ref{gain_sum}.
 
 \begin{equation}\label{gain_sum}
-G_{total}=G_1 + G_2 + G_3 + \cdots +G_{n-1} dB
+G_{total}=G_1 + G_2 + G_3 + \cdots +G_{n-1}\ \ dB
 \end{equation}
 
 A performance metric of an LNA is the noise figure ($NF$).  The noise figure gives us the difference between the actual noise output and an ideal amplifier with the same gain and bandwidth attached to a matched load at the standard noise temperature (290 K).  Another metric used is the noise factor ($F$).  The noise factor is the ratio of the output noise power to the input noise power.  The noise factor (F) is related to the noise figure (NF) as shown in Equation \ref{noise_figure}.
 
 \begin{equation}\label{noise_figure}
-NF=10 * \log_{10}(F) dB
+NF=10 * \log_{10}(F)\ \ dB
 \end{equation}
 
 For devices that are cascaded, the total noise factor is found by the Friis formula and results in equation \ref{noise_factor}.  
@@ -88,7 +88,7 @@ Two criteria used to determine how well a radiometer performs are: 1) Sensitivit
 
 \emph{Sensitivity}.  Sensitivity of a radiometer is the smallest change in power that can be detected.  A radiometer must be able to differentiate between signal noise received by  the antenna ($T_{A}$) and the system generated noise ($T_N$).
 
-Two methods to quantify the sensitivity of a radiometer are: 1) experimentally, and 2) analytically.  Experimentally, sensitivity can be computed as the standard deviation of the measured power (assuming a stable radiometer).  Analytically, sensitivity can be computed as a function of radiometer properties.  Equation \ref{NEAT_EQ} gives this relation.  The term Noise Equivalent Delta ($\Delta$) Temperature ($NE\Delta T$) is often used interchangeably with sensitivity.  As can be seen in Equation \ref{NEAT_EQ}, sensitivity improves (i.e. becomes smaller) as the bandwidth ($\beta$) and integration time ($\tau$) of the radiometer increases[\cite{ulaby}].
+Two methods to quantify the sensitivity of a radiometer are: 1) experimentally, and 2) analytically.  Experimentally, sensitivity can be computed as the standard deviation of the measured power (assuming a stable radiometer).  Analytically, sensitivity can be computed as a function of radiometer properties defined in Equation \ref{NEAT_EQ}.  The term Noise Equivalent Delta ($\Delta$) Temperature ($NE\Delta T$) is often used interchangeably with sensitivity.  As can be seen in Equation \ref{NEAT_EQ}, sensitivity improves (i.e. becomes smaller) as the bandwidth ($\beta$) and/or integration time ($\tau$) of the radiometer increases[\cite{ulaby}].
 
 \begin{equation} \label{NEAT_EQ}
 NE\Delta T=\frac{T_{A}+T_{N}}{\sqrt{\beta * \tau}} 
@@ -141,7 +141,7 @@ While a Dicke radiometer improves stability, it does so at the cost of not seein
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=\textwidth]{Images/NoiseInj_block.png}
+\includegraphics[width=\textwidth]{Images/Noise_inj_radiometer.pdf}
 \isucaption{A block diagram of a Noise Injection radiometer}
 \label{NoiseInj_radiometer}
 \end{figure}
@@ -149,7 +149,7 @@ While a Dicke radiometer improves stability, it does so at the cost of not seein
 
 \emph{Noise Injection Radiometer.}  A noise injection radiometer is a variation of the Dicke radiometer, where a variable noise signal ($T_I$) is injected into the RF chain, as shown in Figure \ref{NoiseInj_radiometer}.  The injected noise signal power is adjusted so when added to the source signal their sum equals the reference signal power.  This improves stability by eliminating gain fluctuations, but increases system noise ($T_N$), which reduces radiometer sensitivity.
 
-\emph{Polarimetric Radiometer} A polarimetric (or correlating) radiometer uses two polarized signals, referred to as vertically polarized (V-Pol) and horizontally polarized (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is fed into the radiometer and correlated.  Because the source noise signal has polarization and the gain fluctuations do not, the gain fluctuations can be eliminated.  This reduces gain fluctuations to increase stability, while helping maintain sensitivity.  However, this is at the cost of increasing radiometer complexity and price, since two identical receivers (one for each polarization) are required. 
+\emph{Polarimetric Radiometer.} A polarimetric (or correlating) radiometer uses two polarized signals, referred to as vertically polarized (V-Pol) and horizontally polarized (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is fed into the radiometer and correlated.  Because the source noise signal has polarization and the gain fluctuations do not, the gain fluctuations can be eliminated.  This reduces gain fluctuations to increase stability, while helping maintain sensitivity.  However, this is at the cost of increasing radiometer complexity and price, since two identical receivers (one for each polarization) are required. 
  
 \section{Software Defined Radios Basics} 
 A Software Defined Radio (SDR) is a device that digitizes a received RF signal as soon as possible, and processes the digital representation of the signal using a computer, FPGA, or dedicated System on Chip (SoC).  A canonical software defined radio architecture consists of a power supply, antenna, analog to digital converter, and a processing unit to carry out radio functions in software [\cite{Mitola1995}]. An ideal software defined radio block diagram is shown in Figure \ref{ideal_sdr}.
@@ -247,7 +247,7 @@ GNURadio uses a combination of Python and C++, where Python handles the high lev
 GNURadio also has a rapid development tool called GNURadio companion (GRC).  GRC is a simple to use graphical system for designing and building radio components in software. An example of GRC is shown in Figure \ref{N200_GRC}.
 
 {\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/N200_radiometer_grc.png}
+\includegraphics[width=\textwidth]{Images/radiometer_power_grc.png}
 \isucaption{A screenshot of the GNURadio Companion editor program.  Source:  GNURadio}
 \label{N200_GRC}
 \end{figure}
