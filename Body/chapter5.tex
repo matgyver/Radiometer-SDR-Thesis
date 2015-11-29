@@ -21,7 +21,7 @@ This experiment is designed to verify our SDR-based radiometer functions as expe
 Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our source signal.  This matched load is then submerged in temperature baths.  These baths use Liquid Nitrogen (LN2), which is known to boil at 77 Kelvin, and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these baths were monitored.  The load was submersed in each bath for a minimum of 2 minutes to allow it to reach the same temperature as the bath.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  
 
 {\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Images/Exp_1_Setup.pdf}
+\includegraphics[width=13cm]{Images/Exp_1_Setup.pdf}
 \isucaption{Block diagram of Experiment 1 setup.  Source: Matthew E. Nelson}
 \label{Exp1_Block}
 \end{figure}
@@ -68,7 +68,7 @@ Two sets of data are produced with this experiment.  First, data is generated fr
 
 There are two types of files the SDR generates.  The first type of file is the I (in-phase) and Q (quadrature phase) data points.  This file is stored in little-indian format as complex values.  Due to the sampling rate, it is not uncommon for this file to grow quite large, usually several gigabytes of data for a 10-15 minute run.  However, this file can then be feed back through GNURadio later to be played back if needed, and it contains the information needed to completely recreate the signal.
 
-The second file type is the total power values generated from the total power block in GNURadio.  A diagram of this block can be found in Appendix \ref{appendix1} (Figure \ref{TPR_GRC}), and its source code can be found in Appendix \ref{appendix1}.  This file also uses a little-endian format, however this file only has real values.  This file is also much smaller than the file that contains the I and Q data points.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
+The second file type is the total power values generated from the total power block in GNURadio.  A diagram of this block can be found in Appendix \ref{appendix1} (Figure \ref{TPR_GRC}), and its source code can be found in Appendix \ref{appendix1}.  This file also uses a little-endian format, however this file only has real values.  This file is also much smaller than the file that contains the I and Q data points due to decimation of the data.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
 
 \emph{Square-law detector data.}  The square-law detector used (ADL5902) outputs total power information as an analog voltage that is linearly proportional to the RF power measured.  The Analog Devices ADL5902 is a single Integrated Circuit (IC) that contains a square-law detector and necessary amplification for the output signal and is shown in Figure \ref{square_law} .  This device operates from 50 MHz to 9 GHz and can detect power as low as -60 dBm.  The output voltage from the square-law is amplified to a range from zero to five volts with a calibrated output of 53 mV/dB.  
 
@@ -131,8 +131,8 @@ Our signal generator is the HackRF One (or just HackRF), shown in Figure \ref{Ha
 
 \begin{figure}[h!tb] \centering
 
-\includegraphics[width=\textwidth]{Images/Hack_RF.jpg}
-\isucaption{Image of the HackRF used to generate the offending signal}
+\includegraphics[width=12cm]{Images/hackrf.jpg}
+\isucaption{Image of the HackRF used to generate the offending signal. (Image from Great Scott Gadgets - www.greatscottgadgets.com)}
 \label{HackRF}
 \end{figure} 
 
