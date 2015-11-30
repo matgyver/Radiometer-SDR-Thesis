@@ -34,7 +34,7 @@ The use of a software defined radio (SDR) to implement a radiometer requires map
 
 \subsection{Power measurement}
 
-A traditional radiometer uses a device called a square law detector to measure power.  This device is a diode that operates in the square law region.  While the diode is operating in this region, the output voltage ($V_{out}$)is proportional to the square of the input voltage ($V_{in}$) and is therefore proportional to the input power ($P_{in}$).  This relationship is shown in Equation \ref{square_eq} [\cite{Navy_detector}].  Figure \ref{square_law_simple} shows a simple circuit diagram and input and output voltages from this circuit.
+A traditional radiometer uses a device called a square law detector to measure power.  This device is a diode that operates in the square law region.  While the diode is operating in this region, the output voltage ($V_{out}$)is proportional to the square of the input voltage ($V_{in}$) and is therefore proportional to the input power ($P_{in}$) where $n$ is the constant of proportionality.  This relationship is shown in Equation \ref{square_eq} [\cite{Navy_detector}].  Figure \ref{square_law_simple} shows a simple circuit diagram and input and output voltages from this circuit.
 
 \begin{equation}\label{square_eq}
 V_{out} = nV_{in}^2 = nP_{in}
@@ -48,7 +48,7 @@ V_{out} = nV_{in}^2 = nP_{in}
 \end{figure}
 }
 
-The software defined radio based radiometer operates in a similar manner as a traditional radiometer.  With the SDR-based radiometer our signal is converted to I (in-phase) and Q (quadrature-phase).  Adding the I and Q data allows us to recreate the signal.  The I and Q data contains the magnitude of the in-phase and quadrature-phase information respectively.  When summed this represents the magnitude of the original signal.  To determine the total power, the magnitude is squared to produce an output that represents the total power of the signal ($P_{out}$).  Equation \ref{sdr_x2} gives the mathematical representation of a software defined radio based radiometer implementation of a square law detector[\cite{Rashid}]. 
+The software defined radio based radiometer operates in a similar manner as a traditional radiometer.  With the SDR-based radiometer our signal is converted to I (in-phase) and Q (quadrature-phase) binary data.  Adding the I and Q data allows us to recreate the signal.  The I and Q data contains the magnitude of the in-phase and quadrature-phase information respectively.  When summed this represents the magnitude of the original signal.  To determine the total power, the magnitude is squared to produce an output that represents the total power of the signal ($P_{out}$).  Equation \ref{sdr_x2} gives the mathematical representation of a software defined radio based radiometer implementation of a square law detector[\cite{Rashid}]. 
 
 \begin{equation}\label{sdr_x2}
 I^2+Q^2 = P_{out}
@@ -58,7 +58,7 @@ Figure \ref{square_block} shows the block within GNURadio Companion that perform
 
 {\begin{figure}[h!tb] 
 \centering
-\includegraphics[width=17cm]{Images/TPR_grc.png}
+\includegraphics[width=17cm]{Images/TPR_grc.pdf}
 \isucaption{A block diagram of the power detection, low pass filter and decimation block used for total power measurements.}
 \label{square_block}
 \end{figure}
@@ -88,6 +88,10 @@ A traditional radiometer will use an integrator, which is equivalent to a low pa
 \end{figure}
 }
 
+To understand how a low pass filter works, we can look at the step response to this filter.  Figure \ref{rc_response} shows the response in the top left and top right graph.  We can now compare this analog low pass filter to our digital filter that will be discussed in more detail.  
+
+%To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the step response of this filter as we did with the RC filter step response.
+
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=17cm]{Experiments/Exp1/x2_filter.pdf}
@@ -96,53 +100,69 @@ A traditional radiometer will use an integrator, which is equivalent to a low pa
 \end{figure}
 }
 
+To implement this type of filter in our SDR-based radiometer an Infinite Impulse Response (IIR), also known as a recursive filter, is used.  IIR filters are ideal for this application as they are well suited for achieving a long impulse response without having to perform a long convolution.  To create an IIR low pass filter we will create what is known as a single pole low-pass filter.  
+
 %This RC filter is described by the Laplace transform of its impulse response.  This RC filter is shown in Equation \ref{RC_laplace} where $K$ is the gain of the filter, $\tau$ is the time constant of the filter and $s$ is the Laplace transform variable.
 
 %\begin{equation}\label{RC_laplace}
 %\frac{Output}{•Input} = K \frac{1}{\tau s + 1}
 %\end{equation}
 
-We can now look at the step response of this filter as shown in Figure \ref{rc_response} in the top left and top right graph.  To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the step response of this filter as we did with the RC filter step response.
-
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=12.5cm]{Experiments/Exp6/all_four.pdf}
-\isucaption{Impulse input and the response of a RC low pass filter}
+\isucaption{Graphs representing the analog and discrete response of a RC low pass filter to a step input.}
 \label{rc_response}
 \end{figure}
 }
 
-A single pole IIR filter is also known as a recursive filter as the mathematical expression used to describe this filter is a recursive function shown in Equation \ref{iir_recursive}.  In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the input signal ($x[n]$) and is added to the previous sample calculated.  The coefficients, $a_0$ and $b_1$ then define the impulse response of the filter.  Figure \ref{rc_response} shows the discrete step input given to the system and the output response.  This response is calculated using Equation \ref{iir_recursive}.
+%The mathematical expression used to describe this filter is a recursive function shown in Equation \ref{iir_recursive}.  In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the input signal ($x[n]$) and is added to the previous sample calculated.  The coefficients, $a_0$ and $b_1$ then define the impulse response of the filter.  The discrete input and output of this filter is shown in the lower left and right of  Figure \ref{rc_response}.  This response is calculated using Equation \ref{iir_recursive}[\cite{smith1997scientist}].
+
+%\begin{equation}\label{iir_recursive}
+%y[n] = a_0 * x[n] + b_1 * y[n-1]
+%\end{equation}
+
+%The coefficients $a_0$ and $b_1$ are determined in Equation \ref{iir_coefficients} for a low pass filter.  Here $x$ is the amount of decay between each sample and is also defined as between zero and one.  The higher value that $x$ is, the slower the decay between samples.  Equation \ref{iir_coefficients} is stable as long as $x$ is between zero and one.
+
+%\begin{align}\label{iir_coefficients}
+%a_0 &= 1 - x \\
+%b_1 &= x
+%\end{align}
+
+%An analog RC filter has a similar decay, referred to as the time constant ($\tau$), that is determined by multiplying the physical value of the resistor and capacitor used in the circuit shown in Figure \ref{rc_circuit} and is calculated in Equation \ref{RC_tc}.  This value is the number of seconds it takes for the circuit to decay to 36.8\% of its final value.  
+
+%\begin{equation}\label{RC_tc}
+%\tau = RC \ \ sec
+%\end{equation}
+
+%The time constant for a single pole low pass filter can be found in a similar way, where we want to find how many samples ($d$) it will take for our recursive filter to decay to 36.8\% of its final value.  Equation \ref{single_pole_tc} shows us the relationship between the number of samples, $d$, to $x$ which is our decay between samples.
+
+%\begin{equation}\label{single_pole_tc}
+%x = e^{\frac{-1}{d}}
+%\end{equation}
+
+%Equation relates this time constant to our value of $x$ for a desired cutoff frequency of $f_c$.  
+
+%\begin{equation}\label{single_pole_fc}
+%x = e^{-2 \pi f_{c}}
+%\end{equation}
+
+%Figure \ref{rc_response} shows that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  We can determine our coefficients of our single pole recursive filter by looking at the number of samples it takes to decay to 36.8\% of the final value as you do with an analog RC filter.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
+
+%Re-added stuff on IIR filters per Phillips request
+
+The mathematical expression used to describe this filter is a recursive function shown in Equation \ref{iir_recursive}.  In Equation \ref{iir_recursive}, our discrete output ($y[n]$) is defined as the input signal ($x[n]$) and is added to the previous sample calculated.  The coefficients, $a_0$ and $b_1$ then define the impulse response of the filter.  The discrete input and output of this filter is shown in the lower left and right of  Figure \ref{rc_response}.  This response is calculated using Equation \ref{iir_recursive}[\cite{smith1997scientist}].
 
 \begin{equation}\label{iir_recursive}
 y[n] = a_0 * x[n] + b_1 * y[n-1]
 \end{equation}
 
-The coefficients $a_0$ and $b_1$ are determined in Equation \ref{iir_coefficients} for a low pass filter.  Here $x$ is the amount of decay between each sample and is also defined as between zero and one.  The higher value that $x$ is, the slower the decay between samples.  
+The coefficients $a_0$ and $b_1$ are determined in Equation \ref{iir_coefficients} for a low pass filter.  Here $x$ is the amount of decay between each sample and is also defined as between zero and one.  The higher value that $x$ is, the slower the decay between samples.  Equation \ref{iir_coefficients} is stable as long as $x$ is between zero and one.
 
-\begin{equation}\label{iir_coefficients}
-a_0 = 1 - x
-b_1 = x
-for
-0 < x < 1
-\end{equation}
-
-An analog RC filter has a similar decay that is determined by multiplying the physical value of the resistor and capacitor used in the circuit shown in Figure \ref{rc_circuit}.  This value is the number of seconds it takes for the circuit to decay to 36.8\% of its final value.  Equation relates this time constant to our value of $x$ for a desired cutoff frequency of $f_c$.  
-
-\begin{equation}
-x = e^{-2 \pi f_{c}}
-\end{equation}
-%{\begin{figure}[h!tb] 
-%\centering
-%\includegraphics[width=17cm]{Experiments/Exp6/iir_response.pdf}
-%\isucaption{Impulse input and the response of a RC low pass filter}
-%\label{iir_response}
-%\end{figure}
-%}
-
-It can be seen in Figure \ref{rc_response} that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
-
-%Re-added stuff on IIR filters per Phillips request
+\begin{align}\label{iir_coefficients}
+a_0 &= 1 - x \\
+b_1 &= x
+\end{align}
 
 In Figure \ref{rc_circuit}, the input is $V_{in}$, the resistance value is $R$, the capacitance value is $C$ and the output is $V_{out}$.  This circuit can be represented by Equation \ref{eq:rc_circuit_eq}.
 
@@ -150,13 +170,13 @@ In Figure \ref{rc_circuit}, the input is $V_{in}$, the resistance value is $R$, 
 \frac{V_{in}-V_{out}}{R}=C\frac{dV_{out}}{dt}
 \end{equation}
 
-Equation \ref{eq:rc_circuit_eq} represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$.  We can substitute the input to the RC circuit ($V_{in}$) as the input to Equation \ref{IIR_eq} or $x_n$.  The output of our RC circuit ($V{out}$) can also be expressed as the output in Equation \ref{IIR_eq} which is $y_n$.  However, in order to do that we must move from the continuous domain to the discrete domain that our digital filter operates in.  This is done by showing the relationship between our sampling frequency $f_s$ and our period or time between samples, $T$ and is shown in Equation \ref{sampling_rate_eq}.
+Equation \ref{eq:rc_circuit_eq} represents the differential equation relating the input voltage $V_{in}$ to the output voltage $V_{out}$.  We can substitute the input to the RC circuit ($V_{in}$) as the input to Equation \ref{iir_recursive} or $x_n$.  The output of our RC circuit ($V_{out}$) can also be expressed as the output in Equation \ref{iir_recursive} which is $y_n$.  However, in order to do that we must move from the continuous domain to the discrete domain that our digital filter operates in.  This is done by showing the relationship between our sampling frequency $f_s$ and our period or time between samples, $T$ and is shown in Equation \ref{sampling_rate_eq}.
 
 \begin{equation}\label{sampling_rate_eq}
 T=Time Between Samples=\frac{1}{f_s}
 \end{equation}
 
-Next we rewrite our difference equation by substituting $x_n$ and $y_n$ into Equation \ref{eq:rc_circuit_eq} which results in an approximated finite difference equation shown in Equation \ref{diff_xn_yn}.
+Next we rewrite our differential equation by substituting $x_n$ and $y_n$ into Equation \ref{eq:rc_circuit_eq} which results in an approximated finite difference equation shown in Equation \ref{diff_xn_yn}.
 
 \begin{equation}\label{diff_xn_yn}
 \frac{x_n-y_n}{R}=C\frac{y_n-y_{n-1}}{T}
@@ -184,7 +204,9 @@ RC=\frac{\sqrt{3}}{2\pi f_c}
 
 The $RC$ values are also referred to as the time constant of the circuit and we do not need to find the individual R and C values.  An example of how we can find the coefficients of our IIR filter, given a desired cutoff frequency of $f_c$ is shown next.  
 
-For a low pass filter, we want a cutoff frequency ($f_c$) of 1000 Hz.  Given this and using Equation \ref{RC_fc} we can determine our time constant to be 2.757 x $10^-4$ or 275.7 microseconds.  If our sample rate is 1 MHz, then our $T$ value is 1 x $10^-6$ or 1 microsecond.  Plugging these values into Equation \ref{final_IIR_RC} results in the coefficient $c_0 = 0.0036$ and $d_1=0.9964$.
+For a low pass filter, we want a cutoff frequency ($f_c$) of 1000 Hz.  Given this and using Equation \ref{RC_fc} we can determine our time constant to be 2.757 x $10^-4$ or 275.7 microseconds.  If our sample rate is 1 MHz, then our $T$ value is 1 x $10^-6$ or 1 microsecond.  Plugging these values into Equation \ref{final_IIR_RC} results in the coefficient $a_0 = 0.0036$ and $b_1=0.9964$.
+
+%Figure \ref{rc_response} shows that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  We can determine our coefficients of our single pole recursive filter by looking at the number of samples it takes to decay to 36.8\% of the final value as you do with an analog RC filter.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
 
 %------------------------------------------------------
 
@@ -197,9 +219,11 @@ GNURadio includes a program that allows us to define our filter and it will gene
 
 \emph{Filtering.}  There are instances when the frequency being observed requires additional filtering (i.e. RFI mitigation, see section \ref{Exp3_results}).  Traditional radiometers deploy analog band-pass or band-reject filters to accomplish this, while in this thesis we show similar functionality can be obtained by implementing software defined filters.
 
-\section{Software Defined Radio Based Radiometer Control System}
+Next we will examine on how we control key functions in our SDR-based radiometer.  These key functions have an impact on the performance of the SDR-based radiometer.  We will also look at how we display the data collected from the SDR-based radiometer.
 
-A traditional radiometer will be designed with fixed parameters such as bandwidth and integration time.  While changes can be made, it requires changes to the radiometer's physical hardware.  A SDR-based radiometer allows us to control several functions that defines how it operates as a radiometer.  These changes can be made while the radiometer is operating since these operations happen in the digital domain and is defined by software. The following items are controlled by software in our SDR-based radiometer: 1) Center frequency, 2) Bandwidth ($\beta$), 3) Integration time ($\tau$), and 4) Gain.
+\section{Software Defined Radio Based Radiometer GUI}
+
+A traditional radiometer will be designed with fixed parameters such as bandwidth and integration time.  While changes can be made, it requires changes to the radiometer's physical hardware.  A SDR-based radiometer allows us to control several functions that defines how it operates as a radiometer.  These changes can be made while the radiometer is operating since these operations happen in the digital domain and is defined by software. The following items are controlled by software in our SDR-based radiometer via the GUI interface: 1) Center frequency, 2) Bandwidth ($\beta$), 3) Integration time ($\tau$), and 4) Gain.
 
 The GUI for the SDR-based radiometer was designed knowing that these parameters such as frequency, bandwidth and integration time can be changed.  Because these controls impact both the performance of the radiometer and in what frequency range the radiometer operates in, it was important to have these controls clearly marked.  Figure \ref{radiometer_gui} shows a screen-shot of the GUI.
 
@@ -215,9 +239,7 @@ The bandwidth, $\beta$, and our integration time, $\tau$, both impact our sensit
 
 The SDR-based radiometer in this thesis uses Low Noise Amplifiers (LNAs) to increase the gain of the system.  The DBSRX2 hardware, described in Section \ref{N200_HW}, also has Programmable Gain Amplifier (PGA) that is controlled by software.  This allows for additional gain to be added or removed as needed.  Next we will also look at how the data is displayed and stored in the software defined radiometer.
 
-\section{SDR-based radiometer data display}
-
-The information from the software defined radio can be displayed through GNURadio to show relevant information to the user.  Currently, our SDR-based radiometer can display spectrum information and total power information.  Spectrum information is used to verify the signal is clean and free of interference. Total power information is displayed as both un-calibrated values and calibrated values, assuming the correct calibration terms have been provided.  This includes a display in a "ticker tape" graph and as a bar graph.  Figure \ref{radiometer_tpr_display} shows a screen-shot of the total power display.  
+\emph{SDR-based radiometer data display.}  The information from the software defined radio can be displayed through GNURadio to show relevant information to the user.  Currently, our SDR-based radiometer can display spectrum information and total power information.  Spectrum information is used to verify the signal is clean and free of interference. Total power information is displayed as both un-calibrated values and calibrated values, assuming the correct calibration terms have been provided.  This includes a display in a "ticker tape" graph and as a bar graph.  Figure \ref{radiometer_tpr_display} shows a screen-shot of the total power display.  
 
 {\begin{figure}[h!tb] 
 \centering
