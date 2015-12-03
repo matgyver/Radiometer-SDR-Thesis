@@ -2,17 +2,12 @@
 \appendixtitle
 \appendix
 \chapter{Source code} \label{appendix1}
+This appendix contains a copy of the source code used to create a total power radiometer in software and software that is able to load and parse information stored from this SDR-based radiometer.  The first code displayed is the source code that creates the total power radiometer in software and analyzes the data generated from the SDR-based radiometer. The first code is the heir block created that detects the power and smooths the data.  An heir block is a user created block that is used in GNURadio Companion.  The second code supplied is Python code that could be used to read the data generated from the SDR-based radiometer and plot it.  This provides an example of reading and parsing data generated from our SDR-based radiometer.
 
-The following is the source code to several programs that make the radiometer possible.  The first is the Python code used with the Ettus N200 software defined radio.  This code is a heir block, which means it can be imported into GNURadio and used as a block.  Once imported you may run your source into this block and use any sink needed to either display or log the data.  This code was generated using GNURadio Companion.  
-
-%The second code is the Matlab script that can be used to parse the output from GNURadio.  This code will plot the total power output as well as perform some other functions such as a NE$\delta$T calculation and also allows for calibration points to be entered as well.  This code can be used as a foundation for other programs.  
-
-The third code supplied is Python code that can be used to read the data generated and plot it.  In many ways it mimics the functions of the Matlab script but uses Python, NumPy and SciPy to perform the mathematical functions.  This may be a better option for those that wish to look at the data but do not have access to Matlab.
-
-Finally, this code has been included in this thesis as a point of reference.  It may be out of date and some other pieces of code was also used for the experimentation used in this thesis.  Copies of this thesis source \LaTeX code, most experimental data, and other code sources may be found on the author's GitHub repository, \url{https://github.com/matgyver/Radiometer-SDR-Thesis}.
+The code included in this appendix is provided as a point of reference.  It may be out of date or incomplete.  Copies of this thesis' source \LaTeX code, most experimental data, and additional code used may be found on the author's GitHub repository, \url{https://github.com/matgyver/Radiometer-SDR-Thesis}.
 
 \section*{Python code for total power radiometer}
-The main code that acts as the total power radiometer is the TPR.py code.  This module adds a custom block to GRC that can then be called and used like any other block in GRC.  A screenshot of the blocks used is shown in Figure \ref{TPR_GRC}.
+This code defines a custom block in GNURadio Companion (GRC) that detects power, smooths the data and then decimates the data to reduce the storage size. This heir block may then be imported in GNURadio Companion and used like any other block in GRC.  A screenshot of this block is shown in Figure \ref{TPR_GRC}.
 
 {\begin{figure}[h!tb] 
 \centering
@@ -20,8 +15,9 @@ The main code that acts as the total power radiometer is the TPR.py code.  This 
 \isucaption{Blocks used for creating a total power radiometer in software.  Source: GNURadio Companion}
 \label{TPR_GRC}
 \end{figure}
-
 }
+
+
 \lstset{
   language=Python,
   showstringspaces=false,
