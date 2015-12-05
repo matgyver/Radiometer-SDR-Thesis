@@ -109,12 +109,12 @@ Figure \ref{X2_filter} shows our data after being filtered by the low pass filte
 \label{X2_SDR_Both}
 \end{figure}
 
-We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up very nicely.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
+We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
 
 \section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
 
 \subsection{Data Collected}
-This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is the same data collected in experiment one in section \ref{Exp1_data}.  The data collected for the stability is the total power data collected from the SDR-based radiometer over a period of 15 minutes.  For the sensitivity data, the data is calibrated using Table \ref{exp1_datapoints}.  For the stability data it is calibrated using Table \ref{exp2_datapoints}.
+This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is the same data collected in experiment one in Section \ref{Exp1_data}.  The data collected for the stability is the total power data collected from the SDR-based radiometer over a period of 15 minutes.  For the sensitivity data, the data is calibrated using Table \ref{exp1_datapoints}.  For the stability data it is calibrated using Table \ref{exp2_datapoints}.
 
 \begin{table}[h!tb] \centering
 \isucaption{Total Power calibration data points for the stability experiment}
@@ -151,7 +151,7 @@ TA = 77 # Antenna noise temperature
 NEAT_SDR = (TA+TN)/sqrt(BSDR*tau)
 \end{lstlisting}
 
-This gives us 0.1 Kelvin for the expected $NE\Delta T$.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data graphed in Figure \ref{Sensitivity_graph}.  Figure \ref{Sensitivity_graph} uses the data graphed in \ref{SDR_Calibrated} but zoomed in from 350 to 450 seconds. 
+This gives us 0.1 Kelvin for the expected $NE\Delta T$.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data graphed in Figure \ref{Sensitivity_graph}.  Figure \ref{Sensitivity_graph} uses the data graphed in Figure \ref{SDR_Calibrated} but zoomed in from 350 to 450 seconds. 
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp1/SDR_Zoom.pdf}
@@ -211,7 +211,7 @@ The data collected for Experiment III is the total power values from the SDR-bas
 
 \subsection{Data Analysis}
 
-We begin by looking at what happens to our total power readings when no RFI mitigation is used.  As we stated in Section \ref{exp3_setup}, the frequency of the offending signal will not change, but the amplitude will.  This results in clear indications of the total power changing as the amplitude of the offending signal changes.  
+We begin by looking at what happens to our total power readings when no RFI mitigation is used.  As stated in Section \ref{exp3_setup}, the frequency of the offending signal will not change, but the amplitude will.  This results in clear indications of the total power changing as the amplitude of the offending signal changes.  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp4/sdr_raw_unfiltered.pdf}
@@ -409,7 +409,7 @@ DBSRX2 Daughter-board & 1 & \$152 \\
 GNURadio & 1 & \$0 \\ \hline
 Total & & \$1847 \\ \hline
 \textbf{ISU Radiometer} \\ \hline
-LNA, FPGA, ADC, Microcontroller and power supplies & 1 & \$10,000\tablefootnote{Purchase price in 2005} \\ \hline
+LNA, FPGA, ADC, Microcontroller and power supplies & 1 & \$10,000\tablefootnote{Approximate purchase price in 2005} \\ \hline
 \textbf{Commercial Off the Shelf Unit}\\ \hline
 Spectracyber 1420 MHz Hydrogen Line Spectrometer & 1 & \$2,650 \\ \hline
 

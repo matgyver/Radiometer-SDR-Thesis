@@ -100,7 +100,7 @@ To understand how a low pass filter works, we can look at the step response to t
 \end{figure}
 }
 
-To implement this type of filter in our SDR-based radiometer an Infinite Impulse Response (IIR), also known as a recursive filter, is used.  IIR filters are ideal for this application as they are well suited for achieving a long impulse response without having to perform a long convolution.  To create an IIR low pass filter, we will create what is known as a single pole low-pass filter.  
+To implement this type of filter in our SDR-based radiometer an Infinite Impulse Response (IIR), also known as a recursive filter, is used.  IIR filters are ideal for this application as they are well suited for achieving a long impulse response without having to perform a long convolution.  The IIR filter that was created is known as a single pole low-pass filter.  
 
 %This RC filter is described by the Laplace transform of its impulse response.  This RC filter is shown in Equation \ref{RC_laplace} where $K$ is the gain of the filter, $\tau$ is the time constant of the filter and $s$ is the Laplace transform variable.
 
