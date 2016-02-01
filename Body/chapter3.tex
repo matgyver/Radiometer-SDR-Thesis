@@ -19,7 +19,7 @@
 This chapter gives background information on the operation of  traditional radiometers and on software defined radios.  We begin by looking at the major components of a radiometer and how it measures power.  Next the metrics used to measure the performance of a traditional radiometer are discussed.  Then an overview of how software defined radios operate is given.  Finally, we review the tools used to develop a software defined radio based radiometer.  
 
 \section{Radiometer Basics}\label{rad_basics}
-A radiometer is a device designed to measure thermal electromagnetic emission by a material media due to the electron agitation within the material [\cite{ulaby}.  This electromagnetic emission is the thermal noise of the object and can be correlated to the physical temperature of the object[\cite{Nyquist1928thermal}].  Because of this correlation, the amount of noise received is called the noise temperature and it is measured in Kelvin. 
+A radiometer is a device designed to measure the power in electromagnetic emission by a material media due to the electron agitation within the material [\cite{ulaby} in respect to remote sensing.  This electromagnetic emission is the thermal noise of the object and can be correlated to the physical temperature of the object[\cite{Nyquist1928thermal}].  Because of this correlation, the amount of noise received is called the noise temperature and it is measured in Kelvin. 
 
 There are six stages common to all radiometers.  They are:
 
@@ -46,7 +46,7 @@ A non-physical object that is present in all radiometers is system noise, repres
 
 \subsection{Power Measurement}\label{pwr_measurement}
 
-As shown in Equation \ref{eq:power_rad_eq}, the power measured by an ideal radiometer is equal to the product of the power received from the source ($T_A$), the gain ($G$) and the bandwidth ($\beta$) of the radiometer, and the Boltzmann constant ($k=1.38 x 10^{-23} J/K$).
+As shown in Equation \ref{eq:power_rad_eq}, the power measured by an ideal radiometer is equal to the product of the thermal noise from the source ($T_A$), the gain ($G$), the bandwidth ($\beta$) of the radiometer, and the Boltzmann constant ($k=1.38 \times 10^{-23} J/K$).
 
 \begin{equation} \label{eq:power_rad_eq}
 P=k*\beta*G*(T_{A})\ watts
