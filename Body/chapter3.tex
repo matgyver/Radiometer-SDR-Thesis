@@ -52,17 +52,17 @@ As shown in Equation \ref{eq:power_rad_eq}, the power measured by an ideal radio
 P=k*\beta*G*(T_{A})\ watts
 \end{equation}
 
-While the components of an ideal radiometer do not contribute noise power ($T_N$) to the system, they do in a real radiometer.  The impact of this internally generated and unwanted noise on the power measured by the radiometer is captured by Equation \ref{eq:final_power}.
+While the components of an ideal radiometer do not contribute noise power ($T_N$) to the system, they do in a real radiometer.  The impact of this internally generated and unwanted noise on the power measured by the radiometer is captured by Equation \ref{eq:final_power} where $T_N$ is the system noise referred to the input of the system.
 
 \begin{equation} \label{eq:final_power}
 P=k*\beta*G*(T_{A}+T_{N})\ watts
 \end{equation}
 
-Gain ($G$) and bandwidth ($\beta$) are important design parameters of a radiometer.  While a large gain is desired to amplify the source signal ($T_A$), the magnitude of the gain must be limited since it also amplifies the unwanted system noise ($T_N$).
+Gain ($G$) and bandwidth ($\beta$) are important design parameters of a radiometer.  While a large gain is desired to amplify the source signal ($T_A$), the system noise is also amplified.  The design of these amplifiers are then crucial to amplify the signal while minimizing contributions of the system noise.
 
-The bandwidth of the source signal is typically wide (large) to maximize the power measured by the radiometer.  The two primary limiting factors to bandwidth are: 1) hardware limitations (e.g. LNA operating limits), and 2) unwanted signals located at a number of frequencies (e.g. radio communication signals).
+The bandwidth of the source signal is typically wide (large) to maximize the sensitivity of the radiometer.  The two primary limiting factors to bandwidth are: 1) hardware limitations (e.g. LNA operating limits), and 2) unwanted signals located at a number of frequencies (e.g. radio communication signals).
 
-\emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining (i.e. cascading) devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $n$ LNAs that are cascaded is the sum of the gain of each LNA shown in equation \ref{gain_sum}.
+\emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining (i.e. cascading) devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $n$ LNAs that are cascaded is the sum of the gain of each LNA shown in equation \ref{gain_sum} where $G_n$ is the gain value for the nth amplifier.
 
 \begin{equation}\label{gain_sum}
 G_{total}=G_1 + G_2 + G_3 + \cdots +G_{n-1}\ \ dB
@@ -74,7 +74,7 @@ A performance metric of an LNA is the noise figure ($NF$).  The noise figure giv
 NF=10 * \log_{10}(F)\ \ dB
 \end{equation}
 
-For devices that are cascaded, the total noise factor is found by the Friis formula and results in equation \ref{noise_factor}.  
+For devices that are cascaded, the total noise factor is found by the Friis formula and results in equation \ref{noise_factor} where $F_n$ is the noise factor for the nth device.  
 
 \begin{equation}\label{noise_factor}
 F=F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +\frac{F_n-1}{G_1 G_2 G_3 \cdots G_{n-1}}
@@ -137,7 +137,11 @@ These gain fluctuations can be controlled by closely monitoring and controlling 
 \end{figure}
 }
 
-While a Dicke radiometer improves stability, it does so at the cost of not seeing the object of interest while it is measuring the reference signal.  This reduces the sensitivity of the radiometer, since the source signal is only observed for a fraction of the time.
+While a Dicke radiometer improves stability, it does so at the cost of not seeing the object of interest while it is measuring the reference signal.  This reduces the sensitivity of the radiometer by a factor of 2, since half the time is used to observe the source signal.  This changes the equation for the sensitivity of a Dicke radiometer as shown in Equation \ref{NEAT_EQ_Dicke}.
+
+\begin{equation} \label{NEAT_EQ_Dicke}
+NE\Delta T=\frac{2(T_{A}+T_{N})}{\sqrt{\beta * \tau}} 
+\end{equation}
 
 {\begin{figure}[h!tb] 
 \centering
@@ -147,9 +151,13 @@ While a Dicke radiometer improves stability, it does so at the cost of not seein
 \end{figure}
 }
 
-\emph{Noise Injection Radiometer.}  A noise injection radiometer is a variation of the Dicke radiometer, where a variable noise signal ($T_I$) is injected into the RF chain, as shown in Figure \ref{NoiseInj_radiometer}.  The injected noise signal power is adjusted so when added to the source signal their sum equals the reference signal power.  This improves stability by eliminating gain fluctuations, but increases system noise ($T_N$), which reduces radiometer sensitivity.
+\emph{Noise Injection Radiometer.}  A noise injection radiometer is a variation of the Dicke radiometer, where a variable noise signal ($T_I$) is injected into the RF chain, as shown in Figure \ref{NoiseInj_radiometer}.  The injected noise signal power is adjusted so when added to the source signal their sum equals the reference signal power.  This improves stability by eliminating gain fluctuations, but increases system noise ($T_N$).  Much like the Dicke radiometer discussed earlier the sensitivity is reduced by a factor of 2 and the sensitivity is found to be similar to Equation \ref{NEAT_EQ_Dicke} except our $T_A$ is now equal to our known noise constant which we can define as $T_R$.
 
-\emph{Polarimetric Radiometer.} A polarimetric (or correlating) radiometer uses two polarized signals, referred to as vertically polarized (V-Pol) and horizontally polarized (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is fed into the radiometer and correlated.  Because the source noise signal has polarization and the gain fluctuations do not, the gain fluctuations can be eliminated.  This reduces gain fluctuations to increase stability, while helping maintain sensitivity.  However, this is at the cost of increasing radiometer complexity and price, since two identical receivers (one for each polarization) are required. 
+\emph{Polarimetric Radiometer.} A polarimetric (or correlating) radiometer uses two polarized signals, referred to as vertically polarized (V-Pol) and horizontally polarized (H-Pol).  In order to accomplish this, an antenna with dual polarization is used [\cite{Fujimoto}].  Each polarized signal is fed into the radiometer and correlated.  Because the source noise signal has polarization and the gain fluctuations do not, the gain fluctuations can be eliminated.  This reduces gain fluctuations to increase stability, while helping maintain sensitivity.  The sensitivity of a correlating radiometer is shown in Equation \ref{correlating_neat}, where $\DeltaT_{TPR}$ is the $NE\Delta T$ of both identical radiometers. This type of radiometer does increase the cost and complexity  of the radiometer, since two identical receivers (one for each polarization) are required. 
+
+\begin{equation}\label{correlating_neat}
+\Delta T = \frac{\Delta T_{TPR}}{\sqrt{2}}
+\end{equation}
  
 \section{Software Defined Radios Basics} 
 A Software Defined Radio (SDR) is a device that digitizes a received RF signal as soon as possible, and processes the digital representation of the signal using a computer, FPGA, or dedicated System on Chip (SoC).  A canonical software defined radio architecture consists of a power supply, antenna, analog to digital converter, and a processing unit to carry out radio functions in software [\cite{Mitola1995}]. An ideal software defined radio block diagram is shown in Figure \ref{ideal_sdr}.
@@ -176,7 +184,7 @@ A more realistic software defined radio is shown in Figure \ref{prac_sdr}, where
 
 \emph{Software Defined Radio Applications.}  Software Defined Radios (SDRs) can be used for a variety of applications, but have been primarily used in the area of communications.  Some examples of these applications include:  mobile communications, wireless local area networks, personal area networks, and digital broadcast.  They appeal to applications where having the ability to change a modulation scheme or filter on the fly is desirable.  In these respects, SDRs often outperform traditional hardware-only radios because of their ability to easily change their operations through software.  
 
-Early SDRs were expensive due to the cost of high speed analog to digital converters (ADCs) and high-end Field Programmable Gate Arrays (FPGA) that were required.  In recent years, the cost of SDRs have decreased due to the cost of these key components decreasing.  Also, while the cost of SDRs has gone down, their performance has increased.  This has led to SDRs becoming feasible for use in many new ways [\cite{jondral2005software}].
+Early SDRs were expensive due to the cost of high speed analog to digital converters (ADCs) and high-end Field Programmable Gate Arrays (FPGA) that were required.  In recent years, the cost of SDRs has decreased due to the cost of these key components decreasing.  Also, while the cost of SDRs has gone down, their performance has increased.  This has led to SDRs becoming feasible for use in many new ways [\cite{jondral2005software}].
 
 \section{Software Defined Radio Development Platform} \label{SDR_platform}
 This section discusses the platform used to develop a software defined radio based radiometer.  The hardware and software tools used are off the shelf.  First, the hardware platform will be introduced, followed by the software platform.  
@@ -232,7 +240,7 @@ The DBSRX2 has the RF hardware needed to transform the received RF signal into i
 \end{figure}
 }
 
-These analog I and Q signals are then sent to the analog to digital converter to be digitized.  The IQ signal are transmitted as differential signals to minimize noise.  Once digitized, the digital I-Q values are sent to a FPGA to be processed, and then sent to the PC for software based signal processing.
+These analog I and Q signals are then sent to the analog to digital converter to be digitized.  The IQ signals are transmitted as differential signals to minimize noise.  Once digitized, the digital I-Q values are sent to a FPGA to be processed, and then sent to the PC for software based signal processing.
 
 \subsection{Software Platform} \label{software_platform}
 
