@@ -14,7 +14,7 @@ Four experiments are described.  Experiment one verifies our SDR-based radiomete
 %What type of data will you collect?
 %What is the experimental setup?
 
-This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against a square-law detector, which is commonly used in traditional radiometers.  To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  This signal is split using a power divider so that the information will be the same to both devices.  This allows us to verify the software defined radio with a proven system.  
+This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against an analog square-law detector, which is commonly used in traditional radiometers.  To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  This signal is split using a power divider so that the information will be the same to both devices.  This allows us to verify the software defined radio with a proven system.  
 
 \subsection{Experimental setup} \label{exp1_setup}
 
@@ -66,7 +66,7 @@ Two sets of data are produced with this experiment.  First, data is generated fr
 \end{figure}
 }
 
-There are two types of files the SDR generates.  The first type of file is the I (in-phase) and Q (quadrature phase) data points.  This file is stored in little-indian format as complex values.  Due to the sampling rate, it is not uncommon for this file to grow quite large, usually several gigabytes of data for a 10-15 minute run.  However, this file can then be feed back through GNURadio later to be played back if needed, and it contains the information needed to completely recreate the signal.
+There are two types of files the SDR generates.  The first type of file is the I (in-phase) and Q (quadrature phase) data points.  This file is stored in little-indian format as complex values.  Due to the sampling rate, it is not uncommon for this file to grow quite large, usually several gigabytes of data for a 10-15 minute run.  However, this file can then be fed back through GNURadio later to be played back if needed, and it contains the information needed to completely recreate the signal.
 
 The second file type is the total power values generated from the total power block in GNURadio.  A diagram of this block can be found in Appendix \ref{appendix1} (Figure \ref{TPR_GRC}), and its source code can be found in Appendix \ref{appendix1}.  This file also uses a little-endian format, however this file only has real values.  This file is also much smaller than the file that contains the I and Q data points due to decimation of the data.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
 
@@ -107,7 +107,7 @@ In this experiment, we evaluate the sensitivity and stability of a SDR-based rad
 The experimental setup used for experiment two is the same as outlined in section \ref{exp1_setup}.  
 
 \subsection{Data Collection}
-The data collected for this experiment was the total power measurements made from the SDR-based radiometer.  These measurements uses the same method as outlined in section \ref{exp1_data}.
+The data collected for this experiment were the total power measurements made from the SDR-based radiometer.  These measurements uses the same method as outlined in section \ref{exp1_data}.
 
 \section{Experiment III - Interfering Signal Mitigation}\label{Exp3}
 
@@ -115,7 +115,7 @@ In this experiment, we generate an interfering signal and then mitigate the sign
 
 This experiment was designed to determine whether or not a SDR-based radiometer can cope with an interfering signal.  This test injects a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  The amplitude of this signal is then incremented and decremented at various times during the test.  This was done to reflect a possible real world scenario and to make it easy to identify the interfering signal with the square-law detector, which only measures power.  
 
-In order to mitigate the offending signal, a filter is designed to remove the offending signal.  The design of the filter used a program that is part of the GNURadio software package, called the GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of this tool when designing the band-reject filter for this application.  This tool generates filter values (also called taps) that GNURadio will use for defining the filter.  The GUI program, shown in Figure \ref{GRC_Filter_DSN}, allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our SDR-based radiometer.  
+In order to mitigate the offending signal, a filter was designed to remove the offending signal.  The design of the filter used a program that is part of the GNURadio software package, called the GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of this tool when designing the band-reject filter for this application.  This tool generates filter values (also called taps) that GNURadio will use for defining the filter.  The GUI program, shown in Figure \ref{GRC_Filter_DSN}, allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our SDR-based radiometer.  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/GNURadio_Filter_dsn.png}
