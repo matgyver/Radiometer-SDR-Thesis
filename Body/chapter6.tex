@@ -75,7 +75,7 @@ Now that we have our calibration points, we can re-graph this data as calibrated
 \label{X2_Raw}
 \end{figure}
 
-To filter the data, Python in conjunction with SciPy is used.  For this experiment, we use a low pass filter to smooth out the signal.  The following code applies the filter to the data.
+To filter the data, Python in conjunction with SciPy is used.  For this experiment, we use a low pass filter to smooth out the signal.  The following code applies a Finite Impulse Response low pass filter that filters the data.
 
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 from scipy import signal
@@ -109,12 +109,12 @@ Figure \ref{X2_filter} shows our data after being filtered by the low pass filte
 \label{X2_SDR_Both}
 \end{figure}
 
-We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
+We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up and this was analyzed to be within 0.002 Kelvin.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
 
 \section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
 
 \subsection{Data Collected}
-This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is the same data collected in experiment one in Section \ref{Exp1_data}.  The data collected for the stability is the total power data collected from the SDR-based radiometer over a period of 15 minutes.  For the sensitivity data, the data is calibrated using Table \ref{exp1_datapoints}.  For the stability data it is calibrated using Table \ref{exp2_datapoints}.
+This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is the same data collected in experiment one in Section \ref{Exp1_data}.  The data collected for the stability are the total power data collected from the SDR-based radiometer over a period of 15 minutes.  For the sensitivity data, the data is calibrated using Table \ref{exp1_datapoints}.  For the stability data it is calibrated using Table \ref{exp2_datapoints} where rQ is the uncalibrated values from the software defined radio based radiometer.
 
 \begin{table}[h!tb] \centering
 \isucaption{Total Power calibration data points for the stability experiment}
@@ -141,7 +141,7 @@ This experiment examines the sensitivity and stability of a SDR-based radiometer
 \end{tabular}
 \end{table}
 
-Python is used to calculate the $NE\Delta T$ using the data from Table \ref{exp2_param}.  The python code listed below is used to calculate the theoretical $NE\Delta T$.
+Python is used to calculate the $NE\Delta T$ using the data from Table \ref{exp2_param}.  Here $T_A$ is the physical temperature of the matched load and $T_N$ is the system noise temperature of the radiometer.  The python code listed below is used to calculate the theoretical $NE\Delta T$.
 
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 tau = 2 # Integration Time
@@ -192,7 +192,7 @@ We can use Python to calculate a second order polynomial to create a line to fit
 
 \section{Experiment III - Interfering Signal Mitigation} \label{Exp3_results}
 
-The addition of a unwanted interfering signal has an adverse effect on how a radiometer operates[\cite{Ellingson}].  This is a growing problem for all radiometers, but is a greater issue for radiometers used in orbiting spacecrafts to observe the Earth as they see large areas that could contain interfering signal sources [\cite{DeRooRFI}].  Even though the band we are working in (i.e. 1.4 GHz) is an internationally protected frequency, there have been both intentional and unintentional signal sources in this band detected by current space borne radiometers that have caused interference [\cite{Forte}].
+The addition of an unwanted interfering signal has an adverse effect on how a radiometer operates[\cite{Ellingson}].  This is a growing problem for all radiometers, but is a greater issue for radiometers used in orbiting spacecraft to observe the Earth as they see large areas that could contain interfering signal sources [\cite{DeRooRFI}].  Even though the band we are working in (i.e. 1.4 GHz) is an internationally protected frequency, there have been both intentional and unintentional signal sources in this band detected by current space borne radiometers that have caused interference [\cite{Forte}].
 
 \subsection{Data Collected}
 
@@ -363,7 +363,7 @@ To compare this theoretical power to the actual power measured, we collected the
 
 \subsection{Usage Scenario}
 %Move this section to 6.4.3 and edit
-\emph{Application with Soil Moisture Readings}.  A common application of radiometers is in the measurement of soil moisture.  All items naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature and the amount that reaches the antenna varies by the amount of moisture in the soil.  If we calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  We will assume the soil is at a constant temperature during the observation.  We will look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
+\emph{Application with Soil Moisture Readings}.  A common application of radiometers is in the measurement of soil moisture.  All materials naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature and the amount that reaches the antenna varies by the amount of moisture in the soil.  If we calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  We will assume the soil is at a constant temperature during the observation.  We will look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
 
 Using the SDR-based radiometer, we can configure it to observe a soil sample area.  Since we do not have an antenna hooked up, we will simulate this by using a matched load submerged in two reference temperatures.  We will use the ice water bath and LN2 bath that was used in previous experiments for our reference temperatures.
 
@@ -422,7 +422,7 @@ The largest cost benefit is that key components that you find in a radiometer, t
 
 \subsection{Weight and component size benefits}
 
-A typical radiometer has many components that are involved in its design.  This includes filters, LNAs, and the power detection (i.e. square-law detector) used.  These components add weight, size and costs to a radiometer.  A software defined radio however digitizes the signal and we are able to replace the filters and square-law detector with their software equivalent.  While a software defined radio does add an ADC and usually a FPGA to perform signal processing, advances in semiconductor technology has continued to shrink these components.  These components are also lighter than the filters often used in traditional radiometers.  Table \ref{weight_table} displays the mass for the SDR-based radiometer built and the ISU Radiometer.  The ISU Radiometer is a representation of most traditional radiometers.
+A typical radiometer has many components that are involved in its design.  This includes filters, LNAs, and the power detection (i.e. square-law detector) used.  These components add weight, size and costs to a radiometer.  A software defined radio however digitizes the signal and we are able to replace the filters and square-law detector with their software equivalent.  While a software defined radio does add an ADC and usually a FPGA to perform signal processing, advances in semiconductor technology have continued to shrink these components.  These components are also lighter than the filters often used in traditional radiometers.  Table \ref{weight_table} displays the mass for the SDR-based radiometer built and the ISU Radiometer.  The ISU Radiometer is a representation of most traditional radiometers.
 
 \begin{table}[h!tb] \centering
 \isucaption{Weight Analysis}
