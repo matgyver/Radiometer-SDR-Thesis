@@ -136,7 +136,7 @@ Our signal generator is the HackRF One (or just HackRF), shown in Figure \ref{Ha
 \label{HackRF}
 \end{figure} 
 
-The HackRF generates a sinusoidal wave at a fixed frequency, and the signal amplitude changed at different times during the experiment.  This is controlled from a program called \emph{osmocom\_siggen}.  Osmocom was originally developed to communicate with OsmocomSDR hardware.  However, it has been expanded to include the HackRF and Ettus Research hardware.  The \emph{osmocom\_siggen} program provides a GUI to set the frequency, amplitude and type of the signal generated.  
+The HackRF generates a sinusoidal wave at a fixed frequency of 1.406 GHz and can be seen in Figure \ref{spectrum_interfering}.  In this experiment, the signal amplitude is changed at different times during the experiment.  Because the signal from this device is relatively large, 26 dB of attenuation is inserted between the HackRF and the first LNA to avoid over-powering the LNAs.  The amplitude is controlled from a program called \emph{osmocom\_siggen}.  Osmocom was originally developed to communicate with OsmocomSDR hardware.  However, it has been expanded to include the HackRF and Ettus Research hardware.  The \emph{osmocom\_siggen} program provides a GUI to set the frequency, amplitude and type of the signal generated.  
 
 \subsection{Data Collection}
 
