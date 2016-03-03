@@ -57,7 +57,9 @@ The following hardware was used and has also been marked on Figure \ref{Exp1_Blo
 
 Two sets of data are produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisition device (USB-6009) that is attached to the square-law detector.  Data from each is stored to a local computer running the appropriate software.
 
-\emph{Software Defined Radio Data.}  The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP, or a file.  As shown in Figure \ref{filesink}, a file sink block is used to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows the user to turn on and off recording of the data.
+\emph{Software Defined Radio Data.}  The software defined radio based radiometer is configured with a bandwidth of 10 MHz and an integration time of two seconds.  It is centered on a frequency of 1.406 GHz which allows it to operate within the mechanical band-pass filters.
+
+The data from the software defined radio is stored in files generated from GNURadio.  GNURadio uses a sink block to output the data to either a screen, socket connection such as TCP/IP, or a file.  As shown in Figure \ref{filesink}, a file sink block is used to output the data to a file.  The flow of data to this sink is controlled by a valve block.  This allows the user to turn on and off recording of the data.
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=5cm]{Images/TPR_Filesink.png}
@@ -70,7 +72,9 @@ There are two types of files the SDR generates.  The first type of file is the I
 
 The second file type is the total power values generated from the total power block in GNURadio.  A diagram of this block can be found in Appendix \ref{appendix1} (Figure \ref{TPR_GRC}), and its source code can be found in Appendix \ref{appendix1}.  This file also uses a little-endian format, however this file only has real values.  This file is also much smaller than the file that contains the I and Q data points due to decimation of the data.  A typical file size is 50 - 100 kB for a 10 to 15 minute run.  
 
-\emph{Square-law detector data.}  The square-law detector used (ADL5902) outputs total power information as an analog voltage that is linearly proportional to the RF power measured.  The Analog Devices ADL5902 is a single Integrated Circuit (IC) that contains a square-law detector and necessary amplification for the output signal and is shown in Figure \ref{square_law} .  This device operates from 50 MHz to 9 GHz and can detect power as low as -60 dBm.  The output voltage from the square-law is amplified to a range from zero to five volts with a calibrated output of 53 mV/dB.  
+\emph{Square-law detector data.}  The square-law detector used (ADL5902) outputs total power information as an analog voltage that is linearly proportional to the RF power measured.  The Analog Devices ADL5902 is a single Integrated Circuit (IC) that contains a square-law detector and necessary amplification for the output signal and is shown in Figure \ref{square_law} .  This device operates from 50 MHz to 9 GHz and can detect power as low as -60 dBm.  The output voltage from the square-law is amplified to a range from zero to five volts with a calibrated output of 53.7 mV/dB.  
+
+Testing was done on the square-law detector to verify linearity and proper operation of the square-law detector.  This test involved sending a known signal into the square-law detector and changing the amplitude at set intervals.  This was then graphed and is shown in Figure 
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=7cm]{Images/adl5902.jpg}
@@ -90,7 +94,7 @@ To use the USB-6009, a fairly simple Lab View program was created to obtain, dis
 \end{figure}
 }
 
-For rapid development, the National Instruments DAQ assistant was used to quickly configure and setup the USB-6009.  Labview also includes blocks that allows us to easily record the data to a file and to use a low pass filter.  These blocks made up most of the program and resulted in a program that was quickly made.  Figure \ref{labviewblock} shows the blocks used and the wiring of the blocks.
+For rapid development, the National Instruments DAQ assistant was used to quickly configure and setup the USB-6009.  Labview also includes blocks that allows us to easily record the data to a file and to use a low pass filter.  The filter used is then configured to have a cutoff frequency that is equivalent to an integration time of 2 seconds to match the software defined radio.  These blocks made up most of the program and resulted in a program that was quickly made.  Figure \ref{labviewblock} shows the blocks used and the wiring of the blocks.
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/labview_diagram.pdf}
@@ -127,7 +131,7 @@ In order to mitigate the offending signal, a filter was designed to remove the o
 
 The setup for this experiment is similar to the setup outline in section \ref{Exp1}.  In addition, a second software defined radio was added to inject an offending signal into the RF signal chain.  This software defined radio was configured to operate as a signal generator to create the offending signal.  
 
-Our signal generator is the HackRF One (or just HackRF), shown in Figure \ref{HackRF}.  This SDR is cheaper, and has lower specifications than the Ettus Research N200 used as the SDR-based radiometer.  However, it suits our needs for the purpose of a signal generator.
+Our signal generator is the HackRF One (or just HackRF), shown in Figure \ref{HackRF}.  This SDR is cheaper, and has lower specifications than the Ettus Research N200 used as the SDR-based radiometer.  However, it allows for transmission of a signal and it suits our needs for the purpose of a signal generator.  The signal the HackRF generates is a sinusoidal signal centered at 1.406 GHz.  The amplitude of this sinusoidal signal is then adjusted accordingly.  
 
 \begin{figure}[h!tb] \centering
 
