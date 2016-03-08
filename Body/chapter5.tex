@@ -74,7 +74,18 @@ The second file type is the total power values generated from the total power bl
 
 \emph{Square-law detector data.}  The square-law detector used (ADL5902) outputs total power information as an analog voltage that is linearly proportional to the RF power measured.  The Analog Devices ADL5902 is a single Integrated Circuit (IC) that contains a square-law detector and necessary amplification for the output signal and is shown in Figure \ref{square_law} .  This device operates from 50 MHz to 9 GHz and can detect power as low as -60 dBm.  The output voltage from the square-law is amplified to a range from zero to five volts with a calibrated output of 53.7 mV/dB.  
 
-Testing was done on the square-law detector to verify linearity and proper operation of the square-law detector.  This test involved sending a known signal into the square-law detector and changing the amplitude at set intervals.  This was then graphed and is shown in Figure 
+Testing was done on the square-law detector to verify linearity and proper operation of the square-law detector.  This test involved sending a known signal into the square-law detector and changing the amplitude at set intervals.  This was then graphed and is shown in Figure \ref{square_law_linear}.  This graph shows that as we changed the input power in linearly, the output measured from the square law detector also changed linearly.
+
+{\begin{figure}[h!tb] \centering
+\includegraphics[width=7cm]{Images/square_law_linear.pdf}
+\isucaption{A graph of the power output of the square law detector.}
+\label{square_law_linear}
+\end{figure}
+}
+
+To capture the voltage output from the ADL5902, a data acquisition unit (DAQ) is used.  The National Instruments USB-6009 DAQ unit was selected as it met the requirements for an easy to use yet high enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample at 48 KSPS with a resolution of 14-bits.  
+
+To use the USB-6009, a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  A GUI program, shown in Figure \ref{labviewgui}, is used to control and display the data.  This made obtaining the data and using the device straightforward.
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=7cm]{Images/adl5902.jpg}
@@ -82,10 +93,6 @@ Testing was done on the square-law detector to verify linearity and proper opera
 \label{square_law}
 \end{figure}
 }
-
-To capture the voltage output from the ADL5902, a data acquisition unit (DAQ) is used.  The National Instruments USB-6009 DAQ unit was selected as it met the requirements for an easy to use yet high enough resolution to obtain accurate information.  The USB-6009 unit has 8 analog inputs that can sample at 48 KSPS with a resolution of 14-bits.  
-
-To use the USB-6009, a fairly simple Lab View program was created to obtain, display and store the data from the ADL5902.  This program retrieved information from the USB-6009 and stored the data in both Labview's binary format and in a more human friendly ASCII format.  A GUI program, shown in Figure \ref{labviewgui}, is used to control and display the data.  This made obtaining the data and using the device straightforward.
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/labviewGUI.png}

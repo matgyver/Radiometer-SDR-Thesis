@@ -45,6 +45,7 @@ Figure \ref{trad_radiometer} illustrates how a signal propagates through a radio
 A non-physical object that is present in all radiometers is system noise, represented as $T_{N}$.  System noise is noise that is generated from within the radiometer due to thermal agitation.  A radiometer is designed to reduce system noise as much as possible by using low-loss components and amplifiers that are low noise, such as Low Noise Amplifiers (LNAs). 
 
 \subsection{Power Measurement}\label{pwr_measurement}
+The voltage from a radiometer can be expressed as the sum of the noise voltages which the amplitude distribution of which is nearly Gaussian as defined by the central limit theorem.  This results in a voltage mean of zero, but results in the root mean square (rms) value of the voltage to be greater than zero in a band limited sample.
 
 As shown in Equation \ref{eq:power_rad_eq}, the power measured by an ideal radiometer is equal to the product of the thermal noise from the source ($T_A$), the power gain ($G$), the bandwidth ($\beta$) of the radiometer, and the Boltzmann constant ($k=1.38 \times 10^{-23} J/K$).
 
