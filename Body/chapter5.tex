@@ -14,11 +14,13 @@ Four experiments are described.  Experiment one verifies our SDR-based radiomete
 %What type of data will you collect?
 %What is the experimental setup?
 
-This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against an analog square-law detector, which is commonly used in traditional radiometers.  To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  This signal is split using a power divider so that the information will be the same to both devices.  This allows us to verify the software defined radio with a proven system.  
+This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against an analog square-law detector, which is commonly used in traditional radiometers.  To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  
+
+This signal is split using a power divider so that the information will be the same to both devices.  This power divider ideally would divide the signal so that the resulting signal is 3 dB lower and is equal between both ports.  The splitter used in this thesis was tested and verified that it does split the signal with a slight difference between port one and port two.  This difference was measured to be .1 dB which is well within the .3 dB specified for this power splitter.  This allows us to verify the software defined radio with a proven system.  
 
 \subsection{Experimental setup} \label{exp1_setup}
 
-Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our source signal.  This matched load is then submerged in temperature baths.  These baths use Liquid Nitrogen (LN2), which is known to boil at 77 Kelvin, and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these baths were monitored.  The load was submersed in each bath for a minimum of 2 minutes to allow it to reach the same temperature as the bath.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  
+Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matched load is used to simulate our source signal.  This matched load is then submerged in temperature baths.  These baths use Liquid Nitrogen (LN2), which is known to boil at 77 Kelvin, and an ice water bath which is known to be at 273.15 Kelvin.  The temperature of these baths were monitored with a thermometer that had an accuracy of $\pm 1$ degree Celsius.  The load was submersed in each bath for a minimum of 2 minutes to allow it to reach the same temperature as the bath.  The physical temperature of this matched load is then the noise temperature the radiometer sees and can be used to calibrate the radiometer.  
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=13cm]{Images/Exp_1_Setup.pdf}
@@ -77,7 +79,7 @@ The second file type is the total power values generated from the total power bl
 Testing was done on the square-law detector to verify linearity and proper operation of the square-law detector.  This test involved sending a known signal into the square-law detector and changing the amplitude at set intervals.  This was then graphed and is shown in Figure \ref{square_law_linear}.  This graph shows that as we changed the input power in linearly, the output measured from the square law detector also changed linearly.
 
 {\begin{figure}[h!tb] \centering
-\includegraphics[width=7cm]{Images/square_law_linear.pdf}
+\includegraphics[width=\textwidth]{Images/square_law_linear1.pdf}
 \isucaption{A graph of the power output of the square law detector.}
 \label{square_law_linear}
 \end{figure}

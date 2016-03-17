@@ -114,7 +114,7 @@ We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and 
 \section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
 
 \subsection{Data Collected}
-This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is the same data collected in experiment one in Section \ref{Exp1_data}.  The data collected for the stability are the total power data collected from the SDR-based radiometer over a period of 15 minutes.  For the sensitivity data, the data is calibrated using Table \ref{exp1_datapoints}.  For the stability data it is calibrated using Table \ref{exp2_datapoints} where rQ is the uncalibrated values from the software defined radio based radiometer.
+This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is data that was collected to confirm the stability of the radiometer.  This data is the total power data collected from the SDR-based radiometer over a period of 15 minutes.  For both sensitivity and stability, the data is calibrated using Table \ref{exp2_datapoints}.
 
 \begin{table}[h!tb] \centering
 \isucaption{Total Power calibration data points for the stability experiment}
@@ -151,15 +151,15 @@ TA = 77 # Antenna noise temperature
 NEAT_SDR = (TA+TN)/sqrt(BSDR*tau)
 \end{lstlisting}
 
-This gives us 0.1 Kelvin for the expected $NE\Delta T$.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data graphed in Figure \ref{Sensitivity_graph}.  Figure \ref{Sensitivity_graph} uses the data graphed in Figure \ref{SDR_Calibrated} but zoomed in from 350 to 450 seconds. 
+This gives us 0.1 Kelvin for the expected $NE\Delta T$.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data graphed in Figure \ref{Sensitivity_graph}.  Figure \ref{Sensitivity_graph} uses the data graphed in Figure \ref{SDR_Calibrated} but zoomed in from 4000 to 4900 seconds. 
 
 \begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Experiments/Exp1/SDR_Zoom.pdf}
-\isucaption{Graph of the calibrated total power from Experiment I while the matched load is submerged in LN2 between 350 and 450 seconds.}
+\includegraphics[width=\textwidth]{Experiments/Exp2/sdr_calibrated_zoom.pdf}
+\isucaption{Graph of the calibrated total power from Experiment II while the matched load is submerged in LN2 between 4000 and 4900 seconds.}
 \label{Sensitivity_graph}
 \end{figure}
 
-Python is used to determine the standard deviation of this range of data.  The code used is shown below and gives a result of .23 Kelvin.  We can now plot both the expected sensitivity and the actual sensitivity which is shown in Figure \ref{sensitivity_exp_real}.
+Python is used to determine the standard deviation of this range of data.  The code used is shown below and gives a result of .08 Kelvin.  We can now plot both the expected sensitivity and the actual sensitivity which is shown in Figure \ref{sensitivity_exp_real}.
 
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 stdsdr = numpy.std(g)
@@ -167,22 +167,22 @@ print stdsdr
 \end{lstlisting}
 
 \begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Experiments/Exp1/std_dev_errbar.pdf}
+\includegraphics[width=\textwidth]{Experiments/Exp2/calib_vstime_stddev.pdf}
 \isucaption{Graph of the calibrated total power with expected and actual sensitivity.}
 \label{sensitivity_exp_real}
 \end{figure}
 
 While .23 Kelvin is higher than the calculated sensitivity, it is still quite acceptable.  As discussed in chapter \ref{ch:implementation} and shown in Table \ref{rad_performance}, our target $NE\Delta T$ is one Kelvin or less.  Therefore our actual performance of .23 Kelvin still meets our radiometer requirement.
 
-\emph{Stability.}  To verify stability of the radiometer, we look to see how much change the radiometer records over a relatively long period of time.  To test this, a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for fifteen minutes.  The readings were then examined to study the trend of the data.  The data is graphed in Figure \ref{Stability}.
+\emph{Stability.}  To verify stability of the radiometer, we look to see how much change the radiometer records over a relatively long period of time.  To test this, a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for fifteen minutes.  The readings were then examined to study the trend of the data.  The data is graphed in Figure \ref{Sensitivity_graph}.
 
-\begin{figure}[h!tb] \centering
-\includegraphics[width=\textwidth]{Experiments/Exp2/sdr_calibrated_zoom.pdf}
-\isucaption{Graph of the calibrated total power over a period of fifteen minutes.}
-\label{Stability}
-\end{figure}
+%\begin{figure}[h!tb] \centering
+%\includegraphics[width=\textwidth]{Experiments/Exp2/sdr_calibrated_zoom.pdf}
+%\isucaption{Graph of the calibrated total power over a period of fifteen minutes.}
+%\label{Stability}
+%\end{figure}
 
-We can use Python to calculate a second order polynomial to create a line to fit the data in Figure \ref{Stability}.  An ideal line would be flat to show no overall change with the data.  In Figure \ref{Stability_calib} we can see that the line and the data does not change more than 0.05 Kelvin over this fifteen minute period.
+We can use Python to calculate a second order polynomial to create a line to fit the data in Figure \ref{Sensitivity_graph}.  An ideal line would be flat to show no overall change with the data.  In Figure \ref{Stability_calib} we can see that the line and the data does not change more than 0.05 Kelvin over this fifteen minute period.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp2/calib_line_fitting.pdf}
