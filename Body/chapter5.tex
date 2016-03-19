@@ -140,7 +140,9 @@ In order to mitigate the offending signal, a filter was designed to remove the o
 
 The setup for this experiment is similar to the setup outline in section \ref{Exp1}.  In addition, a second software defined radio was added to inject an offending signal into the RF signal chain.  This software defined radio was configured to operate as a signal generator to create the offending signal.  
 
-Our signal generator is the HackRF One (or just HackRF), shown in Figure \ref{HackRF}.  This SDR is cheaper, and has lower specifications than the Ettus Research N200 used as the SDR-based radiometer.  However, it allows for transmission of a signal and it suits our needs for the purpose of a signal generator.  The signal the HackRF generates is a sinusoidal signal centered at 1.406 GHz.  The amplitude of this sinusoidal signal is then adjusted accordingly.  
+Our signal generator is the HackRF One (or just HackRF), shown in Figure \ref{HackRF}.  This SDR is cheaper, and has lower specifications than the Ettus Research N200 used as the SDR-based radiometer.  However, it allows for transmission of a signal and it suits our needs for the purpose of a signal generator.  The signal the HackRF generates is a sinusoidal signal centered at 1.406 GHz.  The amplitude of this sinusoidal signal is then adjusted accordingly. 
+
+As stated, the quality of this SDR is lower than the Ettus Research N200 SDR.  As such the output signal is not as clean as one might expect.  This can be seen in Figure \ref{spectrum_filter} where two smaller signals are present.  These are harmonics generated due to the Local Oscillator (LO) and the Intermediate Frequency (IF) used in the setup.  However, this did not present an issue as the filter was designed to filter the main signal at 1.406 GHz and the two smaller harmonic peaks.
 
 \begin{figure}[h!tb] \centering
 
