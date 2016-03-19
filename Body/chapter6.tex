@@ -114,7 +114,13 @@ We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and 
 \section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
 
 \subsection{Data Collected}
-This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is data that was collected to confirm the stability of the radiometer.  This data is the total power data collected from the SDR-based radiometer over a period of 15 minutes.  For both sensitivity and stability, the data is calibrated using Table \ref{exp2_datapoints}.
+This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is data that was collected to confirm the stability of the radiometer.  This data is the total power data collected from the SDR-based radiometer over a period of approximately five hours, however only a fifteen minute block was used for final analysis.  For both sensitivity and stability, the data is calibrated using Table \ref{exp2_datapoints}.  A graph of the data showing the long duration soak time including indicating when the LN2 boiled out of the vessel is shown in \ref{Stability_graph}.
+
+\begin{figure}[h!tb] \centering
+\includegraphics[width=\textwidth]{Experiments/Exp2/sdr_rq_plot.pdf}
+\isucaption{Graph of the un-calibrated total power from Experiment II while the matched load is submerged in LN2 between 4000 and 4900 seconds.}
+\label{Stability_graph}
+\end{figure}
 
 \begin{table}[h!tb] \centering
 \isucaption{Total Power calibration data points for the stability experiment}
@@ -151,7 +157,7 @@ TA = 77 # Antenna noise temperature
 NEAT_SDR = (TA+TN)/sqrt(BSDR*tau)
 \end{lstlisting}
 
-This gives us 0.1 Kelvin for the expected $NE\Delta T$.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data graphed in Figure \ref{Sensitivity_graph}.  Figure \ref{Sensitivity_graph} uses the data graphed in Figure \ref{SDR_Calibrated} but zoomed in from 4000 to 4900 seconds. 
+This gives us 0.1 Kelvin for the expected $NE\Delta T$.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data graphed in Figure \ref{Sensitivity_graph}.  Figure \ref{Sensitivity_graph} uses the data graphed in Figure \ref{Stability_graph} but zoomed in from 4000 to 4900 seconds. 
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp2/sdr_calibrated_zoom.pdf}
