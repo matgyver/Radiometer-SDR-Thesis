@@ -49,13 +49,15 @@ To analyze the results, iPython Notebook is used to read our data and generate t
 \end{figure}
 
 Figure \ref{SDR_rQ} shows the total power reading versus time.  Figure \ref{SDR_rQ} has been annotated to show which medium the matched load has been placed in (i.e. Ice water and LN2).  Since we know the temperatures of the ice water and LN2, we can calibrate these readings to a noise temperature reading.  This is done by reading a calibration file we have stored in a csv format and solving for the slope of a line.  This was accomplished using the following code written in Python.
-
+\ \\ \ \\
+\begin{minipage}{\linewidth}
 \lstset{language=Python}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 a=numpy.array([[rQ_values[0],1.0],[rQ_values[1],1.0]],numpy.float32)
 b=numpy.array([temp_values[0],temp_values[1]])
 z=numpy.linalg.solve(a,b)
 \end{lstlisting}
+\end{minipage}
 
 Now that we have our calibration points, we can re-graph this data as calibrated noise temperature as shown in Figure \ref{SDR_Calibrated}.  Figure \ref{SDR_Calibrated} is also colorized to represent ``warmer'' to ``cooler'' noise temperatures.
 
@@ -75,8 +77,9 @@ Now that we have our calibration points, we can re-graph this data as calibrated
 \label{X2_Raw}
 \end{figure}
 
-To filter the data, Python in conjunction with SciPy is used.  For this experiment, we use a low pass filter to smooth out the signal.  The following code applies a Finite Impulse Response low pass filter that filters the data.
-
+To filter the data, Python in conjunction with SciPy is used.  For this experiment, we use a low pass filter to smooth out the signal.  The following code applies a Finite Impulse Response (FIR) low pass filter that filters the data.
+\ \\
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 from scipy import signal
 N=100  # Number of taps
@@ -85,6 +88,7 @@ Fs=1600  #Sample Frequency
 h=scipy.signal.firwin(numtaps=N, cutoff=Fc, nyq=Fs/2)
 x2_filt=scipy.signal.lfilter(h,1.0,x2_voltage)
 \end{lstlisting}
+\end{minipage}
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp1/x2_filter.pdf}
@@ -148,7 +152,8 @@ This experiment examines the sensitivity and stability of a SDR-based radiometer
 \end{table}
 
 Python is used to calculate the $NE\Delta T$ using the data from Table \ref{exp2_param}.  Here $T_A$ is the physical temperature of the matched load and $T_N$ is the system noise temperature of the radiometer.  The python code listed below is used to calculate the theoretical $NE\Delta T$.
-
+\ \\
+\begin{minipage}{\linewidth}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 tau = 2 # Integration Time
 BSDR = 10e6 # Bandwidth
@@ -156,6 +161,7 @@ TN = 385 # System noise temperature
 TA = 77 # Antenna noise temperature
 NEAT_SDR = (TA+TN)/sqrt(BSDR*tau)
 \end{lstlisting}
+\end{minipage}
 
 This gives us 0.1 Kelvin for the expected $NE\Delta T$.  Since the sensitivity is related to the standard deviation of the graph, we can use Python to give us the standard deviation of the data graphed in Figure \ref{Sensitivity_graph}.  Figure \ref{Sensitivity_graph} uses the data graphed in Figure \ref{Stability_graph} but zoomed in from 4000 to 4900 seconds. 
 
@@ -178,7 +184,7 @@ print stdsdr
 \label{sensitivity_exp_real}
 \end{figure}
 
-While .08 Kelvin is higher than the calculated sensitivity, it is still quite acceptable.  As discussed in chapter \ref{ch:implementation} and shown in Table \ref{rad_performance}, our target $NE\Delta T$ is one Kelvin or less.  Therefore our actual performance of .08 Kelvin still meets our radiometer requirement.
+While .08 Kelvin is lower than the calculated sensitivity, it is still quite acceptable.  As discussed in chapter \ref{ch:implementation} and shown in Table \ref{rad_performance}, our target $NE\Delta T$ is one Kelvin or less.  Therefore our actual performance of .08 Kelvin still meets our radiometer requirement.
 
 \emph{Stability.}  To verify stability of the radiometer, we look to see how much change the radiometer records over a relatively long period of time.  To test this, a matched load was submerged in a liquid nitrogen bath for an extended period of time, in this case for fifteen minutes.  The readings were then examined to study the trend of the data.  The data is graphed in Figure \ref{Sensitivity_graph}.
 
@@ -286,7 +292,7 @@ The data collected for this experiment is shown Table \ref{exp4_data_power} and 
 \label{exp4_data_power}
 % Use: \begin{tabular{|lc|} to put table in a box
 \begin{tabular}{lc} \hline
-\textbf{NEAT (K)} & \textbf{Bandwidth (MHz) } \\ \hline
+\textbf{NE$\Delta$ T (K)} & \textbf{Bandwidth (MHz) } \\ \hline
 .139 & .125 \\
 .141 & .250 \\
 .143 & .500 \\

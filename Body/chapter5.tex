@@ -16,7 +16,7 @@ Four experiments are described.  Experiment one verifies our SDR-based radiomete
 
 This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against an analog square-law detector, which is commonly used in traditional radiometers.  To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  
 
-This signal is split using a power divider so that the information will be the same to both devices.  This power divider ideally would divide the signal so that the resulting signal is 3 dB lower and is equal between both ports.  The splitter used in this thesis was tested and verified that it does split the signal with a slight difference between port one and port two.  This difference was measured to be .1 dB which is well within the .3 dB specified for this power splitter.  This allows us to verify the software defined radio with a proven system.  
+This signal is split using a power divider so that the information will be the same to both devices.  This power divider ideally would divide the signal so that the resulting signal is 3 dB lower, plus the insertion loss, and is equal between both ports.  The splitter used in this thesis was tested and verified that it does split the signal with a slight difference between port one and port two.  This difference was measured to be .1 dB which is well within the .3 dB specified for this power splitter.  This allows us to verify the software defined radio with a proven system.  
 
 \subsection{Experimental setup} \label{exp1_setup}
 
@@ -24,7 +24,7 @@ Figure \ref{Exp1_Block} shows a block diagram of the experimental setup.  A matc
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=13cm]{Images/Exp_1_Setup.pdf}
-\isucaption{Block diagram of Experiment 1 setup.  Source: Matthew E. Nelson}
+\isucaption{Block diagram of Experiment 1 setup.}
 \label{Exp1_Block}
 \end{figure}
 }
@@ -33,7 +33,7 @@ The radiometer RF front end provides the amplification needed for our experiment
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/ISU_RF_noted.jpg}
-\isucaption{The radiometer RF front end, with LNAs and band-pass filters used in the experiments.  Source: Matthew E. Nelson}
+\isucaption{The radiometer RF front end, with LNAs and band-pass filters used in the experiments.}
 \label{ISURF}
 \end{figure}
 }
@@ -98,7 +98,7 @@ To use the USB-6009, a fairly simple Lab View program was created to obtain, dis
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/labviewGUI.png}
-\isucaption{A screenshot of the Labview GUI interface.  Source:  Labview}
+\isucaption{A screenshot of the Labview GUI interface.}
 \label{labviewgui}
 \end{figure}
 }
@@ -107,7 +107,7 @@ For rapid development, the National Instruments DAQ assistant was used to quickl
 
 {\begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/labview_diagram.pdf}
-\isucaption{A screenshot of the Labview block diagram.  Source:  Labview}
+\isucaption{A screenshot of the Labview block diagram.}
 \label{labviewblock}
 \end{figure}
 }
