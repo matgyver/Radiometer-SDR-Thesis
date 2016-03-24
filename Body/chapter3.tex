@@ -44,7 +44,7 @@ Figure \ref{trad_radiometer} illustrates how a signal propagates through a radio
 
 A non-physical object that is present in all radiometers is system noise, represented as $T_{N}$.  System noise is noise that is generated from within the radiometer due to thermal agitation.  A radiometer is designed to reduce system noise as much as possible by using low-loss components and amplifiers that are low noise, such as Low Noise Amplifiers (LNAs). 
 
-\subsection{Power Measurement}\label{pwr_measurement}
+\subsection{Power measurement}\label{pwr_measurement}
 The voltage from a radiometer can be expressed as the sum of the noise voltages which the amplitude distribution of which is nearly Gaussian as defined by the central limit theorem.  This results in a voltage mean of zero, but results in the root mean square (rms) value of the voltage to be greater than zero in a band limited sample.  Because our voltage is an RMS value, our power and subsequently our noise power is a RMS value.
 
 As shown in Equation \ref{eq:power_rad_eq}, the power measured by an ideal radiometer is equal to the product of the thermal noise from the source ($T_A$), the power gain ($G$), the bandwidth ($\beta$) of the radiometer, and the Boltzmann constant ($k=1.38 \times 10^{-23} J/K$).
@@ -83,7 +83,7 @@ F=F_1+\frac{F_2-1}{G_1}+\frac{F_3-1}{G_1 G_2}+\frac{F_4-1}{G_1 G_2 G_3}+\cdots +
 
 The key implication is that the first LNA in the cascade contributes the most system noise.  As a consequence, it is critical that the first LNA has the smallest noise factor, while the remaining LNAs provide a majority of the signal power gain.
 
-\subsection{Radiometer Performance Metrics}\label{performance_metrics}
+\subsection{Radiometer performance metrics}\label{performance_metrics}
 
 Two criteria used to determine how well a radiometer performs are: 1) Sensitivity and 2) Stability.  These criteria determine the smallest change in signal noise temperature (i.e. power) the radiometer can detect, and the amount of drift power measurements have over an extended period of time, respectively..
 
@@ -190,7 +190,7 @@ Early SDRs were expensive due to the cost of high speed analog to digital conver
 \section{Software Defined Radio Development Platform} \label{SDR_platform}
 This section discusses the platform used to develop a software defined radio based radiometer.  The hardware and software tools used are off the shelf.  First, the hardware platform will be introduced, followed by the software platform.  
 
-\subsection{Hardware Platform}\label{N200_HW}
+\subsection{Hardware platform}\label{N200_HW}
 The hardware platform selected for this work is the Ettus Research Group N200 SDR shown in Figure \ref{N200}.  The N200 has the following features that made it desirable for our specific application:
 
 \begin{itemize}
@@ -243,7 +243,7 @@ The DBSRX2 has the RF hardware needed to transform the received RF signal into i
 
 These analog I and Q signals are then sent to the analog to digital converter to be digitized.  The IQ signals are transmitted as differential signals to minimize noise.  Once digitized, the digital I-Q values are sent to a FPGA to be processed, and then sent to the PC for software based signal processing.
 
-\subsection{Software Platform} \label{software_platform}
+\subsection{Software platform} \label{software_platform}
 
 There are two pieces of software that are used with the software defined radio:  1) the firmware that is used in the FPGA of the N200, and 2) the software running on the host PC.  
 

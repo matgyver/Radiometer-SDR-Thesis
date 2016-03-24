@@ -21,7 +21,7 @@ This chapter presents the results obtained from the experiments outlined in Chap
 \section{Experiment I - Software Defined Radio Based Radiometer Verification and Calibration} \label{Exp1_results}
 As outlined in Chapter \ref{ch:exp_design}, Section \ref{Exp1}, this experiment verifies the operation of a software defined radio based radiometer.  This is done by performing experiments that are similar to the verification and calibration methods used for a traditional radiometer.  We compare our results to those of a square-law detector receiving the same signal.
 
-\subsection{Data Collected}\label{Exp1_data}
+\subsection{Data collected}\label{Exp1_data}
 
 For this experiment, total power measurements were collected from the software defined radio based radiometer and the square-law detector.  This data is then calibrated using the known physical temperature of the matched load.  Table \ref{exp1_datapoints} shows the values collected during the experiment and is used to calibrate the raw total power measurements.
 
@@ -36,7 +36,7 @@ For this experiment, total power measurements were collected from the software d
 \end{tabular}
 \end{table}
 
-\subsection{Data Analysis}\label{Exp1_analysis}
+\subsection{Data analysis}\label{Exp1_analysis}
 
 To analyze the results, iPython Notebook is used to read our data and generate the graphs used in this thesis.  This tool uses Python along with HTML and Markdown code to generate a virtual notebook for each experiment.  
 
@@ -53,7 +53,7 @@ Figure \ref{SDR_rQ} shows the total power reading versus time.  Figure \ref{SDR_
 \begin{minipage}{\linewidth}
 \lstset{language=Python}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
-a=numpy.array([[rQ_values[0],1.0],[rQ_values[1],1.0]],numpy.float32)
+a=numpy.array([[rQ_val[0],1.0],[rQ_val[1],1.0]],numpy.float32)
 b=numpy.array([temp_values[0],temp_values[1]])
 z=numpy.linalg.solve(a,b)
 \end{lstlisting}
@@ -78,7 +78,7 @@ Now that we have our calibration points, we can re-graph this data as calibrated
 \end{figure}
 
 To filter the data, Python in conjunction with SciPy is used.  For this experiment, we use a low pass filter to smooth out the signal.  The following code applies a Finite Impulse Response (FIR) low pass filter that filters the data.
-\ \\
+\ \\ \ \\
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 from scipy import signal
@@ -115,9 +115,9 @@ Figure \ref{X2_filter} shows our data after being filtered by the low pass filte
 
 We can see in Figure \ref{X2_SDR_Both} that both the software defined radio and the square-law detector match up and this was analyzed to be within 0.002 Kelvin.  This number was determined by taking the difference between the average values of the software defined radio and the square law detector over the same fifteen second period.  This shows that both the square-law detector and the software defined radio agree when properly calibrated.  This verifies that the software defined radio can indeed operate as a total power radiometer and the data we obtain from this setup agrees with an analog and more traditional radiometer.
 
-\section{Experiment II - Evaluation of sensitivity and stability} \label{Exp2_results}
+\section{Experiment II - Evaluation of Sensitivity and Stability} \label{Exp2_results}
 
-\subsection{Data Collected}
+\subsection{Data collected}
 This experiment examines the sensitivity and stability of a SDR-based radiometer.  The data used for the sensitivity is data that was collected to confirm the stability of the radiometer.  This data is the total power data collected from the SDR-based radiometer over a period of approximately five hours, however only a fifteen minute block was used for final analysis.  For both sensitivity and stability, the data is calibrated using Table \ref{exp2_datapoints}.  A graph of the data showing the long duration soak time including indicating when the LN2 boiled out of the vessel is shown in \ref{Stability_graph}.
 
 \begin{figure}[h!tb] \centering
@@ -137,7 +137,7 @@ This experiment examines the sensitivity and stability of a SDR-based radiometer
 \end{tabular}
 \end{table}
  
-\subsection{Data Analysis}\label{Exp2_analysis}
+\subsection{Data analysis}\label{Exp2_analysis}
 
 \emph{Sensitivity.}  Sensitivity for a radiometer is the $NE\Delta T$ that was covered in chapter \ref{ch:background} and is found in Equation \ref{NEAT_EQ}.  The sensitivity can also be measured as the standard deviation of the data that we collect from the software defined radiometer.  
 
@@ -152,7 +152,7 @@ This experiment examines the sensitivity and stability of a SDR-based radiometer
 \end{table}
 
 Python is used to calculate the $NE\Delta T$ using the data from Table \ref{exp2_param}.  Here $T_A$ is the physical temperature of the matched load and $T_N$ is the system noise temperature of the radiometer.  The python code listed below is used to calculate the theoretical $NE\Delta T$.
-\ \\
+\ \\ \ \\
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[frame=single,keywordstyle=\color{blue}]
 tau = 2 # Integration Time
@@ -206,7 +206,7 @@ We can use Python to calculate a second order polynomial to create a line to fit
 
 The addition of an unwanted interfering signal has an adverse effect on how a radiometer operates[\cite{Ellingson}].  This is a growing problem for all radiometers, but is a greater issue for radiometers used in orbiting spacecraft to observe the Earth as they see large areas that could contain interfering signal sources [\cite{DeRooRFI}].  Even though the band we are working in (i.e. 1.4 GHz) is an internationally protected frequency, there have been both intentional and unintentional signal sources in this band detected by current space borne radiometers that have caused interference [\cite{Forte}].
 
-\subsection{Data Collected}
+\subsection{Data collected}
 
 The data collected for Experiment III is the total power values from the SDR-based radiometer and the voltage data from the square-law detector.  These values are calibrated using the data points provided in Table \ref{exp3_datapoints}.  These values differ from the previous tables because the filter is turned on.  This changes the performance of the SDR-based radiometer and results in different rQ values.  The voltages are higher due to the presence of the offending signal.
 
@@ -221,7 +221,7 @@ The data collected for Experiment III is the total power values from the SDR-bas
 \end{tabular}
 \end{table}
 
-\subsection{Data Analysis}
+\subsection{Data analysis}
 
 We begin by looking at what happens to our total power readings when no RFI mitigation is used.  As stated in Section \ref{exp3_setup}, the frequency of the offending signal will not change, but the amplitude will.  This results in clear indications of the total power changing as the amplitude of the offending signal changes.  
 
@@ -281,10 +281,10 @@ The taps value is generated by Python using the filter design program.  For this
 
 A final note on aligning the square-law detector and the software defined radiometer data.  Both systems have a record function and must be started manually by the user.  They also run on separate computers.  Therefore, there is a human error that also gets introduced to the system as well.  This is usually no more than 1 or 2 seconds.  But in this experiment it was noted that there was a slightly longer delay between the two of about 4 seconds.  
 
-\section{Experiment IV - Performance impact of interfering signal mitigation} \label{Exp4_results}
+\section{Experiment IV - Performance Impact of Interfering Signal Mitigation} \label{Exp4_results}
 The goal of this experiment is to examine what affect adding a filter has on the performance of the radiometer.  While we have demonstrated we can filter an offending signal, this comes at a cost.  This experiment examines the impact that filtering out bands has on the measurement of total power and radiometer sensitivity.
 
-\subsection{Data Collected}
+\subsection{Data collected}
 The data collected for this experiment is shown Table \ref{exp4_data_power} and Table \ref{exp4_datapoints}, and the remaining data is generated from Equations \ref{NEAT_FILTER} and \ref{PWR_FILTER}.  This data will be examined next.
 
 \begin{table}[h!tb] \centering
@@ -331,7 +331,7 @@ The data collected for this experiment is shown Table \ref{exp4_data_power} and 
 \end{tabular}
 \end{table}
 
-\subsection{Data Analysis}
+\subsection{Data analysis}
 
 In Experiment IV, we examine the performance of a software defined radiometer when a filter is used.  Recalling the equation for $NE\Delta T$ from Equation \ref{NEAT_EQ}, our sensitivity is a function of the amount of noise from both the antenna ($T_{A}$) and the addition of system noise ($T_{N}$).  Sensitivity is also a function of the radiometer's bandwidth ($\beta$) and integration time ($\tau$).
 
@@ -373,7 +373,7 @@ P_{out}=k (\beta - \beta_{filter})G(T_{A}+T_{N})
 
 To compare this theoretical power to the actual power measured, we collected the rQ values by once again creating different filter sizes and then measuring the rQ values.  These values can be found in Table \ref{exp4_datapoints} and are added as dots to Figure \ref{power_bw}.  This also shows a very good correlation between the expected total power received and the measured total power received for Experiment IV.
 
-\subsection{Usage Scenario}
+\subsection{Usage scenario}
 %Move this section to 6.4.3 and edit
 \emph{Application with Soil Moisture Readings}.  A common application of radiometers is in the measurement of soil moisture.  All materials naturally emit RF energy due to the random excitation by the electrons in the object.  The amount of noise that gets generated varies by temperature and the amount that reaches the antenna varies by the amount of moisture in the soil.  If we calibrate the radiometer to two known soil conditions, then we can measure the various levels of soil moisture in the soil.  We will assume the soil is at a constant temperature during the observation.  We will look at the percentage of moisture in the soil, which will vary from zero percent or dry soil to one hundred percent or very wet soil.  The drier the soil, the more thermal noise we receive and the "warmer" the noise temperature.  Wet soil on the other hand attenuates the thermal noise and shows up as a "cooler" noise temperature.  
 
@@ -405,7 +405,7 @@ As discussed in Section \ref{Exp4_results}, the performance (i.e. sensitivity) o
 \section{Advantages of a Software Defined Radio Based Radiometer}\label{SDR_benefits}
 A study was conducted on what benefits a software defined radio based radiometer would have over a more traditional radiometer.  We focused on three main areas; cost, weight and size, and the value a SDR-based radiometer can add over traditional radiometers.
 
-\subsection{Cost Benefits}
+\subsection{Cost benefits}
 Software defined radios have become more commonplace in recent years and this has generated a number of Commercial Off The Shelf (COTS) solutions.  A COTS solution is often a lower cost solution due to the mass manufacturing that takes place.  This has driven the cost of many SDRs to under one thousand dollars, while still having excellent performance characteristics.  The N200 SDR purchased for this research cost fifteen hundred dollars and the daughter-board approximately cost one hundred and fifty dollars.  Other software defined radios however have come out on the market since then.  Ettus, for example, has some that are below one thousand dollars and the author has also obtained the HackRF One SDR that now sells for three hundred dollars.  The main difference between software defined radios on the market is in their resolution and the bandwidth they support.
 
 \begin{table}[h!tb] \centering
@@ -466,7 +466,7 @@ Second, we are able to have an agile system that is able to adapt to changing co
 \section{Drawbacks of a SDR-based Radiometer}
 Although we have outlined a number of advantages of using a COTS SDR-based Radiometer and how a SDR can add additional value to the radiometer system, there are some disadvantages to a SDR-based Radiometer.
 
-\subsection{Power Consumption}
+\subsection{Power consumption}
 One of the largest drawbacks to a SDR-based radiometer can be in the power consumption of the SDR.  With the move to perform functions such as power detection and filtering we now require additional computational power to perform these tasks.  With those computational cycles additional power is now required.  The use of FPGAs and SoC can help to minimize these power concerns as they are more efficient than using a PC.  
 
 Power and CPU requirements also increase as we add additional functionality such as filtering an offending signal.  While these additions may not require additional hardware, it can require additional processor and memory requirements.  An increase and processing requirements will also increase power requirements and can also add additional requirements in cooling.

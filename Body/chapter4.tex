@@ -90,8 +90,6 @@ A traditional radiometer will use an integrator, which is equivalent to a low pa
 
 To understand how a low pass filter works, we can look at the step response to this filter.  Figure \ref{rc_response} shows the response in the top left and top right graph.  We can now compare this analog low pass filter to our digital filter that will be discussed in more detail.  
 
-%To implement this low pass filter as a digital filter, a single pole Infinite Impulse Response (IIR) filter is used.  We can examine how a IIR filter is identical to a RC filter by looking at the step response of this filter as we did with the RC filter step response.
-
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=17cm]{Experiments/Exp1/x2_filter.pdf}
@@ -169,10 +167,6 @@ RC=\frac{\sqrt{3}}{2\pi f_c}
 The $RC$ value is also referred to as the time constant of the circuit and we do not need to find the individual R and C values.  An example of how we can find the coefficients of our IIR filter, given a desired cutoff frequency of $f_c$, is shown next.  
 
 Assume, for a low pass filter, we want a cutoff frequency ($f_c$) of 1000 Hz.  Given this and using Equation \ref{RC_fc} we can determine our time constant to be 2.757 x $10^{-4}$ seconds.  If our sample rate is 1 MHz, then our $T$ value is 1 x $10^{-6}$ second.  Plugging these values into Equation \ref{final_IIR_RC} results in the coefficient $a_0 = 0.0036$ and $b_1=0.9964$.
-
-%Figure \ref{rc_response} shows that both the RC filter and the IIR filter respond identically to the same input, in this case a step function.  We can determine our coefficients of our single pole recursive filter by looking at the number of samples it takes to decay to 36.8\% of the final value as you do with an analog RC filter.  Therefore our single pole IIR filter functions identically to a RC low pass filter.  
-
-%------------------------------------------------------
 
 
 GNURadio includes a program that allows us to specify our filter, and it generates the required coefficients and taps.  Chapter \ref{ch:exp_design} goes into more depth on this program.

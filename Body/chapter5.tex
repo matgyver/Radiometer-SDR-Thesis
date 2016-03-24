@@ -55,7 +55,7 @@ The following hardware was used and has also been marked on Figure \ref{Exp1_Blo
 \end{enumerate}
 \end{enumerate}
 
-\subsection{Data Collection}\label{exp1_data}
+\subsection{Data collection}\label{exp1_data}
 
 Two sets of data are produced with this experiment.  First, data is generated from the software defined radio using GNURadio.  Second, data is generated from a data acquisition device (USB-6009) that is attached to the square-law detector.  Data from each is stored to a local computer running the appropriate software.
 
@@ -112,14 +112,14 @@ For rapid development, the National Instruments DAQ assistant was used to quickl
 \end{figure}
 }
 
-\section{Experiment II - Sensitivity and stability evaluation}\label{Exp2}
+\section{Experiment II - Sensitivity and Stability Evaluation}\label{Exp2}
 
 In this experiment, we evaluate the sensitivity and stability of a SDR-based radiometer.    
 
 \subsection{Experimental setup} \label{exp2_setup}
 The experimental setup used for experiment two is the same as outlined in section \ref{exp1_setup}.  
 
-\subsection{Data Collection}
+\subsection{Data collection}
 The data collected for this experiment were the total power measurements made from the SDR-based radiometer.  These measurements uses the same method as outlined in section \ref{exp1_data}.  A longer soak time was used for this experiment where the matched load was in LN2 for approximately five hours before the LN2 boiled out.  
 
 \section{Experiment III - Interfering Signal Mitigation}\label{Exp3}
@@ -153,11 +153,11 @@ As stated, the quality of this SDR is lower than the Ettus Research N200 SDR.  A
 
 The HackRF generates a sinusoidal wave at a fixed frequency of 1.406 GHz and can be seen in Figure \ref{spectrum_interfering}.  In this experiment, the signal amplitude is changed at different times during the experiment.  Because the signal from this device is relatively large, 26 dB of attenuation is inserted between the HackRF and the first LNA to avoid over-powering the LNAs.  The amplitude is controlled from a program called \emph{osmocom\_siggen}.  Osmocom was originally developed to communicate with OsmocomSDR hardware.  However, it has been expanded to include the HackRF and Ettus Research hardware.  The \emph{osmocom\_siggen} program provides a GUI to set the frequency, amplitude and type of the signal generated.  
 
-\subsection{Data Collection}
+\subsection{Data collection}
 
 The data collected for this experiment includes both the total power measurements from the SDR-based radiometer and the square-law data.  Section \ref{exp1_data} explains in detail the setup and configuration of the equipment used to collect this data.
 
-\section{Experiment IV - Performance impact of interfering signal mitigation}\label{Exp4}
+\section{Experiment IV - Performance Impact of Interfering Signal Mitigation}\label{Exp4}
 
 In this experiment we examine the impact of filtering an interfering signal on the sensitivity of the SDR-based radiometer and how reducing our overall bandwidth affects the total power received by the radiometer.
 
@@ -165,7 +165,7 @@ In this experiment we examine the impact of filtering an interfering signal on t
 
 In this experiment, we set up our experiment as outlined in Section \ref{Exp3}.
 
-\subsection{Data Collection}
+\subsection{Data collection}
 
 The data collected for this experiment is the total power reading measurements obtained from the software defined radio.  The data collection method is identical to the method used in Section \ref{exp1_data}.
 
