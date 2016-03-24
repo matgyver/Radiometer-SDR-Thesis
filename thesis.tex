@@ -2,8 +2,9 @@
 %Thesis by Matthew E. Nelson
 %In part for fullfillment of Masters of Science in Computer Engineering
 
+%-------Packages and document class------%
 % ISUTemplate file for a standard thesis
-\documentclass[11pt]{isuthesis}
+\documentclass[12pt]{isuthesis}
 \usepackage[pdftex]{graphicx}
 \usepackage{pdfpages}
 \usepackage{amsmath}
@@ -24,31 +25,44 @@
 \usepackage{natbib}
 \bibliographystyle{apa}
 %\includeonly{titletoc,chapter1}
+
 %Optional Package to add PDF bookmarks and hypertext links
 \usepackage[pdftex,hypertexnames=false,linktocpage=true]{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue,anchorcolor=blue,citecolor=blue,filecolor=blue,urlcolor=blue,bookmarksnumbered=true,pdfview=FitB}
+%-------------------------------------------------------%
+   
 \begin{document}
 \DeclareGraphicsExtensions{.jpg,.pdf,.mps,.png}
+
+%REQUIRED - Titlepage
 \include{Preface/titlepage}
+
 % Optional thesis dedication
 \include{Preface/dedication}
-% Table of Contents, List of Tables and List of Figures
+
+%Optional - List of Figures (REQUIRED if you have figures)
+\cleardoublepage \phantomsection \addcontentsline{toc}{chapter}{LIST OF FIGURES}
+\listoffigures
+% REQUIRED Table of Contents
 \pdfbookmark[1]{TABLE OF CONTENTS}{table}
 \tableofcontents
 \addtocontents{toc}{\def\protect\@chapapp{}} \cleardoublepage \phantomsection
+%Optional - List of Tables (REQUIRED if you have tables)
 \addcontentsline{toc}{chapter}{LIST OF TABLES}
 \listoftables
-\cleardoublepage \phantomsection \addcontentsline{toc}{chapter}{LIST OF FIGURES}
-\listoffigures
 % Comment out the next line if NOT using chaptertitle
 \addtocontents{toc}{\def\protect\@chapapp{CHAPTER\ }}
+
 %Optional Acknowledgements
 \cleardoublepage \phantomsection
 \include{Preface/acknowl}
+
 %Optional thesis abstract
 \cleardoublepage \phantomsection
 \include{Preface/abstract}
 \newpage
+
+% REQUIRED - Thesis chpaters
 \pagenumbering{arabic}
 \include{Body/chapter1}
 \include{Body/chapter2}
@@ -57,9 +71,15 @@
 \include{Body/chapter5}
 \include{Body/chapter6}
 \include{Body/chapter7}
+
+%REQUIRED - Bibliography
+\include{Reference/bibtex}
+
+%Optional - Apendix
 \include{Appendix/appendix1}
+
 %\include{Appendix/appendix2}
 %\include{Appendix/appendix3}
-\include{Reference/bibtex}
+%\include{Reference/bibtex}
 %\include{Reference/biblio}
 \end{document}

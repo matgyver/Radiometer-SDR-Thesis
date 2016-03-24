@@ -713,7 +713,7 @@ For the Major Program\fi\fi}
    \vskip 14pt                    % Changed from 11pt to more evenly space page (JAS11)
    by \\
    \vskip 14pt                   % Changed from 11pt to more evenly space page (JAS11)
-   \@author
+   \textbf{\@author}
    \vskip 41pt                  % Changed from 30pt to more evenly space page (JAS11)
    A \@format\ submitted to \@submit\ \\
    in partial fulfillment of the requirements for the degree of\\
