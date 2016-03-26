@@ -40,13 +40,15 @@
 % Optional thesis dedication
 \include{Preface/dedication}
 
-%Optional - List of Figures (REQUIRED if you have figures)
-\cleardoublepage \phantomsection \addcontentsline{toc}{chapter}{LIST OF FIGURES}
-\listoffigures
 % REQUIRED Table of Contents
 \pdfbookmark[1]{TABLE OF CONTENTS}{table}
 \tableofcontents
 \addtocontents{toc}{\def\protect\@chapapp{}} \cleardoublepage \phantomsection
+
+%Optional - List of Figures (REQUIRED if you have figures)
+\cleardoublepage \phantomsection \addcontentsline{toc}{chapter}{LIST OF FIGURES}
+\listoffigures
+
 %Optional - List of Tables (REQUIRED if you have tables)
 \addcontentsline{toc}{chapter}{LIST OF TABLES}
 \listoftables

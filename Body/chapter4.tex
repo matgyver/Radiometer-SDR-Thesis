@@ -10,8 +10,6 @@ This section discusses the hardware and software requirements used to drive the 
 
 \emph{Hardware Requirements.}  The capabilities of existing traditional radiometers were the primary driving force in setting the requirements of our hardware development platform.  Dr. Brian Hornbuckle from the Electrical and Computer Engineering and Agronomy department at Iowa State University was consulted with respect to key specifications of his radiometer.  Additionally, the specifications of other radiometers were examined. 
 
-Table \ref{rad_performance} summarizes the specification of three parameters that were decided upon for selecting our hardware development platform, based on our investigation.  This lead to the selection of the N200 software defined radio platform with a DBSRX2 daughter board from Ettus Research as our hardware platform.  Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
-
 \begin{table}[h!tb] \centering
 \isucaption{Required Radiometer performance}
 \label{rad_performance}
@@ -23,6 +21,8 @@ Operational frequency & 1400 - 1420 & MHz \\
 $NE\Delta T$ (sensitivity) & 1 & Kelvin \\ \hline
 \end{tabular}
 \end{table}
+
+Table \ref{rad_performance} summarizes the specification of three parameters that were decided upon for selecting our hardware development platform, based on our investigation.  This lead to the selection of the N200 software defined radio platform with a DBSRX2 daughter board from Ettus Research as our hardware platform.  Section \ref{SDR_platform} provides more in depth information on the hardware used and why it was selected.
 
 \emph{Software Requirements.}  Since an objective of this work was to help make radiometers more widely accessible to the general research and education community, a requirement of the development software was ease of use.  Additionally, the user interfaces developed with these software tools needed to be easy to use, while providing sufficient computing efficiency for the signal processing required for radiometry.
 

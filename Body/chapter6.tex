@@ -183,6 +183,7 @@ print stdsdr
 \isucaption{Graph of the calibrated total power with expected and actual sensitivity.}
 \label{sensitivity_exp_real}
 \end{figure}
+\ \\
 
 While .08 Kelvin is lower than the calculated sensitivity, it is still quite acceptable.  As discussed in chapter \ref{ch:implementation} and shown in Table \ref{rad_performance}, our target $NE\Delta T$ is one Kelvin or less.  Therefore our actual performance of .08 Kelvin still meets our radiometer requirement.
 
@@ -474,7 +475,7 @@ Power and CPU requirements also increase as we add additional functionality such
 \subsection{Bandwidth constraints}
 While SDR technology has advanced, bandwidth is still a constraint that affects SDRs and in turn a SDR-based Radiometer.  Bandwidth plays a critical role in a radiometer's sensitivity as explained in this thesis, therefore the fact that many SDRs are limited in bandwidth does create a disadvantage.  In many cases, this bottleneck takes place in both the transport and processing of large bandwidth systems.  This also relates to the power consumption disadvantage since larger bandwidth also means requiring additional computational cycles.
 
-In contrast, a square-law detector usually has a very large bandwidth, as much as one gigahertz, and is why we usually need to filter to the frequency band of interest.  
+%In contrast, a square-law detector usually has a very large bandwidth, as much as one gigahertz, and is why we usually need to filter to the frequency band of interest.  
 
 %----------------------------------------------------------
 % End of Chapter 6.  Anything below this is extra information
