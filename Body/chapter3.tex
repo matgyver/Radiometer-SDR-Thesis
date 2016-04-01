@@ -63,6 +63,8 @@ Power gain ($G$) and bandwidth ($\beta$) are important design parameters of a ra
 
 The bandwidth of the source signal is typically wide (large) to maximize the sensitivity of the radiometer.  The two primary limiting factors to bandwidth are: 1) hardware limitations (e.g. LNA operating limits), and 2) unwanted signals located at a number of frequencies (e.g. radio communication signals).
 
+\ \\
+
 \emph{Low Noise Amplification.}  The method used by most radiometers to mitigate the system noise contributed during signal amplification is daisy chaining (i.e. cascading) devices called Low Noise Amplifiers (LNAs).  The total amount of amplification we can expect from $n$ LNAs that are cascaded is the sum of the power gain of each LNA shown in equation \ref{gain_sum} where $G_n$ is the power gain value for the nth amplifier.
 
 \begin{equation}\label{gain_sum}
@@ -170,7 +172,6 @@ A Software Defined Radio (SDR) is a device that digitizes a received RF signal a
 \label{ideal_sdr}
 \end{figure}
 }
-\ \\
 
 A SDR can perform certain hardware functions in software (e.g. filtering), which provides flexibility over hardware solutions.  Changes can be made by simply uploading new software or firmware to the system.  This has a cost benefit as certain hardware components are no longer needed, and changes made in software do not require hardware to be added, removed or modified.
 
@@ -179,10 +180,11 @@ A more realistic software defined radio is shown in Figure \ref{prac_sdr}, where
 {\begin{figure}[h!tb] 
 \centering
 \includegraphics[width=\textwidth]{Images/SDR_Prac_block.pdf}
-\isucaption{A typical software defined radio}
+\isucaption{A block diagram of a typical software defined radio}
 \label{prac_sdr}
 \end{figure}
 }
+\ \\ \ \\
 
 \emph{Software Defined Radio Applications.}  Software Defined Radios (SDRs) can be used for a variety of applications, but have been primarily used in the area of communications.  Some examples of these applications include:  mobile communications, wireless local area networks, personal area networks, and digital broadcast.  They appeal to applications where having the ability to change a modulation scheme or filter on the fly is desirable.  In these respects, SDRs often outperform traditional hardware-only radios because of their ability to easily change their operations through software.  
 
@@ -192,15 +194,13 @@ Early SDRs were expensive due to the cost of high speed analog to digital conver
 This section discusses the platform used to develop a software defined radio based radiometer.  The hardware and software tools used are off the shelf.  First, the hardware platform will be introduced, followed by the software platform.  
 
 \subsection{Hardware platform}\label{N200_HW}
-The hardware platform selected for this work is the Ettus Research Group N200 SDR shown in Figure \ref{N200}.  The N200 has the following features that made it desirable for our specific application:
+The hardware platform selected for this work is the Ettus Research Group N200 SDR shown in Figure \ref{N200}.  Its flexible architecture and ability to support a large bandwidth made the N200 an ideal hardware platform for software defined radio based radiometer development.  The N200 has the following features that made it desirable for our specific application:
 
 \begin{itemize}
 \item Dual 14-bit ADC,
 \item 20 MHz bandwidth per channel,
 \item Modular daughter-board system for RF front end.
 \end{itemize}
-
-Its flexible architecture and ability to support a large bandwidth made the N200 an ideal hardware platform for software defined radio based radiometer development.
 
 {\begin{figure}[h!tb] 
 \centering
