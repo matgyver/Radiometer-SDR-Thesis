@@ -69,7 +69,9 @@ Now that we have our calibration points, we can re-graph this data as calibrated
 \label{SDR_Calibrated}
 \end{figure}
 
-\emph{Square Law Detector Data.}  Now that we have looked at the software defined radio data, we want to examine the square-law detector data and then compare the two.  The square-law detector gives us power information as a voltage.  In order to compare the square-law detector to the SDR data we will also calibrate it as a noise temperature.  We can do that using the same method as the SDR and calibrate the voltages to the known temperature references.  It can be see in Figure \ref{X2_Raw} that the data from the square-law detector is very noisy.  Therefore, we use a filter to smooth out the data.
+\emph{Square Law Detector Data.}  Now that we have looked at the software defined radio data, we want to examine the square-law detector data and then compare the two.  The square-law detector gives us power information as a voltage.  This voltage corresponds to the received power by the square-law detector
+
+In order to compare the square-law detector to the SDR data we will also calibrate it as a noise temperature.  We can do that using the same method as the SDR and calibrate the voltages to the known temperature references.  It can be see in Figure \ref{X2_Raw} that the data from the square-law detector is very noisy.  Therefore, we use a filter to smooth out the data.
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Experiments/Exp1/noisy_voltage.pdf}
@@ -366,7 +368,11 @@ Finally a line is added to Figure \ref{neat_bw} to show a possible limit of when
 
 We now look at the relationship of the total power received as the bandwidth decreases.  Figure \ref{power_bw} shows both the measured total power received and the expected total power received as the bandwidth of the filter increases.
 
-The total power is calculated from Equation \ref{eq:final_power} and is based on the system noise ($T_N$), the antenna ($T_A$), the bandwidth ($\beta$) and the power gain ($G$) of the amplifiers used.  Our power gain and noise temperatures are fixed, and in this experiment we use a system gain of 30 dB.  This represents the power gain that we see with the three LNAs used minus any losses or attenuation placed in the RF chain.  What changes in this experiment is the amount of bandwidth.  Again, we can modify Equation \ref{eq:final_power} by subtracting the filter bandwidth ($\beta_{filter}$) from the total bandwidth available and is shown in Equation \ref{PWR_FILTER}.
+The total power is calculated from Equation \ref{eq:final_power} and is based on the system noise ($T_N$), the antenna ($T_A$), the bandwidth ($\beta$) and the power gain ($G$) of the amplifiers used.  Our power gain and noise temperatures are fixed, and in this experiment we use a system gain of 30 dB.  This represents the power gain that we see with the three LNAs used minus any losses or attenuation placed in the RF chain.  
+
+\ \\
+
+The change in this experiment is the amount of bandwidth seen by the SDR-based radiometer.  Again, we can modify Equation \ref{eq:final_power} by subtracting the filter bandwidth ($\beta_{filter}$) from the total bandwidth available and this is shown in Equation \ref{PWR_FILTER}.
 
 \begin{equation}\label{PWR_FILTER}
 P_{out}=k (\beta - \beta_{filter})G(T_{A}+T_{N})
@@ -422,7 +428,7 @@ DBSRX2 Daughter-board & 1 & \$152 \\
 GNURadio & 1 & \$0 \\ \hline
 Total & & \$1847 \\ \hline
 \textbf{ISU Radiometer} \\ \hline
-LNA, FPGA, ADC, Microcontroller and power supplies & 1 & \$10,000\tablefootnote{Approximate purchase price in 2005} \\ \hline
+LNA, FPGA, ADC, Microcontroller and power supplies & 1 & \$10,000 \\ \hline
 \textbf{Commercial Off the Shelf Unit}\\ \hline
 Spectracyber 1420 MHz Hydrogen Line Spectrometer & 1 & \$2,650 \\ \hline
 
@@ -462,7 +468,7 @@ Size is another benefit, since semiconductor technology has continued to shrink 
 
 A SDR-based radiometer adds additional value for two reasons.  One, it is able to work with both frequency and magnitude information, where a traditional radiometer does not.  This allows for additional analysis on the signal and can help identify issues such as an interfering signal, which was demonstrated in this thesis.  
 
-Second, we are able to have an agile system that is able to adapt to changing conditions with very little or no change to hardware.  Different types of radiometers can be implemented such as a Dicke radiometer, dual polarization radiometer, or a radiometer that can perform Stokes parameters.  In addition, since we have both frequency and power information, we can create a system that is able to adapt to changing conditions, such as dealing with an interfering signal.  
+Second, we are able to have an agile system that is able to adapt to changing conditions with very little or no change to hardware.  Different types of radiometers can be implemented such as a Dicke radiometer, dual polarization radiometer, or a radiometer that can perform Stokes parameters.  It is also possible to implement new types of radiometers that have not been developed yet.  Finally, since we have both frequency and power information, we can create a system that is able to adapt to changing conditions, such as dealing with an interfering signal.  
 
 \section{Drawbacks of a SDR-based Radiometer}
 Although we have outlined a number of advantages of using a COTS SDR-based Radiometer and how a SDR can add additional value to the radiometer system, there are some disadvantages to a SDR-based Radiometer.

@@ -14,9 +14,11 @@ Four experiments are described.  Experiment one verifies our SDR-based radiomete
 %What type of data will you collect?
 %What is the experimental setup?
 
-This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against an analog square-law detector, which is commonly used in traditional radiometers.  To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  
+This experiment is designed to verify our SDR-based radiometer functions as expected.  Its behavior is compared against an analog square-law detector, which is commonly used in traditional radiometers.  
 
-This signal is split using a power divider so that the information will be the same to both devices.  This power divider ideally would divide the signal so that the resulting signal is 3 dB lower, plus the insertion loss, and is equal between both ports.  The splitter used in this thesis was tested and verified that it does split the signal with a slight difference between port one and port two.  This difference was measured to be .1 dB which is well within the .3 dB specified for this power splitter.  This allows us to verify the software defined radio with a proven system.  
+\ \\
+
+To verify the results of the information that the software defined radio is obtaining a square-law detector is used to measure the power of the incoming signal in parallel to the SDR-based radiometer.  This signal is split using a power divider so that the information will be the same to both devices.  This power divider ideally would divide the signal so that the resulting signal is 3 dB lower, plus the insertion loss, and is equal between both ports.  The splitter used in this thesis was tested and verified that it does split the signal with a slight difference between port one and port two.  This difference was measured to be .1 dB which is well within the .3 dB specified for this power splitter.  This allows us to verify the software defined radio with a proven system.  
 
 \subsection{Experimental setup} \label{exp1_setup}
 
@@ -128,7 +130,9 @@ In this experiment, we generate an interfering signal and then mitigate the sign
 
 This experiment was designed to determine whether or not a SDR-based radiometer can cope with an interfering signal.  This test injects a known signal at 1.406 GHz to interfere with the normal operation of the radiometer.  The amplitude of this signal is then incremented and decremented at various times during the test.  This was done to reflect a possible real world scenario and to make it easy to identify the interfering signal with the square-law detector, which only measures power.  
 
-In order to mitigate the offending signal, a filter was designed to remove the offending signal.  The design of the filter used a program that is part of the GNURadio software package, called the GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of this tool when designing the band-reject filter for this application.  This tool generates filter values (also called taps) that GNURadio will use for defining the filter.  The GUI program, shown in Figure \ref{GRC_Filter_DSN}, allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our SDR-based radiometer.  
+In order to mitigate the offending signal, a filter was designed to remove the offending signal.  The design of the filter used a program that is part of the GNURadio software package, called the GNU Radio Filter Design tool.  Figure \ref{GRC_Filter_DSN} shows a screen shot of this tool when designing the band-reject filter for this application.  
+
+This tool generates filter values (also called taps) that GNURadio will use for defining the filter.  The GUI program, shown in Figure \ref{GRC_Filter_DSN}, allows us to interactively create a filter.  Because this tool is part of the GNURadio package, it also includes a command line interface to the program.  This allows us to call the program from within GNURadio to integrate this functionality into our SDR-based radiometer.  
 
 \begin{figure}[h!tb] \centering
 \includegraphics[width=\textwidth]{Images/GNURadio_Filter_dsn.png}
@@ -151,7 +155,9 @@ As stated, the quality of this SDR is lower than the Ettus Research N200 SDR.  A
 \label{HackRF}
 \end{figure} 
 
-The HackRF generates a sinusoidal wave at a fixed frequency of 1.406 GHz and can be seen in Figure \ref{spectrum_interfering}.  In this experiment, the signal amplitude is changed at different times during the experiment.  Because the signal from this device is relatively large, 26 dB of attenuation is inserted between the HackRF and the first LNA to avoid over-powering the LNAs.  The amplitude is controlled from a program called \emph{osmocom\_siggen}.  Osmocom was originally developed to communicate with OsmocomSDR hardware.  However, it has been expanded to include the HackRF and Ettus Research hardware.  The \emph{osmocom\_siggen} program provides a GUI to set the frequency, amplitude and type of the signal generated.  
+The HackRF generates a sinusoidal wave at a fixed frequency of 1.406 GHz and can be seen in Figure \ref{spectrum_interfering}.  In this experiment, the signal amplitude is changed at different times during the experiment.  Because the signal from this device is relatively large, 26 dB of attenuation is inserted between the HackRF and the first LNA to avoid over-powering the LNAs.  
+
+The amplitude is controlled from a program called \emph{osmocom\_siggen}.  Osmocom was originally developed to communicate with OsmocomSDR hardware.  However, it has been expanded to include the HackRF and Ettus Research hardware.  The \emph{osmocom\_siggen} program provides a GUI to set the frequency, amplitude and type of the signal generated.  
 
 \subsection{Data collection}
 
