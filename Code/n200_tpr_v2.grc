@@ -1,17 +1,17 @@
 options:
   parameters:
-    author: Matthew E Nelson
+    author: Matthew Nelson
     catch_exceptions: 'True'
-    category: Custom
+    category: '[GRC Hier Blocks]'
     cmake_opt: ''
     comment: ''
-    copyright: ''
-    description: Total power radiometer connecting to a N200 SDR
+    copyright: 2016-2021
+    description: Implementation of a Software Defined Radiometer
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: N200_TPR
+    id: N200_TPR_2
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -22,12 +22,12 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: Total Power Radiometer - N200
+    title: N200 TPR V2
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1, 1]
+    coordinate: [8, 8]
     rotation: 0
     state: enabled
 
@@ -59,7 +59,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [672, 20.0]
+    coordinate: [800, 40.0]
     rotation: 0
     state: true
 - name: add_noise
@@ -89,9 +89,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [960, 212.0]
+    coordinate: [2344, 584.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: calib_1
   id: variable_qtgui_entry
   parameters:
@@ -104,7 +104,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [976, 20.0]
+    coordinate: [1104, 28.0]
     rotation: 0
     state: true
 - name: calib_2
@@ -119,7 +119,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [976, 108.0]
+    coordinate: [1104, 124.0]
+    rotation: 0
+    state: true
+- name: clock
+  id: variable
+  parameters:
+    comment: ''
+    value: 100e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1920, 112.0]
     rotation: 0
     state: true
 - name: dc_gain
@@ -144,12 +156,12 @@ blocks:
     orient: Qt.QHBoxLayout
     type: int
     value: '1'
-    widget: combo_box
+    widget: radio_buttons
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1320, 24.0]
+    coordinate: [1456, 40.0]
     rotation: 0
     state: true
 - name: det_rate
@@ -161,9 +173,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 84.0]
+    coordinate: [368, 100.0]
     rotation: 0
     state: enabled
+- name: devid
+  id: variable
+  parameters:
+    comment: ''
+    value: '"addr=192.168.10.2"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2200, 176.0]
+    rotation: 0
+    state: true
 - name: fftrate
   id: variable
   parameters:
@@ -173,9 +197,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [609, 1019]
+    coordinate: [736, 1028.0]
     rotation: 0
     state: enabled
+- name: fftsize
+  id: variable
+  parameters:
+    comment: ''
+    value: '8192'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2168, 320.0]
+    rotation: 0
+    state: true
 - name: file_rate
   id: variable
   parameters:
@@ -185,7 +221,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 84.0]
+    coordinate: [560, 100.0]
     rotation: 0
     state: enabled
 - name: freq
@@ -200,7 +236,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 20.0]
+    coordinate: [960, 28.0]
+    rotation: 0
+    state: true
+- name: frequency
+  id: variable
+  parameters:
+    comment: ''
+    value: 1.4125e9
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1896, 204.0]
     rotation: 0
     state: true
 - name: gain
@@ -210,7 +258,7 @@ blocks:
     gui_hint: ''
     label: RF Gain (dB)
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: Qt.Horizontal
     rangeType: float
     start: '0'
     step: '1'
@@ -221,17 +269,17 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1624, 292.0]
+    coordinate: [1256, 172.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: integ
   id: variable_qtgui_range
   parameters:
     comment: ''
     gui_hint: ''
-    label: Integration time (sec)
+    label: ''
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: Qt.Horizontal
     rangeType: float
     start: '1'
     step: '.5'
@@ -242,7 +290,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1456, 12.0]
+    coordinate: [1584, 20.0]
+    rotation: 0
+    state: disabled
+- name: integ
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2160, 88.0]
     rotation: 0
     state: true
 - name: noise_amplitude
@@ -252,20 +312,20 @@ blocks:
     gui_hint: ''
     label: Noise Amplitutde
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: Qt.Horizontal
     rangeType: float
     start: '0.01'
-    step: '100'
-    stop: '1'
-    value: '0.02'
+    step: '.01'
+    stop: '2'
+    value: '1'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 212.0]
+    coordinate: [960, 228.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: prefix
   id: variable
   parameters:
@@ -275,7 +335,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 84.0]
+    coordinate: [280, 100.0]
     rotation: 0
     state: enabled
 - name: rec_button_iq
@@ -292,9 +352,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [328, 292.0]
+    coordinate: [2360, 340.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: rec_button_tpr
   id: variable_qtgui_push_button
   parameters:
@@ -309,9 +369,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1768, 252.0]
+    coordinate: [2352, 460.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: recfile_kelvin
   id: variable
   parameters:
@@ -321,7 +381,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1408, 1083]
+    coordinate: [1536, 1092.0]
     rotation: 0
     state: enabled
 - name: recfile_tpr
@@ -333,10 +393,22 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [172, 192]
+    coordinate: [112, 164.0]
     rotation: 0
     state: enabled
 - name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 164.0]
+    rotation: 0
+    state: enabled
+- name: samp_rate_0
   id: variable
   parameters:
     comment: ''
@@ -345,7 +417,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [160, 84.0]
+    coordinate: [168, 68.0]
     rotation: 0
     state: enabled
 - name: scope_rate
@@ -357,7 +429,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [392, 84.0]
+    coordinate: [456, 100.0]
     rotation: 0
     state: enabled
 - name: spavg
@@ -365,22 +437,22 @@ blocks:
   parameters:
     comment: ''
     gui_hint: ''
-    label: Spectral Averaging
+    label: '"Spectral Averaging"'
     min_len: '200'
-    orient: QtCore.Qt.Horizontal
+    orient: Qt.Horizontal
     rangeType: float
     start: '1'
     step: '1'
     stop: '20'
     value: '5'
-    widget: counter_slider
+    widget: dial
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1120, 20.0]
+    coordinate: [1248, 36.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: spec_data_fifo
   id: variable
   parameters:
@@ -390,9 +462,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [791, 1005]
+    coordinate: [928, 1012.0]
     rotation: 0
     state: enabled
+- name: subdev
+  id: variable
+  parameters:
+    comment: ''
+    value: '"A:0"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2112, 424.0]
+    rotation: 0
+    state: true
 - name: text_Device_addr
   id: variable_qtgui_label
   parameters:
@@ -406,7 +490,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 4.0]
+    coordinate: [656, 12.0]
     rotation: 0
     state: true
 - name: text_USRP_Clock
@@ -422,7 +506,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [160, 4.0]
+    coordinate: [288, 12.0]
     rotation: 0
     state: true
 - name: text_deviceID
@@ -438,7 +522,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [424, 4.0]
+    coordinate: [560, 12.0]
     rotation: 0
     state: true
 - name: text_samp_rate
@@ -454,7 +538,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [280, 4.0]
+    coordinate: [416, 12.0]
     rotation: 0
     state: true
 - name: TPR_0
@@ -472,7 +556,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 492.0]
+    coordinate: [384, 508.0]
     rotation: 0
     state: enabled
 - name: analog_noise_source_x_0
@@ -480,7 +564,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '1'
+    amp: noise_amplitude
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -491,7 +575,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 924.0]
+    coordinate: [16, 452.0]
     rotation: 0
     state: true
 - name: blocks_add_const_vxx_1
@@ -509,7 +593,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1208, 875]
+    coordinate: [1344, 892.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0
@@ -526,7 +610,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [656, 643]
+    coordinate: [784, 652.0]
     rotation: 0
     state: enabled
 - name: blocks_complex_to_real_0
@@ -542,7 +626,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [256, 648]
+    coordinate: [384, 672.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_0
@@ -560,7 +644,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1424, 1003]
+    coordinate: [1552, 996.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_1
@@ -578,7 +662,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 1124.0]
+    coordinate: [496, 1132.0]
     rotation: 0
     state: disabled
 - name: blocks_file_sink_4
@@ -596,7 +680,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1448, 339]
+    coordinate: [1064, 396.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_5
@@ -614,7 +698,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [812, 1067]
+    coordinate: [944, 1076.0]
     rotation: 0
     state: enabled
 - name: blocks_keep_one_in_n_1
@@ -632,7 +716,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 467]
+    coordinate: [904, 528.0]
     rotation: 0
     state: enabled
 - name: blocks_keep_one_in_n_3
@@ -650,7 +734,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [608, 1083]
+    coordinate: [736, 1092.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0
@@ -668,7 +752,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [472, 515]
+    coordinate: [608, 524.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_1
@@ -686,7 +770,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1016, 875]
+    coordinate: [1152, 892.0]
     rotation: 0
     state: enabled
 - name: blocks_mute_xx_0
@@ -703,7 +787,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [232, 1128.0]
+    coordinate: [368, 1152.0]
     rotation: 0
     state: disabled
 - name: blocks_peak_detector_xb_0
@@ -723,9 +807,28 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [440, 619]
+    coordinate: [576, 628.0]
     rotation: 0
     state: enabled
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 628.0]
+    rotation: 0
+    state: true
 - name: clock
   id: parameter
   parameters:
@@ -735,14 +838,14 @@ blocks:
     label: Clock rate
     short_id: ''
     type: eng_float
-    value: 100.0e6
+    value: '100000000'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 268.0]
+    coordinate: [464, 180.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: devid
   id: parameter
   parameters:
@@ -757,9 +860,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 259]
+    coordinate: [304, 268.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: fftsize
   id: parameter
   parameters:
@@ -774,9 +877,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [544, 84.0]
+    coordinate: [688, 92.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: frequency
   id: parameter
   parameters:
@@ -791,9 +894,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 164.0]
+    coordinate: [624, 180.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: import_0
   id: import
   parameters:
@@ -804,7 +907,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 188.0]
+    coordinate: [168, 12.0]
     rotation: 0
     state: enabled
 - name: logpwrfft_x_0
@@ -826,7 +929,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 860.0]
+    coordinate: [448, 868.0]
     rotation: 0
     state: enabled
 - name: note_0_1
@@ -839,7 +942,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 723]
+    coordinate: [160, 732.0]
     rotation: 0
     state: enabled
 - name: note_0_1_0
@@ -852,7 +955,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 1076.0]
+    coordinate: [512, 1084.0]
     rotation: 0
     state: enabled
 - name: note_0_1_0_0
@@ -865,7 +968,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1096, 827]
+    coordinate: [1232, 844.0]
     rotation: 0
     state: enabled
 - name: note_1
@@ -878,7 +981,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [480, 467]
+    coordinate: [608, 476.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -921,9 +1024,9 @@ blocks:
     label7: ''
     label8: ''
     label9: ''
-    max: '1'
-    min: '-1'
-    name: '""'
+    max: '10'
+    min: '-5'
+    name: Raw TPR Value
     nconnections: '1'
     type: float
     unit1: ''
@@ -941,7 +1044,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 404.0]
+    coordinate: [784, 380.0]
     rotation: 0
     state: true
 - name: qtgui_number_sink_1
@@ -1004,7 +1107,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 620.0]
+    coordinate: [1168, 684.0]
     rotation: 0
     state: true
 - name: qtgui_number_sink_2
@@ -1049,7 +1152,7 @@ blocks:
     label9: ''
     max: '1'
     min: '-1'
-    name: '""'
+    name: Calibrated Noise Temperature
     nconnections: '1'
     type: float
     unit1: ''
@@ -1067,38 +1170,213 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1416, 860.0]
+    coordinate: [1552, 876.0]
     rotation: 0
     state: true
-- name: qtgui_sink_x_0
-  id: qtgui_sink_x
+- name: qtgui_tab_widget_0
+  id: qtgui_tab_widget
   parameters:
-    affinity: ''
     alias: ''
-    bw: samp_rate
     comment: ''
-    fc: '0'
-    fftsize: '1024'
     gui_hint: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    name: '""'
-    plotconst: 'True'
-    plotfreq: 'True'
-    plottime: 'True'
-    plotwaterfall: 'True'
-    rate: '10'
-    showports: 'False'
-    showrf: 'False'
-    type: float
-    wintype: window.WIN_BLACKMAN_hARRIS
+    label0: All
+    label1: Radio Control
+    label10: Tab 10
+    label11: Tab 11
+    label12: Tab 12
+    label13: Tab 13
+    label14: Tab 14
+    label15: Tab 15
+    label16: Tab 16
+    label17: Tab 17
+    label18: Tab 18
+    label19: Tab 19
+    label2: Radiometer
+    label3: Tab 3
+    label4: Tab 4
+    label5: Tab 5
+    label6: Tab 6
+    label7: Tab 7
+    label8: Tab 8
+    label9: Tab 9
+    num_tabs: '3'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1224, 468.0]
+    coordinate: [1880, 592.0]
     rotation: 0
     state: true
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'True'
+    entags: 'True'
+    grid: 'True'
+    gui_hint: ''
+    label1: Radiometer
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: TPR Ticker Tape
+    nconnections: '1'
+    size: '1024'
+    srate: '10000'
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.01'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '5'
+    ymin: '0'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 540.0]
+    rotation: 0
+    state: true
+- name: qtgui_vector_sink_f_0
+  id: qtgui_vector_sink_f
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    grid: 'False'
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    ref_level: '0'
+    showports: 'False'
+    update_time: '0.10'
+    vlen: '1024'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    x_axis_label: '"x-Axis"'
+    x_start: '0'
+    x_step: '1.0'
+    x_units: '""'
+    y_axis_label: '"y-Axis"'
+    y_units: '""'
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1352, 436.0]
+    rotation: 0
+    state: disabled
 - name: qtgui_waterfall_sink_x_0
   id: qtgui_waterfall_sink_x
   parameters:
@@ -1157,7 +1435,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [584, 768.0]
+    coordinate: [720, 784.0]
     rotation: 0
     state: true
 - name: subdev
@@ -1174,9 +1452,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 243]
+    coordinate: [144, 252.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: uhd_usrp_source_0
   id: uhd_usrp_source
   parameters:
@@ -1545,29 +1823,30 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 771]
+    coordinate: [144, 784.0]
     rotation: 0
     state: disabled
 
 connections:
 - [TPR_0, '0', blocks_multiply_const_vxx_0, '0']
-- [analog_noise_source_x_0, '0', TPR_0, '0']
-- [analog_noise_source_x_0, '0', blocks_complex_to_real_0, '0']
-- [analog_noise_source_x_0, '0', logpwrfft_x_0, '0']
-- [analog_noise_source_x_0, '0', qtgui_waterfall_sink_x_0, '0']
+- [analog_noise_source_x_0, '0', blocks_throttle_0, '0']
 - [blocks_add_const_vxx_1, '0', blocks_file_sink_0, '0']
 - [blocks_add_const_vxx_1, '0', qtgui_number_sink_2, '0']
 - [blocks_char_to_float_0, '0', qtgui_number_sink_1, '0']
 - [blocks_complex_to_real_0, '0', blocks_peak_detector_xb_0, '0']
 - [blocks_keep_one_in_n_1, '0', blocks_file_sink_4, '0']
 - [blocks_keep_one_in_n_1, '0', blocks_multiply_const_vxx_1, '0']
-- [blocks_keep_one_in_n_1, '0', qtgui_sink_x_0, '0']
+- [blocks_keep_one_in_n_1, '0', qtgui_time_sink_x_0, '0']
 - [blocks_keep_one_in_n_3, '0', blocks_file_sink_5, '0']
 - [blocks_multiply_const_vxx_0, '0', blocks_keep_one_in_n_1, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_number_sink_0, '0']
 - [blocks_multiply_const_vxx_1, '0', blocks_add_const_vxx_1, '0']
 - [blocks_mute_xx_0, '0', blocks_file_sink_1, '0']
 - [blocks_peak_detector_xb_0, '0', blocks_char_to_float_0, '0']
+- [blocks_throttle_0, '0', TPR_0, '0']
+- [blocks_throttle_0, '0', blocks_complex_to_real_0, '0']
+- [blocks_throttle_0, '0', logpwrfft_x_0, '0']
+- [blocks_throttle_0, '0', qtgui_waterfall_sink_x_0, '0']
 - [logpwrfft_x_0, '0', blocks_keep_one_in_n_3, '0']
 - [uhd_usrp_source_0, '0', TPR_0, '0']
 - [uhd_usrp_source_0, '0', blocks_complex_to_real_0, '0']

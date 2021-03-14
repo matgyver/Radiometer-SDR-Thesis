@@ -5,9 +5,10 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Total Power Radiometer - N200
-# Author: Matthew E Nelson
-# Description: Total power radiometer connecting to a N200 SDR
+# Title: N200 TPR V2
+# Author: Matthew Nelson
+# Copyright: 2016-2021
+# Description: Implementation of a Software Defined Radiometer
 # GNU Radio version: 3.8.2.0
 
 from distutils.version import StrictVersion
@@ -43,14 +44,15 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio.fft import logpwrfft
 from gnuradio.qtgui import Range, RangeWidget
-from PyQt5 import QtCore
 
-class N200_TPR(gr.top_block, Qt.QWidget):
+from gnuradio import qtgui
 
-    def __init__(self, clock=100.0e6, devid=addr=192.168.10.2, fftsize=8192, frequency=1.4125e9, subdev=A:0):
-        gr.top_block.__init__(self, "Total Power Radiometer - N200")
+class N200_TPR_2(gr.top_block, Qt.QWidget):
+
+    def __init__(self):
+        gr.top_block.__init__(self, "N200 TPR V2")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("Total Power Radiometer - N200")
+        self.setWindowTitle("N200 TPR V2")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -68,7 +70,7 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "N200_TPR")
+        self.settings = Qt.QSettings("GNU Radio", "N200_TPR_2")
 
         try:
             if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -79,68 +81,71 @@ class N200_TPR(gr.top_block, Qt.QWidget):
             pass
 
         ##################################################
-        # Parameters
-        ##################################################
-        self.clock = clock
-        self.devid = devid
-        self.fftsize = fftsize
-        self.frequency = frequency
-        self.subdev = subdev
-
-        ##################################################
         # Variables
         ##################################################
-        self.GUI_samp_rate = GUI_samp_rate = int(5e6)
-        self.samp_rate = samp_rate = int(GUI_samp_rate)
+        self.samp_rate = samp_rate = 32000
         self.prefix = prefix = "tpr_"
+        self.fftsize = fftsize = 8192
+        self.GUI_samp_rate = GUI_samp_rate = int(5e6)
         self.text_samp_rate = text_samp_rate = 0
         self.text_deviceID = text_deviceID = 0
         self.text_USRP_Clock = text_USRP_Clock = 100e6
         self.text_Device_addr = text_Device_addr = 0
+        self.subdev = subdev = "A:0"
         self.spec_data_fifo = spec_data_fifo = "spectrum_" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
         self.spavg = spavg = 5
         self.scope_rate = scope_rate = 2
+        self.samp_rate_0 = samp_rate_0 = int(GUI_samp_rate)
         self.recfile_tpr = recfile_tpr = prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
         self.recfile_kelvin = recfile_kelvin = prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat"
-        self.rec_button_tpr = rec_button_tpr = 0
-        self.rec_button_iq = rec_button_iq = 0
-        self.noise_amplitude = noise_amplitude = 0.02
+        self.noise_amplitude = noise_amplitude = 1
         self.integ = integ = 2
         self.gain = gain = 15
+        self.frequency = frequency = 1.4125e9
         self.freq = freq = 1.415e9
         self.file_rate = file_rate = 2.0
         self.fftrate = fftrate = int(samp_rate/fftsize)
+        self.devid = devid = "addr=192.168.10.2"
         self.det_rate = det_rate = int(20.0)
         self.dc_gain = dc_gain = 1
+        self.clock = clock = 100e6
         self.calib_2 = calib_2 = -342.774
         self.calib_1 = calib_1 = 4.0755e3
-        self.add_noise = add_noise = "Off"
 
         ##################################################
         # Blocks
         ##################################################
         self._spavg_range = Range(1, 20, 1, 5, 200)
-        self._spavg_win = RangeWidget(self._spavg_range, self.set_spavg, 'Spectral Averaging', "counter_slider", float, QtCore.Qt.Horizontal)
+        self._spavg_win = RangeWidget(self._spavg_range, self.set_spavg, "Spectral Averaging", 'dial', float)
         self.top_grid_layout.addWidget(self._spavg_win)
-        self._integ_range = Range(1, 60, .5, 2, 200)
-        self._integ_win = RangeWidget(self._integ_range, self.set_integ, 'Integration time (sec)', "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_grid_layout.addWidget(self._integ_win)
+        self._noise_amplitude_range = Range(0.01, 2, .01, 1, 200)
+        self._noise_amplitude_win = RangeWidget(self._noise_amplitude_range, self.set_noise_amplitude, 'Noise Amplitutde', 'counter_slider', float)
+        self.top_grid_layout.addWidget(self._noise_amplitude_win)
         # Create the options list
         self._dc_gain_options = (1, 10, 100, 1000, 10000, )
         # Create the labels list
         self._dc_gain_labels = ('1', '10', '100', '1000', '10000', )
         # Create the combo box
-        self._dc_gain_tool_bar = Qt.QToolBar(self)
-        self._dc_gain_tool_bar.addWidget(Qt.QLabel('DC Gain' + ": "))
-        self._dc_gain_combo_box = Qt.QComboBox()
-        self._dc_gain_tool_bar.addWidget(self._dc_gain_combo_box)
-        for _label in self._dc_gain_labels: self._dc_gain_combo_box.addItem(_label)
-        self._dc_gain_callback = lambda i: Qt.QMetaObject.invokeMethod(self._dc_gain_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._dc_gain_options.index(i)))
-        self._dc_gain_callback(self.dc_gain)
-        self._dc_gain_combo_box.currentIndexChanged.connect(
-            lambda i: self.set_dc_gain(self._dc_gain_options[i]))
         # Create the radio buttons
-        self.top_grid_layout.addWidget(self._dc_gain_tool_bar)
+        self._dc_gain_group_box = Qt.QGroupBox('DC Gain' + ": ")
+        self._dc_gain_box = Qt.QHBoxLayout()
+        class variable_chooser_button_group(Qt.QButtonGroup):
+            def __init__(self, parent=None):
+                Qt.QButtonGroup.__init__(self, parent)
+            @pyqtSlot(int)
+            def updateButtonChecked(self, button_id):
+                self.button(button_id).setChecked(True)
+        self._dc_gain_button_group = variable_chooser_button_group()
+        self._dc_gain_group_box.setLayout(self._dc_gain_box)
+        for i, _label in enumerate(self._dc_gain_labels):
+            radio_button = Qt.QRadioButton(_label)
+            self._dc_gain_box.addWidget(radio_button)
+            self._dc_gain_button_group.addButton(radio_button, i)
+        self._dc_gain_callback = lambda i: Qt.QMetaObject.invokeMethod(self._dc_gain_button_group, "updateButtonChecked", Qt.Q_ARG("int", self._dc_gain_options.index(i)))
+        self._dc_gain_callback(self.dc_gain)
+        self._dc_gain_button_group.buttonClicked[int].connect(
+            lambda i: self.set_dc_gain(self._dc_gain_options[i]))
+        self.top_grid_layout.addWidget(self._dc_gain_group_box)
         self._calib_2_tool_bar = Qt.QToolBar(self)
         self._calib_2_tool_bar.addWidget(Qt.QLabel('Calibration Point 2' + ": "))
         self._calib_2_line_edit = Qt.QLineEdit(str(self.calib_2))
@@ -199,18 +204,6 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self._text_Device_addr_label = Qt.QLabel(str(self._text_Device_addr_formatter(self.text_Device_addr)))
         self._text_Device_addr_tool_bar.addWidget(self._text_Device_addr_label)
         self.top_grid_layout.addWidget(self._text_Device_addr_tool_bar)
-        _rec_button_tpr_push_button = Qt.QPushButton('')
-        _rec_button_tpr_push_button = Qt.QPushButton('rec_button_tpr')
-        self._rec_button_tpr_choices = {'Pressed': 1, 'Released': 0}
-        _rec_button_tpr_push_button.pressed.connect(lambda: self.set_rec_button_tpr(self._rec_button_tpr_choices['Pressed']))
-        _rec_button_tpr_push_button.released.connect(lambda: self.set_rec_button_tpr(self._rec_button_tpr_choices['Released']))
-        self.top_grid_layout.addWidget(_rec_button_tpr_push_button)
-        _rec_button_iq_push_button = Qt.QPushButton('')
-        _rec_button_iq_push_button = Qt.QPushButton('rec_button_iq')
-        self._rec_button_iq_choices = {'Pressed': 1, 'Released': 0}
-        _rec_button_iq_push_button.pressed.connect(lambda: self.set_rec_button_iq(self._rec_button_iq_choices['Pressed']))
-        _rec_button_iq_push_button.released.connect(lambda: self.set_rec_button_iq(self._rec_button_iq_choices['Released']))
-        self.top_grid_layout.addWidget(_rec_button_iq_push_button)
         self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
             1024, #size
             window.WIN_BLACKMAN_hARRIS, #wintype
@@ -245,24 +238,71 @@ class N200_TPR(gr.top_block, Qt.QWidget):
 
         self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_waterfall_sink_x_0_win)
-        self.qtgui_sink_x_0 = qtgui.sink_f(
-            1024, #fftsize
-            window.WIN_BLACKMAN_hARRIS, #wintype
-            0, #fc
-            samp_rate, #bw
-            "", #name
-            True, #plotfreq
-            True, #plotwaterfall
-            True, #plottime
-            True, #plotconst
+        self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
+            1024, #size
+            10000, #samp_rate
+            'TPR Ticker Tape', #name
+            1, #number of inputs
             None # parent
         )
-        self.qtgui_sink_x_0.set_update_time(1.0/10)
-        self._qtgui_sink_x_0_win = sip.wrapinstance(self.qtgui_sink_x_0.pyqwidget(), Qt.QWidget)
+        self.qtgui_time_sink_x_0.set_update_time(0.01)
+        self.qtgui_time_sink_x_0.set_y_axis(0, 5)
 
-        self.qtgui_sink_x_0.enable_rf_freq(False)
+        self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
 
-        self.top_grid_layout.addWidget(self._qtgui_sink_x_0_win)
+        self.qtgui_time_sink_x_0.enable_tags(True)
+        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
+        self.qtgui_time_sink_x_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0.enable_grid(True)
+        self.qtgui_time_sink_x_0.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0.enable_control_panel(True)
+        self.qtgui_time_sink_x_0.enable_stem_plot(False)
+
+
+        labels = ['Radiometer', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
+            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
+        widths = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        colors = ['blue', 'red', 'green', 'black', 'cyan',
+            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
+        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0]
+        styles = [1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1]
+        markers = [-1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1]
+
+
+        for i in range(1):
+            if len(labels[i]) == 0:
+                self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
+
+        self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
+        self.qtgui_tab_widget_0 = Qt.QTabWidget()
+        self.qtgui_tab_widget_0_widget_0 = Qt.QWidget()
+        self.qtgui_tab_widget_0_layout_0 = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.qtgui_tab_widget_0_widget_0)
+        self.qtgui_tab_widget_0_grid_layout_0 = Qt.QGridLayout()
+        self.qtgui_tab_widget_0_layout_0.addLayout(self.qtgui_tab_widget_0_grid_layout_0)
+        self.qtgui_tab_widget_0.addTab(self.qtgui_tab_widget_0_widget_0, 'All')
+        self.qtgui_tab_widget_0_widget_1 = Qt.QWidget()
+        self.qtgui_tab_widget_0_layout_1 = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.qtgui_tab_widget_0_widget_1)
+        self.qtgui_tab_widget_0_grid_layout_1 = Qt.QGridLayout()
+        self.qtgui_tab_widget_0_layout_1.addLayout(self.qtgui_tab_widget_0_grid_layout_1)
+        self.qtgui_tab_widget_0.addTab(self.qtgui_tab_widget_0_widget_1, 'Radio Control')
+        self.qtgui_tab_widget_0_widget_2 = Qt.QWidget()
+        self.qtgui_tab_widget_0_layout_2 = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.qtgui_tab_widget_0_widget_2)
+        self.qtgui_tab_widget_0_grid_layout_2 = Qt.QGridLayout()
+        self.qtgui_tab_widget_0_layout_2.addLayout(self.qtgui_tab_widget_0_grid_layout_2)
+        self.qtgui_tab_widget_0.addTab(self.qtgui_tab_widget_0_widget_2, 'Radiometer')
+        self.top_grid_layout.addWidget(self.qtgui_tab_widget_0)
         self.qtgui_number_sink_2 = qtgui.number_sink(
             gr.sizeof_float,
             0,
@@ -337,7 +377,7 @@ class N200_TPR(gr.top_block, Qt.QWidget):
             None # parent
         )
         self.qtgui_number_sink_0.set_update_time(0.10)
-        self.qtgui_number_sink_0.set_title("")
+        self.qtgui_number_sink_0.set_title('Raw TPR Value')
 
         labels = ['', '', '', '', '',
             '', '', '', '', '']
@@ -349,8 +389,8 @@ class N200_TPR(gr.top_block, Qt.QWidget):
             1, 1, 1, 1, 1]
 
         for i in range(1):
-            self.qtgui_number_sink_0.set_min(i, -1)
-            self.qtgui_number_sink_0.set_max(i, 1)
+            self.qtgui_number_sink_0.set_min(i, -5)
+            self.qtgui_number_sink_0.set_max(i, 10)
             self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
             if len(labels[i]) == 0:
                 self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
@@ -362,9 +402,6 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.qtgui_number_sink_0.enable_autoscale(False)
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_number_sink_0_win)
-        self._noise_amplitude_range = Range(0.01, 1, 100, 0.02, 200)
-        self._noise_amplitude_win = RangeWidget(self._noise_amplitude_range, self.set_noise_amplitude, 'Noise Amplitutde', "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_grid_layout.addWidget(self._noise_amplitude_win)
         self.logpwrfft_x_0 = logpwrfft.logpwrfft_c(
             sample_rate=samp_rate,
             fft_size=fftsize,
@@ -373,7 +410,7 @@ class N200_TPR(gr.top_block, Qt.QWidget):
             avg_alpha=1.0/float(spavg*fftrate),
             average=True)
         self._gain_range = Range(0, 50, 1, 15, 200)
-        self._gain_win = RangeWidget(self._gain_range, self.set_gain, 'RF Gain (dB)', "counter_slider", float, QtCore.Qt.Horizontal)
+        self._gain_win = RangeWidget(self._gain_range, self.set_gain, 'RF Gain (dB)', 'counter_slider', float)
         self.top_grid_layout.addWidget(self._gain_win)
         self._freq_tool_bar = Qt.QToolBar(self)
         self._freq_tool_bar.addWidget(Qt.QLabel('Center Frequency' + ": "))
@@ -382,6 +419,7 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self._freq_line_edit.returnPressed.connect(
             lambda: self.set_freq(eng_notation.str_to_num(str(self._freq_line_edit.text()))))
         self.top_grid_layout.addWidget(self._freq_tool_bar)
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_peak_detector_xb_0 = blocks.peak_detector_fb(0.25, 0.40, 10, 0.001)
         self.blocks_multiply_const_vxx_1 = blocks.multiply_const_ff(calib_1)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_ff(dc_gain)
@@ -396,23 +434,7 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
         self.blocks_char_to_float_0 = blocks.char_to_float(1, 1)
         self.blocks_add_const_vxx_1 = blocks.add_const_ff(calib_2)
-        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, 1, 0)
-        # Create the options list
-        self._add_noise_options = ("Off", "On", )
-        # Create the labels list
-        self._add_noise_labels = ('Off', 'On', )
-        # Create the combo box
-        self._add_noise_tool_bar = Qt.QToolBar(self)
-        self._add_noise_tool_bar.addWidget(Qt.QLabel('Add Noise' + ": "))
-        self._add_noise_combo_box = Qt.QComboBox()
-        self._add_noise_tool_bar.addWidget(self._add_noise_combo_box)
-        for _label in self._add_noise_labels: self._add_noise_combo_box.addItem(_label)
-        self._add_noise_callback = lambda i: Qt.QMetaObject.invokeMethod(self._add_noise_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._add_noise_options.index(i)))
-        self._add_noise_callback(self.add_noise)
-        self._add_noise_combo_box.currentIndexChanged.connect(
-            lambda i: self.set_add_noise(self._add_noise_options[i]))
-        # Create the radio buttons
-        self.top_grid_layout.addWidget(self._add_noise_tool_bar)
+        self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_GAUSSIAN, noise_amplitude, 0)
         self.TPR_0 = TPR(
             det_rate=det_rate,
             integ=integ,
@@ -450,68 +472,30 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.TPR_0, 0), (self.blocks_multiply_const_vxx_0, 0))
-        self.connect((self.analog_noise_source_x_0, 0), (self.TPR_0, 0))
-        self.connect((self.analog_noise_source_x_0, 0), (self.blocks_complex_to_real_0, 0))
-        self.connect((self.analog_noise_source_x_0, 0), (self.logpwrfft_x_0, 0))
-        self.connect((self.analog_noise_source_x_0, 0), (self.qtgui_waterfall_sink_x_0, 0))
+        self.connect((self.analog_noise_source_x_0, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_add_const_vxx_1, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.blocks_add_const_vxx_1, 0), (self.qtgui_number_sink_2, 0))
         self.connect((self.blocks_char_to_float_0, 0), (self.qtgui_number_sink_1, 0))
         self.connect((self.blocks_complex_to_real_0, 0), (self.blocks_peak_detector_xb_0, 0))
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_file_sink_4, 0))
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_multiply_const_vxx_1, 0))
-        self.connect((self.blocks_keep_one_in_n_1, 0), (self.qtgui_sink_x_0, 0))
+        self.connect((self.blocks_keep_one_in_n_1, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_file_sink_5, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_1, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_number_sink_0, 0))
         self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_add_const_vxx_1, 0))
         self.connect((self.blocks_peak_detector_xb_0, 0), (self.blocks_char_to_float_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.TPR_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.blocks_complex_to_real_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.logpwrfft_x_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.qtgui_waterfall_sink_x_0, 0))
         self.connect((self.logpwrfft_x_0, 0), (self.blocks_keep_one_in_n_3, 0))
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "N200_TPR")
+        self.settings = Qt.QSettings("GNU Radio", "N200_TPR_2")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
-
-    def get_clock(self):
-        return self.clock
-
-    def set_clock(self, clock):
-        self.clock = clock
-
-    def get_devid(self):
-        return self.devid
-
-    def set_devid(self, devid):
-        self.devid = devid
-
-    def get_fftsize(self):
-        return self.fftsize
-
-    def set_fftsize(self, fftsize):
-        self.fftsize = fftsize
-        self.set_fftrate(int(self.samp_rate/self.fftsize))
-
-    def get_frequency(self):
-        return self.frequency
-
-    def set_frequency(self, frequency):
-        self.frequency = frequency
-
-    def get_subdev(self):
-        return self.subdev
-
-    def set_subdev(self, subdev):
-        self.subdev = subdev
-
-    def get_GUI_samp_rate(self):
-        return self.GUI_samp_rate
-
-    def set_GUI_samp_rate(self, GUI_samp_rate):
-        self.GUI_samp_rate = GUI_samp_rate
-        self._GUI_samp_rate_callback(self.GUI_samp_rate)
-        self.set_samp_rate(int(self.GUI_samp_rate))
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -520,8 +504,8 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.samp_rate = samp_rate
         self.set_fftrate(int(self.samp_rate/self.fftsize))
         self.TPR_0.set_samp_rate(self.samp_rate)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
         self.logpwrfft_x_0.set_sample_rate(self.samp_rate)
-        self.qtgui_sink_x_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(0, self.samp_rate)
 
     def get_prefix(self):
@@ -531,6 +515,21 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.prefix = prefix
         self.set_recfile_kelvin(self.prefix+"kelvin" + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
         self.set_recfile_tpr(self.prefix + datetime.now().strftime("%Y.%m.%d.%H.%M.%S") + ".dat")
+
+    def get_fftsize(self):
+        return self.fftsize
+
+    def set_fftsize(self, fftsize):
+        self.fftsize = fftsize
+        self.set_fftrate(int(self.samp_rate/self.fftsize))
+
+    def get_GUI_samp_rate(self):
+        return self.GUI_samp_rate
+
+    def set_GUI_samp_rate(self, GUI_samp_rate):
+        self.GUI_samp_rate = GUI_samp_rate
+        self._GUI_samp_rate_callback(self.GUI_samp_rate)
+        self.set_samp_rate_0(int(self.GUI_samp_rate))
 
     def get_text_samp_rate(self):
         return self.text_samp_rate
@@ -560,6 +559,12 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.text_Device_addr = text_Device_addr
         Qt.QMetaObject.invokeMethod(self._text_Device_addr_label, "setText", Qt.Q_ARG("QString", self.text_Device_addr))
 
+    def get_subdev(self):
+        return self.subdev
+
+    def set_subdev(self, subdev):
+        self.subdev = subdev
+
     def get_spec_data_fifo(self):
         return self.spec_data_fifo
 
@@ -580,6 +585,12 @@ class N200_TPR(gr.top_block, Qt.QWidget):
     def set_scope_rate(self, scope_rate):
         self.scope_rate = scope_rate
 
+    def get_samp_rate_0(self):
+        return self.samp_rate_0
+
+    def set_samp_rate_0(self, samp_rate_0):
+        self.samp_rate_0 = samp_rate_0
+
     def get_recfile_tpr(self):
         return self.recfile_tpr
 
@@ -594,23 +605,12 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.recfile_kelvin = recfile_kelvin
         self.blocks_file_sink_0.open(self.recfile_kelvin)
 
-    def get_rec_button_tpr(self):
-        return self.rec_button_tpr
-
-    def set_rec_button_tpr(self, rec_button_tpr):
-        self.rec_button_tpr = rec_button_tpr
-
-    def get_rec_button_iq(self):
-        return self.rec_button_iq
-
-    def set_rec_button_iq(self, rec_button_iq):
-        self.rec_button_iq = rec_button_iq
-
     def get_noise_amplitude(self):
         return self.noise_amplitude
 
     def set_noise_amplitude(self, noise_amplitude):
         self.noise_amplitude = noise_amplitude
+        self.analog_noise_source_x_0.set_amplitude(self.noise_amplitude)
 
     def get_integ(self):
         return self.integ
@@ -624,6 +624,12 @@ class N200_TPR(gr.top_block, Qt.QWidget):
 
     def set_gain(self, gain):
         self.gain = gain
+
+    def get_frequency(self):
+        return self.frequency
+
+    def set_frequency(self, frequency):
+        self.frequency = frequency
 
     def get_freq(self):
         return self.freq
@@ -647,6 +653,12 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.blocks_keep_one_in_n_3.set_n(self.fftrate)
         self.logpwrfft_x_0.set_avg_alpha(1.0/float(self.spavg*self.fftrate))
 
+    def get_devid(self):
+        return self.devid
+
+    def set_devid(self, devid):
+        self.devid = devid
+
     def get_det_rate(self):
         return self.det_rate
 
@@ -662,6 +674,12 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         self.dc_gain = dc_gain
         self._dc_gain_callback(self.dc_gain)
         self.blocks_multiply_const_vxx_0.set_k(self.dc_gain)
+
+    def get_clock(self):
+        return self.clock
+
+    def set_clock(self, clock):
+        self.clock = clock
 
     def get_calib_2(self):
         return self.calib_2
@@ -679,41 +697,18 @@ class N200_TPR(gr.top_block, Qt.QWidget):
         Qt.QMetaObject.invokeMethod(self._calib_1_line_edit, "setText", Qt.Q_ARG("QString", eng_notation.num_to_str(self.calib_1)))
         self.blocks_multiply_const_vxx_1.set_k(self.calib_1)
 
-    def get_add_noise(self):
-        return self.add_noise
-
-    def set_add_noise(self, add_noise):
-        self.add_noise = add_noise
-        self._add_noise_callback(self.add_noise)
 
 
 
 
-def argument_parser():
-    description = 'Total power radiometer connecting to a N200 SDR'
-    parser = ArgumentParser(description=description)
-    parser.add_argument(
-        "--clock", dest="clock", type=eng_float, default="100.0M",
-        help="Set Clock rate [default=%(default)r]")
-    parser.add_argument(
-        "--fftsize", dest="fftsize", type=intx, default=8192,
-        help="Set fftsize [default=%(default)r]")
-    parser.add_argument(
-        "--frequency", dest="frequency", type=eng_float, default="1.4125G",
-        help="Set Center Frequency [default=%(default)r]")
-    return parser
-
-
-def main(top_block_cls=N200_TPR, options=None):
-    if options is None:
-        options = argument_parser().parse_args()
+def main(top_block_cls=N200_TPR_2, options=None):
 
     if StrictVersion("4.5.0") <= StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
         style = gr.prefs().get_string('qtgui', 'style', 'raster')
         Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
-    tb = top_block_cls(clock=options.clock, fftsize=options.fftsize, frequency=options.frequency)
+    tb = top_block_cls()
 
     tb.start()
 
