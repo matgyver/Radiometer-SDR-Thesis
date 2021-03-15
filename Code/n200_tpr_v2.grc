@@ -59,7 +59,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 40.0]
+    coordinate: [784, 16.0]
     rotation: 0
     state: true
 - name: add_noise
@@ -89,7 +89,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2344, 584.0]
+    coordinate: [2080, 384.0]
     rotation: 0
     state: disabled
 - name: calib_1
@@ -131,7 +131,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1920, 112.0]
+    coordinate: [280, 164.0]
     rotation: 0
     state: true
 - name: dc_gain
@@ -161,7 +161,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1456, 40.0]
+    coordinate: [1392, 32.0]
     rotation: 0
     state: true
 - name: det_rate
@@ -185,7 +185,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2200, 176.0]
+    coordinate: [376, 164.0]
     rotation: 0
     state: true
 - name: fftrate
@@ -197,7 +197,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 1028.0]
+    coordinate: [640, 940.0]
     rotation: 0
     state: enabled
 - name: fftsize
@@ -209,7 +209,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2168, 320.0]
+    coordinate: [528, 164.0]
     rotation: 0
     state: true
 - name: file_rate
@@ -248,7 +248,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1896, 204.0]
+    coordinate: [640, 100.0]
     rotation: 0
     state: true
 - name: gain
@@ -269,7 +269,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1256, 172.0]
+    coordinate: [1256, 156.0]
     rotation: 0
     state: enabled
 - name: integ
@@ -290,21 +290,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1584, 20.0]
+    coordinate: [1512, 148.0]
     rotation: 0
-    state: disabled
-- name: integ
-  id: variable
-  parameters:
-    comment: ''
-    value: '2'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [2160, 88.0]
-    rotation: 0
-    state: true
+    state: enabled
 - name: noise_amplitude
   id: variable_qtgui_range
   parameters:
@@ -323,7 +311,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [960, 228.0]
+    coordinate: [960, 116.0]
     rotation: 0
     state: enabled
 - name: prefix
@@ -352,7 +340,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2360, 340.0]
+    coordinate: [1768, 340.0]
     rotation: 0
     state: disabled
 - name: rec_button_tpr
@@ -369,7 +357,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2352, 460.0]
+    coordinate: [1768, 476.0]
     rotation: 0
     state: disabled
 - name: recfile_kelvin
@@ -381,7 +369,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1536, 1092.0]
+    coordinate: [1472, 1052.0]
     rotation: 0
     state: enabled
 - name: recfile_tpr
@@ -400,7 +388,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '32000'
+    value: 1e6
   states:
     bus_sink: false
     bus_source: false
@@ -450,7 +438,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1248, 36.0]
+    coordinate: [1248, 28.0]
     rotation: 0
     state: enabled
 - name: spec_data_fifo
@@ -462,7 +450,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [928, 1012.0]
+    coordinate: [824, 948.0]
     rotation: 0
     state: enabled
 - name: subdev
@@ -474,7 +462,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2112, 424.0]
+    coordinate: [640, 164.0]
     rotation: 0
     state: true
 - name: text_Device_addr
@@ -556,7 +544,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 508.0]
+    coordinate: [328, 436.0]
     rotation: 0
     state: enabled
 - name: analog_noise_source_x_0
@@ -593,7 +581,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1344, 892.0]
+    coordinate: [1248, 900.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0
@@ -644,7 +632,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1552, 996.0]
+    coordinate: [1472, 964.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_1
@@ -662,7 +650,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 1132.0]
+    coordinate: [352, 1068.0]
     rotation: 0
     state: disabled
 - name: blocks_file_sink_4
@@ -680,7 +668,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1064, 396.0]
+    coordinate: [992, 276.0]
     rotation: 0
     state: enabled
 - name: blocks_file_sink_5
@@ -698,7 +686,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 1076.0]
+    coordinate: [832, 1012.0]
     rotation: 0
     state: enabled
 - name: blocks_keep_one_in_n_1
@@ -716,7 +704,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [904, 528.0]
+    coordinate: [824, 376.0]
     rotation: 0
     state: enabled
 - name: blocks_keep_one_in_n_3
@@ -734,7 +722,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [736, 1092.0]
+    coordinate: [616, 1012.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_0
@@ -752,7 +740,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [608, 524.0]
+    coordinate: [576, 452.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_const_vxx_1
@@ -770,7 +758,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1152, 892.0]
+    coordinate: [1072, 900.0]
     rotation: 0
     state: enabled
 - name: blocks_mute_xx_0
@@ -787,7 +775,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 1152.0]
+    coordinate: [192, 1072.0]
     rotation: 0
     state: disabled
 - name: blocks_peak_detector_xb_0
@@ -826,7 +814,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 628.0]
+    coordinate: [48, 340.0]
     rotation: 0
     state: true
 - name: clock
@@ -843,7 +831,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [464, 180.0]
+    coordinate: [1688, 44.0]
     rotation: 0
     state: disabled
 - name: devid
@@ -860,7 +848,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 268.0]
+    coordinate: [1712, 156.0]
     rotation: 0
     state: disabled
 - name: fftsize
@@ -877,7 +865,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [688, 92.0]
+    coordinate: [1872, 68.0]
     rotation: 0
     state: disabled
 - name: frequency
@@ -894,7 +882,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [624, 180.0]
+    coordinate: [1976, 84.0]
     rotation: 0
     state: disabled
 - name: import_0
@@ -929,7 +917,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 868.0]
+    coordinate: [360, 868.0]
     rotation: 0
     state: enabled
 - name: note_0_1
@@ -942,7 +930,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [160, 732.0]
+    coordinate: [24, 540.0]
     rotation: 0
     state: enabled
 - name: note_0_1_0
@@ -955,7 +943,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [512, 1084.0]
+    coordinate: [360, 1004.0]
     rotation: 0
     state: enabled
 - name: note_0_1_0_0
@@ -968,7 +956,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 844.0]
+    coordinate: [1152, 852.0]
     rotation: 0
     state: enabled
 - name: note_1
@@ -981,7 +969,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [608, 476.0]
+    coordinate: [584, 396.0]
     rotation: 0
     state: enabled
 - name: qtgui_number_sink_0
@@ -990,10 +978,10 @@ blocks:
     affinity: ''
     alias: ''
     autoscale: 'False'
-    avg: '0'
-    color1: ("black", "black")
+    avg: '.5'
+    color1: ("blue", "red")
     color10: ("black", "black")
-    color2: ("black", "black")
+    color2: ("blue", "red")
     color3: ("black", "black")
     color4: ("black", "black")
     color5: ("black", "black")
@@ -1014,10 +1002,10 @@ blocks:
     factor9: '1'
     graph_type: qtgui.NUM_GRAPH_HORIZ
     gui_hint: ''
-    label1: ''
+    label1: Raw
     label10: ''
-    label2: ''
-    label3: ''
+    label2: Decimated
+    label3: Peak detected
     label4: ''
     label5: ''
     label6: ''
@@ -1026,8 +1014,8 @@ blocks:
     label9: ''
     max: '10'
     min: '-5'
-    name: Raw TPR Value
-    nconnections: '1'
+    name: TPR Value
+    nconnections: '2'
     type: float
     unit1: ''
     unit10: ''
@@ -1044,7 +1032,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [784, 380.0]
+    coordinate: [1000, 484.0]
     rotation: 0
     state: true
 - name: qtgui_number_sink_1
@@ -1107,7 +1095,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 684.0]
+    coordinate: [1000, 636.0]
     rotation: 0
     state: true
 - name: qtgui_number_sink_2
@@ -1116,8 +1104,8 @@ blocks:
     affinity: ''
     alias: ''
     autoscale: 'False'
-    avg: '0'
-    color1: ("black", "black")
+    avg: '.5'
+    color1: ("blue", "red")
     color10: ("black", "black")
     color2: ("black", "black")
     color3: ("black", "black")
@@ -1150,12 +1138,12 @@ blocks:
     label7: ''
     label8: ''
     label9: ''
-    max: '1'
-    min: '-1'
+    max: '300'
+    min: '0'
     name: Calibrated Noise Temperature
     nconnections: '1'
     type: float
-    unit1: ''
+    unit1: K
     unit10: ''
     unit2: ''
     unit3: ''
@@ -1170,7 +1158,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1552, 876.0]
+    coordinate: [1472, 804.0]
     rotation: 0
     state: true
 - name: qtgui_tab_widget_0
@@ -1204,7 +1192,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1880, 592.0]
+    coordinate: [1512, 36.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0
@@ -1263,7 +1251,7 @@ blocks:
     name: TPR Ticker Tape
     nconnections: '1'
     size: '1024'
-    srate: '10000'
+    srate: '100000'
     stemplot: 'False'
     style1: '1'
     style10: '1'
@@ -1301,82 +1289,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1096, 540.0]
+    coordinate: [1320, 452.0]
     rotation: 0
     state: true
-- name: qtgui_vector_sink_f_0
-  id: qtgui_vector_sink_f
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'False'
-    average: '1.0'
-    color1: '"blue"'
-    color10: '"dark blue"'
-    color2: '"red"'
-    color3: '"green"'
-    color4: '"black"'
-    color5: '"cyan"'
-    color6: '"magenta"'
-    color7: '"yellow"'
-    color8: '"dark red"'
-    color9: '"dark green"'
-    comment: ''
-    grid: 'False'
-    gui_hint: ''
-    label1: ''
-    label10: ''
-    label2: ''
-    label3: ''
-    label4: ''
-    label5: ''
-    label6: ''
-    label7: ''
-    label8: ''
-    label9: ''
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    name: '""'
-    nconnections: '1'
-    ref_level: '0'
-    showports: 'False'
-    update_time: '0.10'
-    vlen: '1024'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    x_axis_label: '"x-Axis"'
-    x_start: '0'
-    x_step: '1.0'
-    x_units: '""'
-    y_axis_label: '"y-Axis"'
-    y_units: '""'
-    ymax: '10'
-    ymin: '-140'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1352, 436.0]
-    rotation: 0
-    state: disabled
 - name: qtgui_waterfall_sink_x_0
   id: qtgui_waterfall_sink_x
   parameters:
@@ -1452,7 +1367,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [144, 252.0]
+    coordinate: [1904, 188.0]
     rotation: 0
     state: disabled
 - name: uhd_usrp_source_0
@@ -1823,7 +1738,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [144, 784.0]
+    coordinate: [16, 608.0]
     rotation: 0
     state: disabled
 
@@ -1836,6 +1751,7 @@ connections:
 - [blocks_complex_to_real_0, '0', blocks_peak_detector_xb_0, '0']
 - [blocks_keep_one_in_n_1, '0', blocks_file_sink_4, '0']
 - [blocks_keep_one_in_n_1, '0', blocks_multiply_const_vxx_1, '0']
+- [blocks_keep_one_in_n_1, '0', qtgui_number_sink_0, '1']
 - [blocks_keep_one_in_n_1, '0', qtgui_time_sink_x_0, '0']
 - [blocks_keep_one_in_n_3, '0', blocks_file_sink_5, '0']
 - [blocks_multiply_const_vxx_0, '0', blocks_keep_one_in_n_1, '0']

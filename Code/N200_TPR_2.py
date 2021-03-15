@@ -83,7 +83,7 @@ class N200_TPR_2(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = 32000
+        self.samp_rate = samp_rate = 1e6
         self.prefix = prefix = "tpr_"
         self.fftsize = fftsize = 8192
         self.GUI_samp_rate = GUI_samp_rate = int(5e6)
@@ -240,7 +240,7 @@ class N200_TPR_2(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self._qtgui_waterfall_sink_x_0_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
             1024, #size
-            10000, #samp_rate
+            100000, #samp_rate
             'TPR Ticker Tape', #name
             1, #number of inputs
             None # parent
@@ -305,26 +305,26 @@ class N200_TPR_2(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self.qtgui_tab_widget_0)
         self.qtgui_number_sink_2 = qtgui.number_sink(
             gr.sizeof_float,
-            0,
+            .5,
             qtgui.NUM_GRAPH_HORIZ,
             1,
             None # parent
         )
         self.qtgui_number_sink_2.set_update_time(0.10)
-        self.qtgui_number_sink_2.set_title("")
+        self.qtgui_number_sink_2.set_title('Calibrated Noise Temperature')
 
         labels = ['', '', '', '', '',
             '', '', '', '', '']
-        units = ['', '', '', '', '',
+        units = ['K', '', '', '', '',
             '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
+        colors = [("blue", "red"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
             ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
         factor = [1, 1, 1, 1, 1,
             1, 1, 1, 1, 1]
 
         for i in range(1):
-            self.qtgui_number_sink_2.set_min(i, -1)
-            self.qtgui_number_sink_2.set_max(i, 1)
+            self.qtgui_number_sink_2.set_min(i, 0)
+            self.qtgui_number_sink_2.set_max(i, 300)
             self.qtgui_number_sink_2.set_color(i, colors[i][0], colors[i][1])
             if len(labels[i]) == 0:
                 self.qtgui_number_sink_2.set_label(i, "Data {0}".format(i))
@@ -371,24 +371,24 @@ class N200_TPR_2(gr.top_block, Qt.QWidget):
         self.top_grid_layout.addWidget(self._qtgui_number_sink_1_win)
         self.qtgui_number_sink_0 = qtgui.number_sink(
             gr.sizeof_float,
-            0,
+            .5,
             qtgui.NUM_GRAPH_HORIZ,
-            1,
+            2,
             None # parent
         )
         self.qtgui_number_sink_0.set_update_time(0.10)
-        self.qtgui_number_sink_0.set_title('Raw TPR Value')
+        self.qtgui_number_sink_0.set_title('TPR Value')
 
-        labels = ['', '', '', '', '',
+        labels = ['Raw', 'Calibrated', 'Peak detected', '', '',
             '', '', '', '', '']
-        units = ['', '', '', '', '',
+        units = ['', 'K', '', '', '',
             '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
+        colors = [("blue", "red"), ("blue", "red"), ("black", "black"), ("black", "black"), ("black", "black"),
             ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
         factor = [1, 1, 1, 1, 1,
             1, 1, 1, 1, 1]
 
-        for i in range(1):
+        for i in range(2):
             self.qtgui_number_sink_0.set_min(i, -5)
             self.qtgui_number_sink_0.set_max(i, 10)
             self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
@@ -429,7 +429,7 @@ class N200_TPR_2(gr.top_block, Qt.QWidget):
         self.blocks_file_sink_5.set_unbuffered(True)
         self.blocks_file_sink_4 = blocks.file_sink(gr.sizeof_float*1, recfile_tpr, False)
         self.blocks_file_sink_4.set_unbuffered(True)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*1, recfile_kelvin, False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_float*1, 'test.dat', False)
         self.blocks_file_sink_0.set_unbuffered(True)
         self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
         self.blocks_char_to_float_0 = blocks.char_to_float(1, 1)
@@ -479,6 +479,7 @@ class N200_TPR_2(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_complex_to_real_0, 0), (self.blocks_peak_detector_xb_0, 0))
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_file_sink_4, 0))
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.blocks_multiply_const_vxx_1, 0))
+        self.connect((self.blocks_keep_one_in_n_1, 0), (self.qtgui_number_sink_0, 1))
         self.connect((self.blocks_keep_one_in_n_1, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.blocks_keep_one_in_n_3, 0), (self.blocks_file_sink_5, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_keep_one_in_n_1, 0))
@@ -603,7 +604,6 @@ class N200_TPR_2(gr.top_block, Qt.QWidget):
 
     def set_recfile_kelvin(self, recfile_kelvin):
         self.recfile_kelvin = recfile_kelvin
-        self.blocks_file_sink_0.open(self.recfile_kelvin)
 
     def get_noise_amplitude(self):
         return self.noise_amplitude
